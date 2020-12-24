@@ -23,27 +23,24 @@ info:
 # schema $ref: 밑 부분의 model 작성을 통해 참조
 paths:
   #테스트
-  /api/test:
+  /api/test/{message}:
     get:
       summary: 테스트
       parameters:
-        - name: testmessage
-          description: 메시지를 받으면 해당 메시지를 다시전송
+        - name: message
+          description: 테스트용 행운의편지
           in: path
-          message: message
       responses:
         '200':
           schema:
             $ref: "#/definitions/test"
-        '404':
-          description: "존재하지 않는 페이지"
         '418':
           description: "나는 커피를 끓이는것을 원치않는다 아이스아메리카노를 가져와라"
 
   ###############################가게######################################
   #가게 생성
   /api/store/:
-    get:
+    post:
       summary: "가게 생성"
       parameters:
       - name: "new_store"
@@ -82,8 +79,6 @@ paths:
           description: 다음의 값이 배열로 전송
           schema:
             $ref: "#/definitions/store"
-        '404':
-          description: "매장 데이터가 없습니다."
         '500':
           description: "서버에 문제가 생겼음을 알림"
   
@@ -101,8 +96,6 @@ paths:
           description: "다음의 값이 전송, 입력받은값이 없는경우엔 배열로 목록을 전송"
           schema:
             $ref: "#/definitions/store"
-        '404':
-          description: "해당 가게가 존재하지 않습니다."
         '500':
           description: "서버에 문제가 생겼음을 알림"
     
@@ -134,6 +127,7 @@ paths:
         '500':
           description: "서버에 문제가 생겼음을 알림"
 
+  #가게 조회(관리자)
   /api/ad-store:
     get:
       summary: "소유한 가게를 조회 ( 관리자 로그인 체크 )"
@@ -164,7 +158,7 @@ paths:
           description: "서버에 문제가 생겼음을 알림"
 
   #회원가입
-  /api/auth/register:
+  /api/customers/register:
     post:
       summary: 회원가입
       parameters:
@@ -201,10 +195,10 @@ paths:
         '500':
           description: "서버에 문제가 생겼음을 알림"
   
-  #회원가입
-  /api/auth/ad-register:
+  #관리자 회원가입
+  /api/owner/register:
     post:
-      summary: 회원가입
+      summary: 회원가입(관리자)
       parameters:
       - in: body
         name: customer register
@@ -213,11 +207,11 @@ paths:
           $ref: "#/definitions/register_owner"
       responses: 
         '201':
-          description: DB에 저장까지 완료되었음을 알리고 클라이언트에 데이터를 보냄
+          description: "DB에 저장까지 완료되었음을 알리고 클라이언트에 데이터를 보냄"
           schema:
             $ref: "#/definitions/owners"
         '400':
-          description: 기입이 되어있지 않거나, 잘못된 값이 서버에 전송되었음을 의미
+          description: "잘못된 값이 서버에 전송되었음을 의미함"
         '500':
           description: "서버에 문제가 생겼음을 알림"
 
@@ -225,27 +219,173 @@ paths:
   
   ###########################예약관련##################################
 
-    #나의 예약현황(유저)
+  #새로운 예약
+  /api/customers/reserve/{storeid}:
+    post:
+      summary: "예약 하기"
+      parameters:
+      - in : path
+        name: "storeid"
+        required: true
+        type: "integer"
+      - in : body
+        name: reserve_data
+        required: true
+        schema:
+          $ref: "#/definitions/new_reservation"
+      responses:
+        '201':
+          description: "예약에 성공헀고 영수증데이터를 불러옴"
+          schema:
+            $ref: "#/definitions/receipt"
+    # 예약취소(사용자)
+    delete:
+      summary: "예약 취소"
+      parameters:
+      - in : path
+        name: "storeid"
+        required: true
+        type: "integer"
+      responses:
+        '204':
+          description: "예약 취소에 성공했음"
+        '400':
+          description: "잘못된 값이 서버에 전송되었음을 의미함"
+        '403':
+          description: "로그인이 되어있지 않거나, 해당 가게의 관리자가 아닌 사용자의 접근"
+        '500':
+          description: "서버에 문제가 생겼음을 알림"
+      
+
+  #나의 예약현황(유저)
   /api/customers/reserve:
     get:
       summary: "유저 예약 현황"
       parameters:
-      - in: body
-        name: my_reserve
+      responses:
+        '200':
+          dsecription: "현재 로그인된 사용자의 예약 현황을 불러옴"
+          schema:
+            $ref: "#/definitions/reservation"
+        '403':
+          description: "로그인이 되어있지 않은 사용자의 접근"
+        '500':
+          description: "서버에 문제가 생겼음을 알림"
   
   #나의 이전 예약현황(유저)
   /api/customers/reserve/old:
     get:
       summary: "유저 이전 예약 현황"
+      parameters:
+      responses:
+        '200':
+          description: "현재 로그인된 사용자의 현재 날짜 이전부터 3개월전의 예약 현황을 불러옴"
+          schema:
+            $ref: "#/definitions/reservation"
+        '403':
+          description: "로그인이 되어있지 않은 사용자의 접근"
+        '500':
+          description: "서버에 문제가 생겼음을 알림"
+      
 
-    #내 가게 예약현황(가게 관리자)
+  #내 가게 예약현황(가게 관리자)
   /api/owners/reserve/{storeid}:
     get:
+      summary: "관리자 가게 예약 현황"
+      parameters:
+      - in: path
+        name: storeid
+      responses:
+        '200':
+          description: "현재 로그인된 관리자의 예약 현황을 불러줌(storeid가 입력된경우 해당 storeid에 대한 예약만)"
+          schema:
+            $ref: "#/definitions/reservation"
+        '403':
+          description: "로그인이 되어있지 않거나, 해당 가게의 관리자가 아닌 사용자의 접근"
+        '500':
+          description: "서버에 문제가 생겼음을 알림"
+    
+    #예약취소(관리자)
+    delete:
+      summary: "관리자 예약 취소"
+      parameters:
+      - in : path
+        name: storeid
+      responses:
+        '200':
+          description: "예약취소된 예약과 해당 주문번호를 보내줌"
+          schema: 
+            $ref: "#/definitions/payment"
+        '400':
+          description: "잘못된 접근을 의미"
+        '403':
+          description: "로그인이 되어있지 않거나, 해당 가게의 관리자가 아닌 사용자의 접근"
+        '500':
+          description: "서버에 문제가 생겼음을 알림"
+
+  #가게 예약 현황
+  /api/reserve/{storeid}:
+    get:
       summary: "가게 예약 현황"
+      parameters:
+      - in: path
+        name: storeid
+        required: true
+      responses:
+        '200':
+          description: "path에 입력받은 데이터로 해당 가게의 예약 현황을 배열로 전달"
+          schema:
+            #$ref: "#/definitions/reservation"
+            type: "object"
+            properties:
+              reservedate:
+                description: "예약날짜"
+              reservetime:
+                description: "예약시간"
+            example:
+              reservedate: "20201225"
+              reservetime: "18:00:00"
+        '500':
+          description: "서버에 문제가 생겼음을 알림"
 
 
+    #리뷰 작성
+  /api/store/{storeid}/review:
+    get:
+      summary: "리뷰 조회"
+      parameters:
+        - in: path
+          name: "storeid"
+          required: true
+      responses:
+        '200': 
+          description: "리뷰 조회내역을 전송"
+          schema:
+            $ref: "#/definitions/reviews"
+        '500':
+          description: "서버에 문제가 생겼음을 알림"
 
-
+    post:
+      summary: "리뷰 작성"
+      parameters:
+        - in: path
+          name: "storeid"
+          required: true
+        - in: body
+          name: "content"
+          schema:
+            $ref: "#/definitions/new_review"
+      responses:
+        '201':
+          description: "리뷰가 성공적으로 생성됨"
+          schema:
+            $ref: "#/definitions/reviews"
+        '400':
+          description: "잘못된 요청"
+        '403':
+          description: "접근이 허용되지않은 사용자"
+        '500':
+          description: "서버에 문제가 생겼음을 알림"
 
 
 
@@ -510,6 +650,33 @@ definitions:
       price: 6500000
       menu_img: "/images/menu/sanghello.jpg"
 
+  #가게 리뷰 생성
+  new_review:
+    type: "object"
+    properties:
+      title:
+        type: "string"
+        description: "리뷰 제목"
+      content:
+        type: "string"
+        description: "리뷰 내용"
+      review_img:
+        type: "string"
+        description: "리뷰 이미지"
+      score:
+        type: "integer"
+        description: "별점"
+      writedate:
+        type: "date"
+        description: "작성일자"
+
+      example:
+        title: "최고의 가게입니다."
+        content: "제 이름같은 영재적 사고방식을 가진 사람이 만든 가게인것같습니다. 다좋았어요 그래서 제 점수는요?"
+        review_img: "untitled-01yo.jpg"
+        score: 4
+        writedate: "20201225"
+
   #가게 리뷰 데이터
   reviews:
     type: "object"
@@ -542,12 +709,39 @@ definitions:
       example:
         reviewid: 0
         storeid: 0
-        writer: "최영재"
+        writer: 0
         title: "최고의 가게입니다."
         content: "제 이름같은 영재적 사고방식을 가진 사람이 만든 가게인것같습니다. 다좋았어요 그래서 제 점수는요?"
         review_img: "/images/review/jmt.jpg"
         score: 4
         writedate: "20201225"
+
+  # 새로운 예약
+  new_reservation:
+    type: "object"
+    properties:
+      reservedate:
+        type: "date"
+        description: "예약 일자"
+      prepay:
+        type: "integer"
+        description: "선수금"
+      orderer:
+        type: "string"
+        description: "주문자"
+      peoples:
+        type: "integer"
+        description: "인원수"
+      reservetime:
+        type: "integer"
+        description: "예약 시간"
+
+    example:
+      reservedate: "20201225"
+      prepay: 650000
+      orderer: "최영재"
+      peoples: "1"
+      reservetime: 18
 
   # 예약
   reservation:
@@ -584,7 +778,7 @@ definitions:
       reservedate: "20201225"
       prepay: 650000
       orderer: "최영재"
-      peoples: "1"
+      peoples: 1
       reservetime: 18
       cancel: "N"
 
@@ -613,6 +807,41 @@ definitions:
       res_YN: "Y"
 
   # 영수증
+  receipt:
+    type: "object"
+    properties:
+      paycode:
+        type: "string"
+        description: "결제 고유 식별 번호(iamport)"
+      ordercode:
+        type: "string"
+        description: "결제 고유 식별 번호(매장영수증)"
+      reservedate:
+        type: "date"
+        description: "예약 일자"
+      prepay:
+        type: "integer"
+        description: "선수금"
+      orderer:
+        type: "string"
+        description: "주문자"
+      peoples:
+        type: "integer"
+        description: "인원수"
+      reservetime:
+        type: "integer"
+        description: "예약 시간"
+    
+    example:
+      paycode: "iamport-0000000"
+      ordercode: "맥도날드-0"
+      reservedate: "20201225"
+      prepay: 650000
+      orderer: "최영재"
+      peoples: 1
+      reservetime: 18
+
+  #결제 데이터
   payment:
     type: "object"
     properties:
@@ -623,7 +852,7 @@ definitions:
         type: "string"
         description: "결제 고유 식별 번호(매장영수증)"
       reserveid:
-        type: "string"
+        type: "int"
         description: "예약 코드"
 
     example:
