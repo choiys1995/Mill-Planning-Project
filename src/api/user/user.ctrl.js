@@ -2,7 +2,6 @@ const User = require('../../models/user')
 const Joi = require('joi')
 const encrypt = require('../../lib/encrypt')
 const mailer = require('../../lib/mailer')
-const { token } = require('morgan')
 
 /**
  * 회원가입메서드

@@ -17,7 +17,7 @@ module.exports = {
         host: '52.79.40.60',
         user: 'root',
         password: 'vmfhwprxm',
-        database: 'test_schema',
+        database: 'youngjaetest',
         connectionLimit: 100
     },
     /**운영서버 */
