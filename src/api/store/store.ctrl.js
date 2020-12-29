@@ -1,4 +1,4 @@
-
+const { date } = require("joi");
 
 module.exports = {
     //가게 생성
@@ -12,7 +12,7 @@ module.exports = {
          * DB에 입력요청
          */
 
-         res.status(200).json();
+         res.status(200).json(store_data);
     },
 
     //가게 검색 메서드
@@ -50,11 +50,41 @@ module.exports = {
         res.status(204).json();
     },
 
+    //리뷰 작성 메서드
     createReview: function(req, res) {
         const {storeid} = req.params;
+        const { title, content, score } = req.body;
+        let file = null;
+
+        if(req.file) file = req.file.filename;
+
+        const review = {
+            title, storeid, content, score, 
+            review_img: file,
+            writedate: Date.now().format('yyyymmdd')
+        }
+
+        /**
+         * db에 작성요청
+         */
+        
+         return res.status(200).json(review);
+
     },
 
+    //리뷰 조회 메서드
     ReviewViewer: function(req, res) {
-        const {storeid} = req.params;
+        const { storeid } = req.params;
+    },
+
+    test: async function(req, res) {
+        if(!req.file) return res.status(200).json(req.fileVaildationError)
+
+        let fileSrc;
+        if(req.file){
+            fileSrc = `${req.file.destination.replace('./public/images/', '')}/${req.file.filename}`;
+        }
+
+        res.status(200).json(fileSrc);
     }
 }

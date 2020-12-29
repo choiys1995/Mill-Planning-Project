@@ -6,7 +6,7 @@ router.use('/ad-store', require('./ad-store'));
 router.use('/customers', require('./customers'));
 router.use('/owners', require('./owners'));
 router.use('/reseve', require('./reserve'));
-router.use('./store', require('./store'));
+router.use('/store', require('./store'));
 
 router.get('/test/:message', function (req, res) {
     const { message } = req.params

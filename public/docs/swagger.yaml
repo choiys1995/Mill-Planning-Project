@@ -726,15 +726,15 @@ definitions:
         type: "date"
         description: "작성일자"
 
-      example:
-        reviewid: 0
-        storeid: 0
-        writer: 0
-        title: "최고의 가게입니다."
-        content: "제 이름같은 영재적 사고방식을 가진 사람이 만든 가게인것같습니다. 다좋았어요 그래서 제 점수는요?"
-        review_img: "/images/review/jmt.jpg"
-        score: 4
-        writedate: "20201225"
+    example:
+      reviewid: 0
+      storeid: 0
+      writer: 0
+      title: "최고의 가게입니다."
+      content: "제 이름같은 영재적 사고방식을 가진 사람이 만든 가게인것같습니다. 다좋았어요 그래서 제 점수는요?"
+      review_img: "/images/review/jmt.jpg"
+      score: 4
+      writedate: "20201225"
 
   # 새로운 예약
   new_reservation:
