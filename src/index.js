@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser')
 const http = require('http');
 const session = require('express-session')
 const FileStore = require('session-file-store')(session);
+const dateFormat = require('./lib/dateFormat')
 
 
 const app = express();
@@ -30,6 +31,7 @@ passportConfig();
 app.use(cookieParser())
 
 app.use('/swagger-ui', express.static(__dirname + '/../public/docs'))
+app.use('/images', express.static(__dirname + '/../public/images'))
 app.use('/api', require('./api'));
 
 const httpServer = http.createServer(app);

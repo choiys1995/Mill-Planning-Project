@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('../../lib/multer');
-const { createStore, storeView, storeSearch, storeUpdate, storeDestory } = require('./store.ctrl');
+const { createStore, storeView, storeSearch, storeUpdate, storeDestory, test } = require('./store.ctrl');
 const {checkToAdmin, checkToLogin} = require('../../middleware/loginCheck')
 
 /**
@@ -45,5 +45,7 @@ router.get('/:storeid/review', checkToLogin);
  * 로그인 필요
  */
 router.post('/:storeid/review', checkToLogin, multer.upload.single("review_img"));
+
+router.post ('/test', multer.upload.single('test'), test);
 
 module.exports = router;
