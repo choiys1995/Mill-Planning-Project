@@ -16,7 +16,7 @@ exports.Login = async function(req, res) {
                     email: account.email,
                 },  //토큰에 입력할 값
                 global.secret,  //비밀 키
-                { expiresIn: '60 days' } //토큰 만료 시간
+                { expiresIn: 60 * 60 * 24 * 128 } //토큰 만료 시간
             )
             return res.status(200).json({ token });
         });

@@ -27,17 +27,17 @@ const KakaoStrategyOption = kakaoConfig;
  * 세션관리
  */
 passport.serializeUser(function(user, done) {
-    done(null, user.email);
+    done(null, user);
 });
 
-passport.deserializeUser(function(id, done) {
-    customer.findOne(id)
-    done(null, id)
+passport.deserializeUser(function(user, done) {
+    customer.findOne(user.account.email)
+    done(null, user)
 });
 
 async function localVerify(req, email, password, done) {
     let account;
-    console.log(req.body);
+    let userinfo = null;
     try{
         /**
          * DB에서 아이디 체크
@@ -49,6 +49,11 @@ async function localVerify(req, email, password, done) {
             account = await customer.findOne(email);
         }
         if(!account) return done(null, false);
+
+        userinfo = {
+            account,
+            admin: !!req.body.admin,
+        }
 
         /**
          * 아이디가 일치한다면 DB에서 패스워드 체크
@@ -62,7 +67,7 @@ async function localVerify(req, email, password, done) {
     /**
      * 최종 성공시
      */
-    return done(null, account);
+    return done(null, userinfo);
 }
 
 async function kakaoVerify(accessToken, refreshToken, profile, done) {
