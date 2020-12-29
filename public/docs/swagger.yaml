@@ -7,7 +7,7 @@ info:
     이에 대한 사항을 문서로 남겨놓고자 해당 문서를 작성한다
   version: 1.0.0
   title: Mill-Planning
-  termsOfService: https://github.com/
+  termsOfService: https://github.com/ece5074/Mill-Planning-Project
   contact:
     email: ece5074@gmail.com
   license:
@@ -100,7 +100,7 @@ paths:
           description: "서버에 문제가 생겼음을 알림"
     
     patch:
-      summary: 가게 수정( 관리자 로그인 체크 )
+      summary: 가게 수정( 가게 관리자 로그인 체크 )
       parameters:
       - name: "update_store"
         in: body
@@ -118,7 +118,7 @@ paths:
         '500':
           description: "서버에 문제가 생겼음을 알림"
     delete:
-      summary: "가게 삭제 ( 관리자 로그인 체크 )"
+      summary: "가게 삭제 ( 가게 관리자 로그인 체크 )"
       responses:
         '204':
           description: "해당 가게가 삭제되었음을 알림(전송값 없음)"
@@ -127,17 +127,17 @@ paths:
         '500':
           description: "서버에 문제가 생겼음을 알림"
 
-  #가게 조회(관리자)
+  #가게 조회(가게 관리자)
   /api/ad-store:
     get:
-      summary: "소유한 가게를 조회 ( 관리자 로그인 체크 )"
+      summary: "소유한 가게를 조회 ( 가게 관리자 로그인 체크 )"
       responses:
         '200':
           description: "다음의 값이 배열로 전송"
           schema:
             $ref: "#/definitions/store"
 
-  ##############################유저 또는 관리자 계정관련#############################
+  ##############################유저 또는 가게 관리자 계정관련#############################
 
   #로그인
   /api/auth/login:
@@ -156,6 +156,45 @@ paths:
           description: 유저가 로그인에 실패했음을 알림
         '500':
           description: "서버에 문제가 생겼음을 알림"
+
+  #카카오 oAuth 로그인
+  /api/auth/oauth-login:
+    post:
+      summary: 카카오 계정 로그인(사용자)
+      parameters:
+      - in: body
+        name: kakao_account
+        required: true
+        schema:
+          type: "object"
+          properties: 
+            oAuth_token:
+              type: "string"
+              description: "카카오 계정 토큰"
+      responses:
+        '200':
+          description: "로그인 성공"
+        '406':
+          description: "토큰이 존재하지않음"
+        '500':
+          description: "서버에 문제가 생겼음을 알림"
+
+
+  #카카오 oAuth 회원가입
+  /api/customers/oauth-register:
+    post:
+      summary: 카카오 계정 회원가입(사용자)
+      parameters:
+      - in: body
+        name: kakao_account
+        required: true
+        schema:
+          $ref: "#/definitions/register_oAuth"
+      responses:
+        '201':
+          description: "가입되었음을 확인"
+          schema:
+            $ref: "#/definitions/customers"
 
   #회원가입
   /api/customers/register:
@@ -177,10 +216,10 @@ paths:
         '500':
           description: "서버에 문제가 생겼음을 알림"
     
-  # 관리자 로그인
+  # 가게 관리자 로그인
   /api/auth/ad-login:
     post:
-      summary: 관리자 로그인
+      summary: 가게 관리자 로그인
       parameters:
       - in: body
         name: admin login
@@ -189,16 +228,16 @@ paths:
           $ref: "#/definitions/login_customer"
       responses: 
         '200':
-          description: 관리자가 로그인에 성공했음을 알리고 쿠키(세션)에 저장[필요한 데이터있으면 요청일람]
+          description: 가게 관리자가 로그인에 성공했음을 알리고 쿠키(세션)에 저장[필요한 데이터있으면 요청일람]
         '406':
-          description: 관리자가 로그인에 실패했음을 알림
+          description: 가게 관리자가 로그인에 실패했음을 알림
         '500':
           description: "서버에 문제가 생겼음을 알림"
   
-  #관리자 회원가입
+  #가게 관리자 회원가입
   /api/owner/register:
     post:
-      summary: 회원가입(관리자)
+      summary: 회원가입(가게 관리자)
       parameters:
       - in: body
         name: customer register
@@ -252,7 +291,7 @@ paths:
         '400':
           description: "잘못된 값이 서버에 전송되었음을 의미함"
         '403':
-          description: "로그인이 되어있지 않거나, 해당 가게의 관리자가 아닌 사용자의 접근"
+          description: "로그인이 되어있지 않거나, 해당 가게의 가게 관리자가 아닌 사용자의 접근"
         '500':
           description: "서버에 문제가 생겼음을 알림"
       
@@ -288,26 +327,26 @@ paths:
           description: "서버에 문제가 생겼음을 알림"
       
 
-  #내 가게 예약현황(가게 관리자)
+  #내 가게 예약현황(가게 가게 관리자)
   /api/owners/reserve/{storeid}:
     get:
-      summary: "관리자 가게 예약 현황"
+      summary: "가게 관리자 가게 예약 현황"
       parameters:
       - in: path
         name: storeid
       responses:
         '200':
-          description: "현재 로그인된 관리자의 예약 현황을 불러줌(storeid가 입력된경우 해당 storeid에 대한 예약만)"
+          description: "현재 로그인된 가게 관리자의 예약 현황을 불러줌(storeid가 입력된경우 해당 storeid에 대한 예약만)"
           schema:
             $ref: "#/definitions/reservation"
         '403':
-          description: "로그인이 되어있지 않거나, 해당 가게의 관리자가 아닌 사용자의 접근"
+          description: "로그인이 되어있지 않거나, 해당 가게의 가게 관리자가 아닌 사용자의 접근"
         '500':
           description: "서버에 문제가 생겼음을 알림"
     
-    #예약취소(관리자)
+    #예약취소(가게 관리자)
     delete:
-      summary: "관리자 예약 취소"
+      summary: "가게 관리자 예약 취소"
       parameters:
       - in : path
         name: storeid
@@ -319,7 +358,7 @@ paths:
         '400':
           description: "잘못된 접근을 의미"
         '403':
-          description: "로그인이 되어있지 않거나, 해당 가게의 관리자가 아닌 사용자의 접근"
+          description: "로그인이 되어있지 않거나, 해당 가게의 가게 관리자가 아닌 사용자의 접근"
         '500':
           description: "서버에 문제가 생겼음을 알림"
 
@@ -518,7 +557,26 @@ definitions:
       email: "mybatis@gmail.com"
       password: "007jmt@"
       isOAuth: false
-      oAuth_token: 
+      oAuth_token:
+
+  #카카오 가입 시 필요 데이터
+  register_oAuth:
+    type: "object"
+    properties:
+      oAuth_token:
+        type: "string"
+        description: "카카오계정 인증 토큰"
+      nickname:
+        type: "string"
+        description: "닉네임"
+      tel:
+        type: "string"
+        description: "전화번호"
+    example:
+      oAuth_token: "4Aofd8#kas90$ajfjafiaAFhfj823"
+      nickname: "카카오_가입자"
+      tel: "01012340000"
+
   
   #유저 가입시 필요한 데이터
   register_customer:
@@ -562,6 +620,9 @@ definitions:
         type: "string"
         description: "리뷰 등에서 보여질 이름"
       #카카오톡 로그인관련 oAuth에 대한 token값 데이터모델에 추가
+      oAuth_token:
+        type: "string"
+        description: "카카오 계정으로의 가입이라면 email과 password가 사라지고 여기가 존재함"
 
     example:
       custid: 0
@@ -569,26 +630,27 @@ definitions:
       password: "4G52a9Lj456cv25Aidf59v2zdf"
       tel: "01000000000"
       nickname: "나는나야!"
+      oAuth_token: "있을수도, 없을수도 있습니다."
   
-  #관리자 가입시 입력할 데이터
+  #가게 관리자 가입시 입력할 데이터
   register_owner:
     type: "object"
     properties:
       ownerid:
         type: "integer"
-        description: "가게 관리자를 식별하는 인덱스번호"
+        description: "가게 가게 관리자를 식별하는 인덱스번호"
       email:
         type: "string"
-        description: "가게 관리자의 고유한 이메일 주소 로그인시 사용"
+        description: "가게 가게 관리자의 고유한 이메일 주소 로그인시 사용"
       password:
         type: "string"
-        description: "가게 관리자의 비밀번호"
+        description: "가게 가게 관리자의 비밀번호"
       tel:
         type: "string"
-        description: "가게 관리자의 전화번호"
+        description: "가게 가게 관리자의 전화번호"
       nickname:
         type: "string"
-        description: "가게 관리자의 닉네임"
+        description: "가게 가게 관리자의 닉네임"
     
     example:
       email: "iamowner@gmail.com"
@@ -596,25 +658,25 @@ definitions:
       tel: "01077889940"
       nickname: "난매출1위다"
 
-  #관리자 데이터
+  #가게 관리자 데이터
   owners:
     type: "object"
     properties:
       ownerid:
         type: "integer"
-        description: "가게 관리자를 식별하는 인덱스번호"
+        description: "가게 가게 관리자를 식별하는 인덱스번호"
       email:
         type: "string"
-        description: "가게 관리자의 고유한 이메일 주소 로그인시 사용"
+        description: "가게 가게 관리자의 고유한 이메일 주소 로그인시 사용"
       password:
         type: "string"
-        description: "가게 관리자의 비밀번호"
+        description: "가게 가게 관리자의 비밀번호"
       tel:
         type: "string"
-        description: "가게 관리자의 전화번호"
+        description: "가게 가게 관리자의 전화번호"
       nickname:
         type: "string"
-        description: "가게 관리자의 닉네임"
+        description: "가게 가게 관리자의 닉네임"
     
     example:
       ownerid: 0
