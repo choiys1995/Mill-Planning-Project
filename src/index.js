@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser')
 const http = require('http');
 const session = require('express-session')
+const FileStore = require('session-file-store')(session);
 
 
 const app = express();
@@ -20,7 +21,8 @@ app.use(session({
     cookie: {
         httpOnly: true,
         secure: false
-    }
+    },
+    store: new FileStore(),
 }))
 app.use(passport.initialize());
 app.use(passport.session());
