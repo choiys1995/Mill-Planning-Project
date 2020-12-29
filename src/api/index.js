@@ -1,8 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-router.use('/auth', require('./auth'))
-router.use('/user', require('./user'))
+router.use('/auth', require('./auth'));
+router.use('/ad-store', require('./ad-store'));
+router.use('/customers', require('./customers'));
+router.use('/owners', require('./owners'));
+router.use('/reseve', require('./reserve'));
+router.use('./store', require('./store'));
 
 router.get('/test/:message', function (req, res) {
     const { message } = req.params

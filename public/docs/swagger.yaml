@@ -151,9 +151,15 @@ paths:
           $ref: "#/definitions/login_customer"
       responses: 
         '200':
-          description: 유저가 로그인에 성공했음을 알리고 쿠키(세션)에 저장[필요한 데이터있으면 요청일람]
+          description: 유저가 로그인에 성공했음을 알리고 client에 access_token을 보내고 session에 토큰 저장
+          schema:
+            $ref: "#/definitions/login_success"
+        '400':
+          description: "Method방식(Post전송)이 잘못되었거나 유효하지 않은 데이터를 입력함"
+        '401':
+          description: "로그인 된 사용자가 해당 페이지로 접속하려고함"
         '406':
-          description: 유저가 로그인에 실패했음을 알림
+          description: "유저가 로그인에 실패했음을 알림[검색 결과 계정이 존재하지않음]"
         '500':
           description: "서버에 문제가 생겼음을 알림"
 
@@ -228,9 +234,13 @@ paths:
           $ref: "#/definitions/login_customer"
       responses: 
         '200':
-          description: 가게 관리자가 로그인에 성공했음을 알리고 쿠키(세션)에 저장[필요한 데이터있으면 요청일람]
+          description: 관리자가 로그인에 성공했음을 알리고 client에 access_token을 보내고 session에 토큰 저장
+          schema:
+            $ref: "#/definitions/login_success"
+        '400':
+          description: Method방식(Post전송)이 잘못되었거나 유효하지 않은 데이터를 입력함
         '406':
-          description: 가게 관리자가 로그인에 실패했음을 알림
+          description: 관리자가 로그인에 실패했음을 알림[검색 결과 계정이 존재하지않음]
         '500':
           description: "서버에 문제가 생겼음을 알림"
   
@@ -535,6 +545,16 @@ definitions:
       holyday: 월화수목금
       buisno: 101-81-26409
       store_img: "untitled-01.jpg"
+
+  login_success:
+    type: "object"
+    properties:
+      token:
+        type: "string"
+        description: "세션데이터"
+    
+    example:
+      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im15YmF0aXNAZ21haWwuY29tIiwiaWF0IjoxNjA5MjA4NDM1LCJleHAiOjE2MTQzOTI0MzV9.4FPvOXszmsAKrbbQreKxcbzO38NAv6kYCJbR11khoP8"
 
   #유저 로그인시 필요한 데이터
   login_customer:

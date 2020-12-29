@@ -2,9 +2,11 @@ const connectionPool = require('./index');
 
 /**
  * 데이터베이스 연결
+ * 여기서 코드를 변경할 필요가없음!!
  */
 const connect = async function () {
     try {
+        //데이터베이스 커넥션 풀에 연결을 요청하고 커넥션을 반환함
         const connection =  await connectionPool.getConnection(conn => conn);
         console.log('Success DB Server Connect');
 
@@ -15,28 +17,23 @@ const connect = async function () {
 }
 
 module.exports = {
-    /**
-     * username을 입력받아 해당 username의 user정보를 출력
-     */
-    findOne: async function (username) {
-        /**입력받은 username값이 존재하지않는다면, db를 연결시키지않고 return */
-        if (!username || '') return;
-
+    findAll: async function() {
         const connection = await connect();
-        if(connection.error) return;
+        if(connection.error) return connection.error;
 
-        try {
-            const query = 'SELECT * FROM users where username = ?';
-
-            const [rows] = await connection.query(query, [username]);
-            return rows[0];
-        } catch (error) {
-            /** query 문제가 발생하였다면 error를 반환 */
-            return error;
-        } finally {
-            //쿼리 처리가 끝났다면 무조건 반환해주어야함
-            await connection.release();
+        try{
+            const query = 'select * from store';
+            const data = await connection.query(query, []);
+            return data;
+        }catch(e){
+            return e;
+        }finally {
+            connection.release();
         }
+    },
+    
+    findOne: async function (email) {
+        
     },
 
     /** 
@@ -47,12 +44,12 @@ module.exports = {
         if(!user) return;
 
         const connection = await connect();
-        if(connection.error) return;
+        if(connection.error) return connection.error;
 
         try {
-            const query = 'INSERT INTO USERS(username, password, salt) VALUES (?, ?, ?)';
+            const query = 'insert into customers(email, password, tel, nickname) values (?, ?, ?, ?)';
 
-            const data = await connection.query(query, [user.username, user.password, user.salt]);
+            const data = await connection.query(query, [user.email, user.password, user.tel, user.nickname]);
             return data;
         }catch(error){
             return error;

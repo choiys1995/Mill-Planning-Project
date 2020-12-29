@@ -54,7 +54,7 @@ module.exports = {
         if(!user) return;
 
         const connection = await connect();
-        if(connection.error) return;
+        if(connection.error) return connection.error;
 
         try {
             const query = 'insert into customers(email, password, tel, nickname) values (?, ?, ?, ?)';
