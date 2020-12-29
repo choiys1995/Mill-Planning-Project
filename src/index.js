@@ -1,21 +1,31 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser')
-// const https = require('https');
-const http = require('http')
-// const { privateKey, publicKey } = require('./config/sslconfig');
+const http = require('http');
+const session = require('express-session')
+
 
 const app = express();
 const http_port = 6534
-// const https_port = 6535;
+
+const passport = require('passport');
+const passportConfig = require('./lib/passport')
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(session({
+    resave: true,
+    saveUninitialized: false,
+    secret: "g7m60p0h0m",
+    cookie: {
+        httpOnly: true,
+        secure: false
+    }
+}))
+app.use(passport.initialize());
+app.use(passport.session());
+passportConfig();
 app.use(cookieParser())
-
-// const options = {
-//     key: privateKey,
-//     cert: publicKey
-// }
 
 app.use('/swagger-ui', express.static(__dirname + '/../public/docs'))
 app.use('/api', require('./api'));
@@ -24,8 +34,3 @@ const httpServer = http.createServer(app);
 httpServer.listen(http_port, function() {
     console.log(`http server listening on ${http_port}`);
 })
-
-// const httpsServer = https.createServer(options, app);
-// httpsServer.listen(https_port, function() {
-//     console.log(`HTTPS server listening on ${https_port}`);
-// })

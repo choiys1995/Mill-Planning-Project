@@ -6,11 +6,11 @@
 module.exports = {
     /**개발서버 */
     development: {
-        host: 'localhost',
+        host: '52.79.40.60',
         user: 'root',
-        password: 'root',
-        database: 'test_schema',
-        connectionLimit: 10
+        password: 'vmfhwprxm',
+        database: 'youngjaetest',
+        connectionLimit: 100
     },
     /**테스트용 */
     test: {
