@@ -39,7 +39,7 @@
     window.onload = function() {
       // Begin Swagger UI call region
       const ui = SwaggerUIBundle({
-        url: "http://burnningbread.iptime.org/swagger-ui/swagger.yaml",
+        url: `${window.document.URL}swagger.yaml`,
         dom_id: '#swagger-ui',
         deepLinking: true,
         presets: [

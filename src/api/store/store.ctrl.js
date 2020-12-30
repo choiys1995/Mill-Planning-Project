@@ -18,6 +18,8 @@ module.exports = {
     //가게 검색 메서드
     storeSearch: function(req, res) {
         const { main, detail } = req.query;
+
+        res.json(req.query)
     },
 
     //가게 조회 메서드
