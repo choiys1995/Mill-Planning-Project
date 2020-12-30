@@ -34,6 +34,17 @@ app.use('/swagger-ui', express.static(__dirname + '/../public/docs'))
 app.use('/images', express.static(__dirname + '/../public/images'))
 app.use('/api', require('./api'));
 
+// view 경로 설정
+app.set('views', __dirname + '/views');
+
+// 화면 engine을 ejs로 설정
+app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
+
+app.get('/', (req, res) => {
+    res.render('index.html');
+})
+
 const httpServer = http.createServer(app);
 httpServer.listen(http_port, function() {
     console.log(`http server listening on ${http_port}`);
