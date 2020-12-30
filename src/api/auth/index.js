@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { Login, Logout, Auth } = require('./auth.ctrl');
+const { Login, Logout, Auth, Kakao } = require('./auth.ctrl');
 const {checkToLogin, checkToNotLogin} = require('../../middleware/loginCheck');
+const passport = require('passport');
 
 /**
  * 로그인 인증
@@ -16,7 +17,7 @@ router.post('/login', checkToNotLogin, Login);
 /**
  * oAuth 기반 로그인
  */
-router.post('/oauth-login', checkToNotLogin);
+router.get('/oauth/kakao', checkToNotLogin, Kakao);
 
 /**
  * 로그인 (관리자)

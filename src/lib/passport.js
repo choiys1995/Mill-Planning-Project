@@ -27,12 +27,13 @@ const KakaoStrategyOption = kakaoConfig;
  * 세션관리
  */
 passport.serializeUser(function(user, done) {
+    console.log('serial', user);
     done(null, user);
 });
 
-passport.deserializeUser(function(user, done) {
-    customer.findOne(user.account.email)
-    done(null, user)
+passport.deserializeUser(async function(user, done) {
+    console.log('deserial', user)
+    done(null, user);
 });
 
 async function localVerify(req, email, password, done) {
@@ -72,10 +73,28 @@ async function localVerify(req, email, password, done) {
 
 async function kakaoVerify(accessToken, refreshToken, profile, done) {
     //사용자 정보는 profile에 있음
+    console.log('verify', profile);
+    let account = null;
+    let userinfo = null;
 
+    try{
+        account = await customer.findKakao(profile);
+        if(!account) {
+            await customer.insertKakao(profile)
+            account = await customer.findKakao(profile);
+        }
+
+        userinfo = {
+            account,
+        }
+    }catch(e){
+        done(e);
+    }
+    
+    return done(null, userinfo);
 }
 
 module.exports = () => {
     passport.use('local', new LocalStrategy(LocalStrategyOption, localVerify));
-    passport.use('oauth', new KakaoStrategy(KakaoStrategyOption, kakaoVerify))
+    passport.use('kakao', new KakaoStrategy(KakaoStrategyOption, kakaoVerify))
 }

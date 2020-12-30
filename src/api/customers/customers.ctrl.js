@@ -28,4 +28,8 @@ module.exports = {
 
         return res.status(201).json(customer)
     },
+
+    registerForKakao: async function(req, res) {
+        
+    }
 }

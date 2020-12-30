@@ -164,19 +164,15 @@ paths:
           description: "서버에 문제가 생겼음을 알림"
 
   #카카오 oAuth 로그인
-  /api/auth/oauth-login:
-    post:
+  /api/auth/oauth/kakao:
+    get:
       summary: 카카오 계정 로그인(사용자)
       parameters:
-      - in: body
-        name: kakao_account
-        required: true
-        schema:
-          type: "object"
-          properties: 
-            oAuth_token:
-              type: "string"
-              description: "카카오 계정 토큰"
+      - name: "code"
+        in: "query"
+        description: "access_code를 요청"
+        items:
+          type: "string"
       responses:
         '200':
           description: "로그인 성공"

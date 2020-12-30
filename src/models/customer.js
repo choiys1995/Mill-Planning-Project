@@ -46,12 +46,30 @@ module.exports = {
         }
     },
 
+    findKakao: async function(profile) {
+        if(!profile || '') return ;
+        const connection = await connect();
+        if(connection.error) return connection.error;
+
+        try{
+            const query = 'select * from customers where token = ?';
+
+            const [rows] = await connection.query(query, [profile.id]);
+
+            return rows[0];
+        }catch(e){
+            return e;
+        }finally {
+            await connection.release();
+        }
+    },
+
     /** 
      * 유저 데이터를 넘겨서 insert해줌 
      * 입력하지않아도되는 정보는 어떻게 넘겨줄것인지 (그냥 null로 넣을것인지..)
      * */
-    insert: async function ( user ) {
-        if(!user) return;
+    insert: async function ( customer ) {
+        if(!customer) return;
 
         const connection = await connect();
         if(connection.error) return connection.error;
@@ -59,9 +77,27 @@ module.exports = {
         try {
             const query = 'insert into customers(email, password, tel, nickname) values (?, ?, ?, ?)';
 
-            const data = await connection.query(query, [user.email, user.password, user.tel, user.nickname]);
+            const data = await connection.query(query, [customer.email, customer.password, customer.tel, customer.nickname]);
             return data;
         }catch(error){
+            return error;
+        }finally {
+            connection.release();
+        }
+    },
+
+    insertKakao: async function ( profile ) {
+        if(!profile) return;
+
+        const connection = await connect();
+        if(connection.error) return connection.error;
+
+        try {
+            const query = 'insert into customers(token, nickname) values (?,?)';
+
+            const data = await connection.query(query, [profile.id, profile.username]);
+            return data;
+        }catch(error) {
             return error;
         }finally {
             connection.release();

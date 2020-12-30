@@ -23,14 +23,25 @@ exports.Login = async function(req, res) {
     })(req, res)
 }
 
-exports.oAuth_Login = async function(req, res) {
-    passport.authenticate('local', (err, account) => {
-
-    })
-}
-
 exports.Auth = async function(req, res){
     res.json();
+}
+
+exports.Kakao = async function(req, res) {
+    passport.authenticate('kakao', (err, account) => {
+        if(err) return res.status(500).json(err);
+
+        req.login(account, (error) => {
+            if(error) return res.status(500).json(error);
+            const token = jwt.sign( {
+                oauth_token: account.oauth_token,
+            },
+            global.secret,
+            { expiresIn: 60 * 60 * 24 * 128 }
+            )
+            return res.status(200).json({token});
+        })
+    })(req,res);
 }
 
 exports.Logout = async function(req, res) {
