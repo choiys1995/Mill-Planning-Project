@@ -1,0 +1,26 @@
+
+test:
+  name: "lucky letter"
+  in: path
+  required: true
+  description: "테스트용 행운의 편지"
+
+search_store_main:
+  name: "main"
+  in: query
+  description: "메인 검색"
+  items:
+    type: "string"
+  
+search_store_detail:
+  name: "details"
+  in: query
+  description: "상세 검색"
+  items:
+    type: "string"
+
+index_store:
+  name: "storeid"
+  in: path
+  description: "해당 storeid를 가진 store를 조회"
+  

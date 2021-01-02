@@ -1,0 +1,474 @@
+
+test:
+  type: "object"
+  properties:
+    message:
+      type: "string"
+      description: "ㅇㅅㅇ"
+  example:
+    message: "이 메시지는 클라이언트로부터 시작되어..."
+
+error:
+  required:
+    - code
+    - message
+  properties:
+    code:
+      type: integer
+      format: int32
+    message:
+      type: string
+
+#가게 데이터
+store:
+  type: "object"
+  properties:
+    storeid:
+      type: "integer"
+      description: "가게에 고유로 부여된 indexd번호"
+    ownerid:
+      type: "integer"
+      description: "해당 가게 소유주의 index번호"
+    ownername:
+      type: "string"
+      description: "해당 가게 소유주의 이름"
+    name:
+      type: "string"
+      description: "가게 명"
+    address:
+      type: "string"
+      description: "가게 주소"
+    tel:
+      type: "string"
+      description: "가게 전화번호"
+    desc:
+      type: "string"
+      description: "가게 설명"
+    prepay:
+      type: "integer"
+      description: "선수금"
+    breaktime:
+      type: "string"
+      description: "휴식 시간"
+    holyday:
+      type: "string"
+      description: "휴일"
+    buisno:
+      type: "string"
+      description: "사업자 등록번호"
+    store_img:
+      type: "string"
+      description: "가게 이미지"
+  example:
+    storeid: 0
+    ownerid: 0
+    ownername: '누구였드라'
+    name: "맥도날드"
+    address: "경기도 성남시 분당구 삼평동 판교역로 231"
+    tel: "07072090564"
+    desc: "버거, 감자튀김, 셰이크로 유명한 오랜 전통의 클래식 패스트푸드 체인점입니다."
+    prepay: 1000
+    breaktime: 14시
+    holyday: 월화수목금
+    buisno: 101-81-26409
+    store_img: "/images/store/mackodonarudo.jpg"
+
+# 다수의 가게 조회
+stores:
+  type: "array"
+  items:
+    $ref: "schemas.yaml#/store"
+
+login_success:
+  type: "object"
+  properties:
+    token:
+      type: "string"
+      description: "세션데이터"
+  
+  example:
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im15YmF0aXNAZ21haWwuY29tIiwiaWF0IjoxNjA5MjA4NDM1LCJleHAiOjE2MTQzOTI0MzV9.4FPvOXszmsAKrbbQreKxcbzO38NAv6kYCJbR11khoP8"
+
+#유저 로그인시 필요한 데이터
+login_customer:
+  type: "object"
+  properties:
+    email:
+      type: "string"
+      description: "이메일 주소"
+    password:
+      type: "string"
+      description: "비밀번호"
+    isOAuth:
+      type: "boolean"
+      description: "oAuth 로그인인지 아닌지를 보냄(default false)"
+    oAuth_token:
+      type: "string"
+      description: "isOAuth가 true일때 토큰값이 들어있어야함(중요)"
+  example:
+    email: "mybatis@gmail.com"
+    password: "007jmt@"
+    isOAuth: false
+    oAuth_token:
+#카카오 가입 시 필요 데이터
+register_oAuth:
+  type: "object"
+  properties:
+    oAuth_token:
+      type: "string"
+      description: "카카오계정 인증 토큰"
+    nickname:
+      type: "string"
+      description: "닉네임"
+    tel:
+      type: "string"
+      description: "전화번호"
+  example:
+    oAuth_token: "4Aofd8#kas90$ajfjafiaAFhfj823"
+    nickname: "카카오_가입자"
+    tel: "01012340000"
+
+#유저 가입시 필요한 데이터
+register_customer:
+  type: "object"
+  properties:
+    email:
+      type: "string"
+      description: "이메일 주소"
+    password:
+      type: "string"
+      description: "비밀번호"
+    tel:
+      type: "string"
+      description: "전화번호"
+    nickname:
+      type: "string"
+      description: "리뷰 등에서 보여질 이름"
+  example:
+    email: "test@gmail.com"
+    password: "4G52a9Lj456cv25Aidf59v2zdf"
+    tel: "01000000000"
+    nickname: "나는나야!"
+#유저 데이터
+customers:
+  type: "object"
+  properties:
+    custid:
+      type: "integer"
+      description: "유저 고유의 인덱스 번호"
+    email:
+      type: "string"
+      description: "이메일주소"
+    password:
+      type: "string"
+      description: "비밀번호"
+    tel:
+      type: "string"
+      description: "전화번호"
+    nickname:
+      type: "string"
+      description: "리뷰 등에서 보여질 이름"
+    #카카오톡 로그인관련 oAuth에 대한 token값 데이터모델에 추가
+    oAuth_token:
+      type: "string"
+      description: "카카오 계정으로의 가입이라면 email과 password가 사라지고 여기가 존재함"
+  example:
+    custid: 0
+    email: "test@gmail.com"
+    password: "4G52a9Lj456cv25Aidf59v2zdf"
+    tel: "01000000000"
+    nickname: "나는나야!"
+    oAuth_token: "있을수도, 없을수도 있습니다."
+
+#가게 관리자 가입시 입력할 데이터
+register_owner:
+  type: "object"
+  properties:
+    ownerid:
+      type: "integer"
+      description: "가게 가게 관리자를 식별하는 인덱스번호"
+    email:
+      type: "string"
+      description: "가게 가게 관리자의 고유한 이메일 주소 로그인시 사용"
+    password:
+      type: "string"
+      description: "가게 가게 관리자의 비밀번호"
+    tel:
+      type: "string"
+      description: "가게 가게 관리자의 전화번호"
+    nickname:
+      type: "string"
+      description: "가게 가게 관리자의 닉네임"
+  
+  example:
+    email: "iamowner@gmail.com"
+    password: "4A65cC3D96zZ354F69Q"
+    tel: "01077889940"
+    nickname: "난매출1위다"
+#가게 관리자 데이터
+owners:
+  type: "object"
+  properties:
+    ownerid:
+      type: "integer"
+      description: "가게 가게 관리자를 식별하는 인덱스번호"
+    email:
+      type: "string"
+      description: "가게 가게 관리자의 고유한 이메일 주소 로그인시 사용"
+    password:
+      type: "string"
+      description: "가게 가게 관리자의 비밀번호"
+    tel:
+      type: "string"
+      description: "가게 가게 관리자의 전화번호"
+    nickname:
+      type: "string"
+      description: "가게 가게 관리자의 닉네임"
+  
+  example:
+    ownerid: 0
+    email: "iamowner@gmail.com"
+    password: "4A65cC3D96zZ354F69Q"
+    tel: "01077889940"
+    nickname: "난매출1위다"
+#가게 메뉴 데이터
+menus:
+  type: "object"
+  properties:
+    menuid:
+      type: "integer"
+      description: "메뉴를 식별하기위한 고유인덱스"
+    storeid:
+      type: "integer"
+      description: "가게 고유 식별자번호(이 메뉴는 해당 가게에 종속됨을 의미함)"
+    name:
+      type: "string"
+      description: "메뉴명"
+    price:
+      type: "integer"
+      description: "해당 메뉴의 가격"
+    menu_img:
+      type: "string"
+      description: "메뉴의 이미지"
+    
+  example:
+    menuid: 0
+    storeid: 0
+    name: "상하이 스파이스 췩힌버거"
+    price: 6500000
+    menu_img: "/images/menu/sanghello.jpg"
+
+#가게 리뷰 생성
+new_review:
+  type: "object"
+  properties:
+    title:
+      type: "string"
+      description: "리뷰 제목"
+    content:
+      type: "string"
+      description: "리뷰 내용"
+    review_img:
+      type: "string"
+      description: "리뷰 이미지"
+    score:
+      type: "integer"
+      description: "별점"
+    writedate:
+      type: "date"
+      description: "작성일자"
+    example:
+      title: "최고의 가게입니다."
+      content: "제 이름같은 영재적 사고방식을 가진 사람이 만든 가게인것같습니다. 다좋았어요 그래서 제 점수는요?"
+      review_img: "untitled-01yo.jpg"
+      score: 4
+      writedate: "20201225"
+
+#가게 리뷰 데이터
+review:
+  type: "object"
+  properties:
+    reviewid:
+      type: "integer"
+      description: "리뷰 식별자 인덱스"
+    storeid:
+      type: "integer"
+      description: "가게의 식별자 인덱스(이 리뷰는 해당 가게에 종속됨)"
+    custid:
+      type: "integer"
+      description: "작성자 인덱스"
+    writer:
+      type: "string"
+      description: "작성자 명"
+    title:
+      type: "string"
+      description: "리뷰 제목"
+    content:
+      type: "string"
+      description: "리뷰 내용"
+    review_img:
+      type: "string"
+      description: "리뷰 이미지"
+    score:
+      type: "integer"
+      description: "별점"
+    writedate:
+      type: "date"
+      description: "작성일자"
+  example:
+    reviewid: 0
+    storeid: 0
+    custid: 0
+    writer: "최영재"
+    title: "최고의 가게입니다."
+    content: "제 이름같은 영재적 사고방식을 가진 사람이 만든 가게인것같습니다. 다좋았어요 그래서 제 점수는요?"
+    review_img: "/images/review/jmt.jpg"
+    score: 4
+    writedate: "20201225"
+
+# 다수의 가게 조회
+reviews:
+  type: "array"
+  items:
+    $ref: "schemas.yaml#/review"
+  
+# 새로운 예약
+new_reservation:
+  type: "object"
+  properties:
+    custid:
+      type: "integer"
+      description: "작성자 인덱스"
+    reservedate:
+      type: "date"
+      description: "예약 일자"
+    prepay:
+      type: "integer"
+      description: "선수금"
+    orderer:
+      type: "string"
+      description: "주문자 명"
+    peoples:
+      type: "integer"
+      description: "인원수"
+    reservetime:
+      type: "integer"
+      description: "예약 시간"
+  example:
+    custid: 0
+    reservedate: "20201225"
+    prepay: 650000
+    orderer: "최영재"
+    peoples: "1"
+    reservetime: 18
+    
+# 예약
+reservation:
+  type: "object"
+  properties:
+    reserveid:
+      type: "integer"
+      description: "예약 고유 식별번호"
+    storeid:
+      type: "integer"
+      description: "가게 고유 식별번호"
+    reservedate:
+      type: "date"
+      description: "예약 일자"
+    prepay:
+      type: "integer"
+      description: "선수금"
+    orderer:
+      type: "string"
+      description: "주문자"
+    peoples:
+      type: "integer"
+      description: "인원수"
+    reservetime:
+      type: "integer"
+      description: "예약 시간"
+    cancel:
+      type: "char"
+      description: "예약을 취소했는지 여부"
+  example:
+    reserveid: 0
+    storeid: 0
+    reservedate: "20201225"
+    prepay: 650000
+    orderer: "최영재"
+    peoples: 1
+    reservetime: 18
+    cancel: "N"
+# 일정데이터
+dateplan:
+  type: "object"
+  properties:
+    busi_index:
+      type: "integer"
+      description: "가게의 고유 식별번호"
+    res_date:
+      type: "date"
+      description: "날짜"
+    res_time:
+      type: "time"
+      description: "시간"
+    res_YN:
+      type: "char"
+      description: "예약여부"
+  
+  example:
+    busi_index: 0
+    res_date: "20201225"
+    res_time: "18:00:00"
+    res_YN: "Y"
+# 영수증
+receipt:
+  type: "object"
+  properties:
+    paycode:
+      type: "string"
+      description: "결제 고유 식별 번호(iamport)"
+    ordercode:
+      type: "string"
+      description: "결제 고유 식별 번호(매장영수증)"
+    reservedate:
+      type: "date"
+      description: "예약 일자"
+    prepay:
+      type: "integer"
+      description: "선수금"
+    orderer:
+      type: "string"
+      description: "주문자"
+    peoples:
+      type: "integer"
+      description: "인원수"
+    reservetime:
+      type: "integer"
+      description: "예약 시간"
+  
+  example:
+    paycode: "iamport-0000000"
+    ordercode: "맥도날드-0"
+    reservedate: "20201225"
+    prepay: 650000
+    orderer: "최영재"
+    peoples: 1
+    reservetime: 18
+#결제 데이터
+payment:
+  type: "object"
+  properties:
+    paycode:
+      type: "string"
+      description: "결제 고유 식별 번호(iamport)"
+    ordercode:
+      type: "string"
+      description: "결제 고유 식별 번호(매장영수증)"
+    reserveid:
+      type: "int"
+      description: "예약 코드"
+  example:
+    paycode: "iamport-0000000"
+    ordercode: "맥도날드-0"
+    reserveid: 0

@@ -1,0 +1,9 @@
+description: "400: 비정상적인 요청<br> 401: 로그인식별불가<br>403: 권한식별불가<br> 406: 로그인 실패<br> 500: 서버에 문제가 생김"
+content:
+  application/json:
+    schema:
+      $ref: "../schemas.yaml#/error"
+
+    example:
+      code: 401
+      message: "로그인 되어있지 않은 사용자입니다."

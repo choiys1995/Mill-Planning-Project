@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { Login, Logout, Auth, Kakao } = require('./auth.ctrl');
 const {checkToLogin, checkToNotLogin} = require('../../middleware/loginCheck');
-const passport = require('passport');
 
 /**
  * 로그인 인증

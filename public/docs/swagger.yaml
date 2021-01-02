@@ -1,11 +1,11 @@
 # 이 라인은 주석입니다.
 # 문서작성자 : 최영재
-swagger: "2.0"
+openapi: "3.0.0"
 info:
   description: |
     프론트엔드, 백엔드로 작업을 하다보면 데이터가 송, 수신되는데 이 과정에서 서로가 필요한 데이터를 정확히 모르기 때문에
     이에 대한 사항을 문서로 남겨놓고자 해당 문서를 작성한다
-  version: 1.0.0
+  version: 1.1.0
   title: Mill-Planning
   termsOfService: https://github.com/ece5074/Mill-Planning-Project
   contact:
@@ -27,13 +27,13 @@ paths:
     get:
       summary: 테스트
       parameters:
-        - name: message
-          description: 테스트용 행운의편지
-          in: path
+        - $ref: 'parameters.yaml#/test'
       responses:
         '200':
-          schema:
-            $ref: "#/definitions/test"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/test"
         '418':
           description: "나는 커피를 끓이는것을 원치않는다 아이스아메리카노를 가져와라"
 
@@ -41,91 +41,72 @@ paths:
   #가게 생성
   /api/store/:
     post:
-      summary: "가게 생성"
-      parameters:
-      - name: "new_store"
-        in: body
-        schema:
-          $ref: "#/definitions/new_store"
+      summary: "가게 생성(관리자)"
+      requestBody:
+        $ref: 'requestBody/store.yaml'
       
       responses:
         '201':
           description: "해당 사용자의 가게가 생성되었음을 알림"
-          schema:
-            $ref: "#/definitions/store"
-        '400':
-          description: "비 정상적인 경로로 접근한 사용자"
-        '500':
-          description: "서버에 문제가 생겼음을 알림"
+        default:
+          $ref: 'responses/error.yaml'
 
   #가게 검색
   /api/store/search:
     get:
       summary: "가게 검색"
       parameters:
-      - name: "main"
-        in: "query"
-        description: "메인 검색에 들어온 내용"
-        items:
-          type: "string"
-      - name: "details"
-        in: "query"
-        description: "상세 검색"
-        items:
-          type: "string"
+      - $ref: 'parameters.yaml#/search_store_main'
+      - $ref: 'parameters.yaml#/search_store_detail'
           
       responses:
         '200':
           description: 다음의 값이 배열로 전송
-          schema:
-            $ref: "#/definitions/store"
-        '500':
-          description: "서버에 문제가 생겼음을 알림"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/stores"
+        default:
+          $ref: 'responses/error.yaml'
+
   
   #가게 조회(페이지 정보 요청)
   /api/store/{storeid}:
     get:
       summary: "가게 조회(가게 페이지에서 정보요청)"
       parameters:
-        - name: "storeid"
-          in: path
-          description: "storeid를 받으면 해당 storeid를 가지고있는 가게조회"
-          storeid: "storeid"
+      - $ref: 'parameters.yaml#/index_store'
       responses:
         '200':
           description: "다음의 값이 전송, 입력받은값이 없는경우엔 배열로 목록을 전송"
-          schema:
-            $ref: "#/definitions/store"
-        '500':
-          description: "서버에 문제가 생겼음을 알림"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/stores"
+        default:
+          $ref: 'responses/error.yaml'
     
     patch:
       summary: 가게 수정( 가게 관리자 로그인 체크 )
       parameters:
-      - name: "update_store"
-        in: body
-        description: "수정할 데이터를 입력하고, 모든데이터를 전송"
-        schema:
-          $ref: "#/definitions/new_store"
+      - $ref: 'parameters.yaml#/index_store'
+      requestBody:
+        $ref: 'requestBody/store.yaml'
         
       responses:
-        '200':
-          description: "수정된 가게의 정보를 전송"
-          schema:
-            $ref: "#/definitions/store"
-        '400':
-          description: "비 정상적인 경로로 접근한 사용자"
-        '500':
-          description: "서버에 문제가 생겼음을 알림"
+        '204':
+          description: "가게 정보가 수정되었음을 알림"
+        default:
+          $ref: 'responses/error.yaml'
     delete:
       summary: "가게 삭제 ( 가게 관리자 로그인 체크 )"
+      parameters:
+      - $ref: 'parameters.yaml#/index_store'
       responses:
         '204':
           description: "해당 가게가 삭제되었음을 알림(전송값 없음)"
-        '400':
-          description: "비 정상적인 경로로 접근한 사용자"
-        '500':
-          description: "서버에 문제가 생겼음을 알림"
+        default:
+          $ref: 'responses/error.yaml'
 
   #가게 조회(가게 관리자)
   /api/ad-store:
@@ -134,69 +115,44 @@ paths:
       responses:
         '200':
           description: "다음의 값이 배열로 전송"
-          schema:
-            $ref: "#/definitions/store"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/stores"
+        default:
+          $ref: 'responses/error.yaml'
 
   ##############################유저 또는 가게 관리자 계정관련#############################
 
   #로그인
   /api/auth/login:
     post:
-      summary: 로그인
-      parameters:
-      - in: body
-        name: customer login
-        required: true
-        schema: 
-          $ref: "#/definitions/login_customer"
+      summary: 로그인(사용자)
+      requestBody:
+        $ref: 'requestBody/localLogin.yaml'
       responses: 
         '200':
-          description: 유저가 로그인에 성공했음을 알리고 client에 access_token을 보내고 session에 토큰 저장
-          schema:
-            $ref: "#/definitions/login_success"
-        '400':
-          description: "Method방식(Post전송)이 잘못되었거나 유효하지 않은 데이터를 입력함"
-        '401':
-          description: "로그인 된 사용자가 해당 페이지로 접속하려고함"
-        '406':
-          description: "유저가 로그인에 실패했음을 알림[검색 결과 계정이 존재하지않음]"
-        '500':
-          description: "서버에 문제가 생겼음을 알림"
+          description: 로그인에 성공했음을 알리고 토큰을 전송
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/login_success"
+        default:
+          $ref: 'responses/error.yaml'
 
   #카카오 oAuth 로그인
   /api/auth/oauth/kakao:
     get:
       summary: 카카오 계정 로그인(사용자)
-      parameters:
-      - name: "code"
-        in: "query"
-        description: "access_code를 요청"
-        items:
-          type: "string"
       responses:
         '200':
-          description: "로그인 성공"
-        '406':
-          description: "토큰이 존재하지않음"
-        '500':
-          description: "서버에 문제가 생겼음을 알림"
-
-
-  #카카오 oAuth 회원가입
-  /api/customers/oauth-register:
-    post:
-      summary: 카카오 계정 회원가입(사용자)
-      parameters:
-      - in: body
-        name: kakao_account
-        required: true
-        schema:
-          $ref: "#/definitions/register_oAuth"
-      responses:
-        '201':
-          description: "가입되었음을 확인"
-          schema:
-            $ref: "#/definitions/customers"
+          description: 이미 가입되었다면 로그인, 가입되지않았다면 회원가입되었음을 알림
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/login_success"
+        default:
+          $ref: 'responses/error.yaml'
 
   #회원가입
   /api/customers/register:
@@ -207,38 +163,28 @@ paths:
         name: customer register
         required: true
         schema:
-          $ref: "#/definitions/register_customer"
+          $ref: "schemas.yaml#/register_customer"
       responses: 
         '201':
-          description: DB에 저장까지 완료되었음을 알리고 클라이언트에 데이터를 보냄
-          schema:
-            $ref: "#/definitions/customers"
-        '400':
-          description: 기입이 되어있지 않거나, 잘못된 값이 서버에 전송되었음을 의미
-        '500':
-          description: "서버에 문제가 생겼음을 알림"
+          description: "회원가입이 성공적으로 진행되었음을 알림"
+        default:
+          $ref: 'responses/error.yaml'
     
   # 가게 관리자 로그인
   /api/auth/ad-login:
     post:
       summary: 가게 관리자 로그인
-      parameters:
-      - in: body
-        name: admin login
-        required: true
-        schema: 
-          $ref: "#/definitions/login_customer"
+      requestBody:
+        $ref: 'requestBody/localLogin.yaml'
       responses: 
         '200':
           description: 관리자가 로그인에 성공했음을 알리고 client에 access_token을 보내고 session에 토큰 저장
-          schema:
-            $ref: "#/definitions/login_success"
-        '400':
-          description: Method방식(Post전송)이 잘못되었거나 유효하지 않은 데이터를 입력함
-        '406':
-          description: 관리자가 로그인에 실패했음을 알림[검색 결과 계정이 존재하지않음]
-        '500':
-          description: "서버에 문제가 생겼음을 알림"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/login_success"
+        default:
+          $ref: 'responses/error.yaml'
   
   #가게 관리자 회원가입
   /api/owner/register:
@@ -249,16 +195,12 @@ paths:
         name: customer register
         required: true
         schema:
-          $ref: "#/definitions/register_owner"
+          $ref: "schemas.yaml#/register_owner"
       responses: 
         '201':
-          description: "DB에 저장까지 완료되었음을 알리고 클라이언트에 데이터를 보냄"
-          schema:
-            $ref: "#/definitions/owners"
-        '400':
-          description: "잘못된 값이 서버에 전송되었음을 의미함"
-        '500':
-          description: "서버에 문제가 생겼음을 알림"
+          description: "관리자의 회원가입이 성공적으로 진행되었음을 알림"
+        default:
+          $ref: 'responses/error.yaml'
 
 
   
@@ -269,20 +211,22 @@ paths:
     post:
       summary: "예약 하기"
       parameters:
-      - in : path
-        name: "storeid"
+      - $ref: "parameters.yaml#/index_store"
         required: true
-        type: "integer"
       - in : body
         name: reserve_data
         required: true
         schema:
-          $ref: "#/definitions/new_reservation"
+          $ref: "schemas.yaml#/new_reservation"
       responses:
         '201':
           description: "예약에 성공헀고 영수증데이터를 불러옴"
-          schema:
-            $ref: "#/definitions/receipt"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/receipt"
+        default:
+          $ref: 'responses/error.yaml'
     # 예약취소(사용자)
     delete:
       summary: "예약 취소"
@@ -294,12 +238,8 @@ paths:
       responses:
         '204':
           description: "예약 취소에 성공했음"
-        '400':
-          description: "잘못된 값이 서버에 전송되었음을 의미함"
-        '403':
-          description: "로그인이 되어있지 않거나, 해당 가게의 가게 관리자가 아닌 사용자의 접근"
-        '500':
-          description: "서버에 문제가 생겼음을 알림"
+        default:
+          $ref: 'responses/error.yaml'
       
 
   #나의 예약현황(유저)
@@ -310,12 +250,12 @@ paths:
       responses:
         '200':
           dsecription: "현재 로그인된 사용자의 예약 현황을 불러옴"
-          schema:
-            $ref: "#/definitions/reservation"
-        '403':
-          description: "로그인이 되어있지 않은 사용자의 접근"
-        '500':
-          description: "서버에 문제가 생겼음을 알림"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/reservation"
+        default:
+          $ref: 'responses/error.yaml'
   
   #나의 이전 예약현황(유저)
   /api/customers/reserve/old:
@@ -325,12 +265,12 @@ paths:
       responses:
         '200':
           description: "현재 로그인된 사용자의 현재 날짜 이전부터 3개월전의 예약 현황을 불러옴"
-          schema:
-            $ref: "#/definitions/reservation"
-        '403':
-          description: "로그인이 되어있지 않은 사용자의 접근"
-        '500':
-          description: "서버에 문제가 생겼음을 알림"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/reservation"
+        default:
+          $ref: 'responses/error.yaml'
       
 
   #내 가게 예약현황(가게 가게 관리자)
@@ -343,12 +283,12 @@ paths:
       responses:
         '200':
           description: "현재 로그인된 가게 관리자의 예약 현황을 불러줌(storeid가 입력된경우 해당 storeid에 대한 예약만)"
-          schema:
-            $ref: "#/definitions/reservation"
-        '403':
-          description: "로그인이 되어있지 않거나, 해당 가게의 가게 관리자가 아닌 사용자의 접근"
-        '500':
-          description: "서버에 문제가 생겼음을 알림"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/reservation"
+        default:
+          $ref: 'responses/error.yaml'
     
     #예약취소(가게 관리자)
     delete:
@@ -357,16 +297,10 @@ paths:
       - in : path
         name: storeid
       responses:
-        '200':
-          description: "예약취소된 예약과 해당 주문번호를 보내줌"
-          schema: 
-            $ref: "#/definitions/payment"
-        '400':
-          description: "잘못된 접근을 의미"
-        '403':
-          description: "로그인이 되어있지 않거나, 해당 가게의 가게 관리자가 아닌 사용자의 접근"
-        '500':
-          description: "서버에 문제가 생겼음을 알림"
+        '204':
+          description: "예약취소 되었음을 알리고 페이지 새로고침"
+        default:
+          $ref: 'responses/error.yaml'
 
   #가게 예약 현황
   /api/reserve/{storeid}:
@@ -380,7 +314,7 @@ paths:
         '200':
           description: "path에 입력받은 데이터로 해당 가게의 예약 현황을 배열로 전달"
           schema:
-            #$ref: "#/definitions/reservation"
+            #$ref: "schemas.yaml#/reservation"
             type: "object"
             properties:
               reservedate:
@@ -390,8 +324,8 @@ paths:
             example:
               reservedate: "20201225"
               reservetime: "18:00:00"
-        '500':
-          description: "서버에 문제가 생겼음을 알림"
+        default:
+          $ref: 'responses/error.yaml'
 
 
     #리뷰 작성
@@ -405,535 +339,21 @@ paths:
       responses:
         '200': 
           description: "리뷰 조회내역을 전송"
-          schema:
-            $ref: "#/definitions/reviews"
-        '500':
-          description: "서버에 문제가 생겼음을 알림"
+          content:
+            application/json:
+              schema:
+                $ref: "schemas.yaml#/reviews"
+        default:
+          $ref: 'responses/error.yaml'
 
     post:
       summary: "리뷰 작성"
       parameters:
-        - in: path
-          name: "storeid"
-          required: true
-        - in: body
-          name: "content"
-          schema:
-            $ref: "#/definitions/new_review"
+        - $ref: "parameters.yaml#/index_store"
+      requestBody:
+        $ref: 'requestBody/review.yaml'
       responses:
         '201':
           description: "리뷰가 성공적으로 생성됨"
-          schema:
-            $ref: "#/definitions/reviews"
-        '400':
-          description: "잘못된 요청"
-        '403':
-          description: "접근이 허용되지않은 사용자"
-        '500':
-          description: "서버에 문제가 생겼음을 알림"
-
-
-
-
-
-
-###############################모델링#################################################
-# Request와 Response에 사용할 Model을 정의
-definitions:
-  #테스트 데이터:
-  test:
-    type: "object"
-    properties:
-      message: "type"
-      description: "테스트 메시지"
-    example:
-      message: "이 메시지는 클라이언트로부터 시작되어..."
-
-
-  #가게 데이터
-  store:
-    type: "object"
-    properties:
-      storeid:
-        type: "integer"
-        description: "가게에 고유로 부여된 indexd번호"
-      ownerid:
-        type: "integer"
-        description: "해당 가게 소유주의 index번호"
-      name:
-        type: "string"
-        description: "가게 명"
-      address:
-        type: "string"
-        description: "가게 주소"
-      tel:
-        type: "string"
-        description: "가게 전화번호"
-      desc:
-        type: "string"
-        description: "가게 설명"
-      prepay:
-        type: "integer"
-        description: "선수금"
-      breaktime:
-        type: "string"
-        description: "휴식 시간"
-      holyday:
-        type: "string"
-        description: "휴일"
-      buisno:
-        type: "string"
-        description: "사업자 등록번호"
-      store_img:
-        type: "string"
-        description: "가게 이미지"
-    example:
-      storeid: 0
-      ownerid: 0
-      name: "맥도날드"
-      address: "경기도 성남시 분당구 삼평동 판교역로 231"
-      tel: "07072090564"
-      desc: "버거, 감자튀김, 셰이크로 유명한 오랜 전통의 클래식 패스트푸드 체인점입니다."
-      prepay: 1000
-      breaktime: 14시
-      holyday: 월화수목금
-      buisno: 101-81-26409
-      store_img: "/images/store/mackodonarudo.jpg"
-  
-  # 가게 생성데이터
-  new_store:
-    type: "object"
-    properties:
-      name:
-        type: "string"
-        description: "가게 명"
-      address:
-        type: "string"
-        description: "가게 주소"
-      tel:
-        type: "string"
-        description: "가게 전화번호"
-      desc:
-        type: "string"
-        description: "가게 설명"
-      prepay:
-        type: "integer"
-        description: "선수금"
-      breaktime:
-        type: "string"
-        description: "휴식 시간"
-      holyday:
-        type: "string"
-        description: "휴일"
-      buisno:
-        type: "string"
-        description: "사업자 등록번호"
-      store_img:
-        type: "string"
-        description: "가게 이미지"
-    example:
-      name: "맥도날드"
-      address: "경기도 성남시 분당구 삼평동 판교역로 231"
-      tel: "07072090564"
-      desc: "버거, 감자튀김, 셰이크로 유명한 오랜 전통의 클래식 패스트푸드 체인점입니다."
-      prepay: 1000
-      breaktime: 14
-      holyday: 월화수목금
-      buisno: 101-81-26409
-      store_img: "untitled-01.jpg"
-
-  login_success:
-    type: "object"
-    properties:
-      token:
-        type: "string"
-        description: "세션데이터"
-    
-    example:
-      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im15YmF0aXNAZ21haWwuY29tIiwiaWF0IjoxNjA5MjA4NDM1LCJleHAiOjE2MTQzOTI0MzV9.4FPvOXszmsAKrbbQreKxcbzO38NAv6kYCJbR11khoP8"
-
-  #유저 로그인시 필요한 데이터
-  login_customer:
-    type: "object"
-    properties:
-      email:
-        type: "string"
-        description: "이메일 주소"
-      password:
-        type: "string"
-        description: "비밀번호"
-      isOAuth:
-        type: "boolean"
-        description: "oAuth 로그인인지 아닌지를 보냄(default false)"
-      oAuth_token:
-        type: "string"
-        description: "isOAuth가 true일때 토큰값이 들어있어야함(중요)"
-
-    example:
-      email: "mybatis@gmail.com"
-      password: "007jmt@"
-      isOAuth: false
-      oAuth_token:
-
-  #카카오 가입 시 필요 데이터
-  register_oAuth:
-    type: "object"
-    properties:
-      oAuth_token:
-        type: "string"
-        description: "카카오계정 인증 토큰"
-      nickname:
-        type: "string"
-        description: "닉네임"
-      tel:
-        type: "string"
-        description: "전화번호"
-    example:
-      oAuth_token: "4Aofd8#kas90$ajfjafiaAFhfj823"
-      nickname: "카카오_가입자"
-      tel: "01012340000"
-
-  
-  #유저 가입시 필요한 데이터
-  register_customer:
-    type: "object"
-    properties:
-      email:
-        type: "string"
-        description: "이메일 주소"
-      password:
-        type: "string"
-        description: "비밀번호"
-      tel:
-        type: "string"
-        description: "전화번호"
-      nickname:
-        type: "string"
-        description: "리뷰 등에서 보여질 이름"
-    example:
-      email: "test@gmail.com"
-      password: "4G52a9Lj456cv25Aidf59v2zdf"
-      tel: "01000000000"
-      nickname: "나는나야!"
-
-  #유저 데이터
-  customers:
-    type: "object"
-    properties:
-      custid:
-        type: "integer"
-        description: "유저 고유의 인덱스 번호"
-      email:
-        type: "string"
-        description: "이메일주소"
-      password:
-        type: "string"
-        description: "비밀번호"
-      tel:
-        type: "string"
-        description: "전화번호"
-      nickname:
-        type: "string"
-        description: "리뷰 등에서 보여질 이름"
-      #카카오톡 로그인관련 oAuth에 대한 token값 데이터모델에 추가
-      oAuth_token:
-        type: "string"
-        description: "카카오 계정으로의 가입이라면 email과 password가 사라지고 여기가 존재함"
-
-    example:
-      custid: 0
-      email: "test@gmail.com"
-      password: "4G52a9Lj456cv25Aidf59v2zdf"
-      tel: "01000000000"
-      nickname: "나는나야!"
-      oAuth_token: "있을수도, 없을수도 있습니다."
-  
-  #가게 관리자 가입시 입력할 데이터
-  register_owner:
-    type: "object"
-    properties:
-      ownerid:
-        type: "integer"
-        description: "가게 가게 관리자를 식별하는 인덱스번호"
-      email:
-        type: "string"
-        description: "가게 가게 관리자의 고유한 이메일 주소 로그인시 사용"
-      password:
-        type: "string"
-        description: "가게 가게 관리자의 비밀번호"
-      tel:
-        type: "string"
-        description: "가게 가게 관리자의 전화번호"
-      nickname:
-        type: "string"
-        description: "가게 가게 관리자의 닉네임"
-    
-    example:
-      email: "iamowner@gmail.com"
-      password: "4A65cC3D96zZ354F69Q"
-      tel: "01077889940"
-      nickname: "난매출1위다"
-
-  #가게 관리자 데이터
-  owners:
-    type: "object"
-    properties:
-      ownerid:
-        type: "integer"
-        description: "가게 가게 관리자를 식별하는 인덱스번호"
-      email:
-        type: "string"
-        description: "가게 가게 관리자의 고유한 이메일 주소 로그인시 사용"
-      password:
-        type: "string"
-        description: "가게 가게 관리자의 비밀번호"
-      tel:
-        type: "string"
-        description: "가게 가게 관리자의 전화번호"
-      nickname:
-        type: "string"
-        description: "가게 가게 관리자의 닉네임"
-    
-    example:
-      ownerid: 0
-      email: "iamowner@gmail.com"
-      password: "4A65cC3D96zZ354F69Q"
-      tel: "01077889940"
-      nickname: "난매출1위다"
-
-  #가게 메뉴 데이터
-  menus:
-    type: "object"
-    properties:
-      menuid:
-        type: "integer"
-        description: "메뉴를 식별하기위한 고유인덱스"
-      storeid:
-        type: "integer"
-        description: "가게 고유 식별자번호(이 메뉴는 해당 가게에 종속됨을 의미함)"
-      name:
-        type: "string"
-        description: "메뉴명"
-      price:
-        type: "integer"
-        description: "해당 메뉴의 가격"
-      menu_img:
-        type: "string"
-        description: "메뉴의 이미지"
-      
-    example:
-      menuid: 0
-      storeid: 0
-      name: "상하이 스파이스 췩힌버거"
-      price: 6500000
-      menu_img: "/images/menu/sanghello.jpg"
-
-  #가게 리뷰 생성
-  new_review:
-    type: "object"
-    properties:
-      title:
-        type: "string"
-        description: "리뷰 제목"
-      content:
-        type: "string"
-        description: "리뷰 내용"
-      review_img:
-        type: "string"
-        description: "리뷰 이미지"
-      score:
-        type: "integer"
-        description: "별점"
-      writedate:
-        type: "date"
-        description: "작성일자"
-
-      example:
-        title: "최고의 가게입니다."
-        content: "제 이름같은 영재적 사고방식을 가진 사람이 만든 가게인것같습니다. 다좋았어요 그래서 제 점수는요?"
-        review_img: "untitled-01yo.jpg"
-        score: 4
-        writedate: "20201225"
-
-  #가게 리뷰 데이터
-  reviews:
-    type: "object"
-    properties:
-      reviewid:
-        type: "integer"
-        description: "리뷰 식별자 인덱스"
-      storeid:
-        type: "integer"
-        description: "가게의 식별자 인덱스(이 리뷰는 해당 가게에 종속됨)"
-      writer:
-        type: "integer"
-        description: "작성자 인덱스"
-      title:
-        type: "string"
-        description: "리뷰 제목"
-      content:
-        type: "string"
-        description: "리뷰 내용"
-      review_img:
-        type: "string"
-        description: "리뷰 이미지"
-      score:
-        type: "integer"
-        description: "별점"
-      writedate:
-        type: "date"
-        description: "작성일자"
-
-    example:
-      reviewid: 0
-      storeid: 0
-      writer: 0
-      title: "최고의 가게입니다."
-      content: "제 이름같은 영재적 사고방식을 가진 사람이 만든 가게인것같습니다. 다좋았어요 그래서 제 점수는요?"
-      review_img: "/images/review/jmt.jpg"
-      score: 4
-      writedate: "20201225"
-
-  # 새로운 예약
-  new_reservation:
-    type: "object"
-    properties:
-      reservedate:
-        type: "date"
-        description: "예약 일자"
-      prepay:
-        type: "integer"
-        description: "선수금"
-      orderer:
-        type: "string"
-        description: "주문자"
-      peoples:
-        type: "integer"
-        description: "인원수"
-      reservetime:
-        type: "integer"
-        description: "예약 시간"
-
-    example:
-      reservedate: "20201225"
-      prepay: 650000
-      orderer: "최영재"
-      peoples: "1"
-      reservetime: 18
-
-  # 예약
-  reservation:
-    type: "object"
-    properties:
-      reserveid:
-        type: "integer"
-        description: "예약 고유 식별번호"
-      storeid:
-        type: "integer"
-        description: "가게 고유 식별번호"
-      reservedate:
-        type: "date"
-        description: "예약 일자"
-      prepay:
-        type: "integer"
-        description: "선수금"
-      orderer:
-        type: "string"
-        description: "주문자"
-      peoples:
-        type: "integer"
-        description: "인원수"
-      reservetime:
-        type: "integer"
-        description: "예약 시간"
-      cancel:
-        type: "char"
-        description: "예약을 취소했는지 여부"
-
-    example:
-      reserveid: 0
-      storeid: 0
-      reservedate: "20201225"
-      prepay: 650000
-      orderer: "최영재"
-      peoples: 1
-      reservetime: 18
-      cancel: "N"
-
-
-  # 일정데이터
-  dateplan:
-    type: "object"
-    properties:
-      busi_index:
-        type: "integer"
-        description: "가게의 고유 식별번호"
-      res_date:
-        type: "date"
-        description: "날짜"
-      res_time:
-        type: "time"
-        description: "시간"
-      res_YN:
-        type: "char"
-        description: "예약여부"
-    
-    example:
-      busi_index: 0
-      res_date: "20201225"
-      res_time: "18:00:00"
-      res_YN: "Y"
-
-  # 영수증
-  receipt:
-    type: "object"
-    properties:
-      paycode:
-        type: "string"
-        description: "결제 고유 식별 번호(iamport)"
-      ordercode:
-        type: "string"
-        description: "결제 고유 식별 번호(매장영수증)"
-      reservedate:
-        type: "date"
-        description: "예약 일자"
-      prepay:
-        type: "integer"
-        description: "선수금"
-      orderer:
-        type: "string"
-        description: "주문자"
-      peoples:
-        type: "integer"
-        description: "인원수"
-      reservetime:
-        type: "integer"
-        description: "예약 시간"
-    
-    example:
-      paycode: "iamport-0000000"
-      ordercode: "맥도날드-0"
-      reservedate: "20201225"
-      prepay: 650000
-      orderer: "최영재"
-      peoples: 1
-      reservetime: 18
-
-  #결제 데이터
-  payment:
-    type: "object"
-    properties:
-      paycode:
-        type: "string"
-        description: "결제 고유 식별 번호(iamport)"
-      ordercode:
-        type: "string"
-        description: "결제 고유 식별 번호(매장영수증)"
-      reserveid:
-        type: "int"
-        description: "예약 코드"
-
-    example:
-      paycode: "iamport-0000000"
-      ordercode: "맥도날드-0"
-      reserveid: 0
+        default:
+          $ref: 'responses/error.yaml'

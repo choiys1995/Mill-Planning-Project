@@ -1,0 +1,44 @@
+  # 가게 생성데이터
+  description: '가게 생성 또는 수정'
+  content:
+    application/json:
+      schema:
+        type: "object"
+        properties:
+          name:
+            type: "string"
+            description: "가게 명"
+          address:
+            type: "string"
+            description: "가게 주소"
+          tel:
+            type: "string"
+            description: "가게 전화번호"
+          desc:
+            type: "string"
+            description: "가게 설명"
+          prepay:
+            type: "integer"
+            description: "선수금"
+          breaktime:
+            type: "string"
+            description: "휴식 시간"
+          holyday:
+            type: "string"
+            description: "휴일"
+          buisno:
+            type: "string"
+            description: "사업자 등록번호"
+          store_img:
+            type: "string"
+            description: "가게 이미지"
+        example:
+          name: "맥도날드"
+          address: "경기도 성남시 분당구 삼평동 판교역로 231"
+          tel: "07072090564"
+          desc: "버거, 감자튀김, 셰이크로 유명한 오랜 전통의 클래식 패스트푸드 체인점입니다."
+          prepay: 1000
+          breaktime: 14
+          holyday: 월화수목금
+          buisno: 101-81-26409
+          store_img: "untitled-01.jpg"
