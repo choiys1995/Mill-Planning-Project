@@ -23,4 +23,3 @@ index_store:
   name: "storeid"
   in: path
   description: "해당 storeid를 가진 store를 조회"
-  

@@ -27,12 +27,12 @@ const KakaoStrategyOption = kakaoConfig;
  * 세션관리
  */
 passport.serializeUser(function(user, done) {
-    console.log('serial', user);
+    //console.log('serial', user);
     done(null, user);
 });
 
 passport.deserializeUser(async function(user, done) {
-    console.log('deserial', user)
+    //console.log('deserial', user)
     done(null, user);
 });
 

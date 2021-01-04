@@ -7,16 +7,17 @@ const passport = require('passport');
  */
 exports.Login = async function(req, res) {
     passport.authenticate('local', (err, account) => {
-        if(err) return res.status(400).end('잘못된 주소로의 접근입니다.');
+        if(err) return res.status(400).end(err);
         if(!account) return res.status(406).json('Invalid email or password')
         req.login(account, (error) => {
             if(error) return res.status(500).json(error);
             const token = jwt.sign(
                 {
                     email: account.email,
+                    admin: account.admin,
                 },  //토큰에 입력할 값
                 global.secret,  //비밀 키
-                { expiresIn: 60 * 60 * 24 * 128 } //토큰 만료 시간
+                { expiresIn: 60 * 60 * 24 } //토큰 만료 시간
             )
             return res.status(200).json({ token });
         });
@@ -35,9 +36,10 @@ exports.Kakao = async function(req, res) {
             if(error) return res.status(500).json(error);
             const token = jwt.sign( {
                 oauth_token: account.oauth_token,
+                admin: account.admin,
             },
             global.secret,
-            { expiresIn: 60 * 60 * 24 * 128 }
+            { expiresIn: 60 * 60 * 24 }
             )
             return res.status(200).json({token});
         })
