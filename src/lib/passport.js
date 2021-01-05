@@ -27,11 +27,13 @@ const KakaoStrategyOption = kakaoConfig;
  * 세션관리
  */
 passport.serializeUser(function(user, done) {
-    //console.log('serial', user);
+    delete user.account.password
+    //console.log('serial', user);    
     done(null, user);
 });
 
 passport.deserializeUser(async function(user, done) {
+    //delete user.account.password
     //console.log('deserial', user)
     done(null, user);
 });
@@ -45,7 +47,7 @@ async function localVerify(req, email, password, done) {
          */
 
         if(req.body.admin){
-            account = await owner.findOne(email);
+            account = await customer.findOne(email);
         }else {
             account = await customer.findOne(email);
         }

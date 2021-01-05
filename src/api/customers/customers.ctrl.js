@@ -1,5 +1,6 @@
 const encrypt = require('../../lib/encrypt');
 const customers = require('../../models/customer');
+const iamport = require('../../lib/iamport');
 
 module.exports = {
     register: async function (req, res) {
@@ -28,4 +29,11 @@ module.exports = {
 
         return res.status(201).json(customer)
     },
+
+    //예약하기
+    doReserve: function(req, res) {
+        const { storeid } = req.params;
+        const reserve_data = req.body;
+        
+    }
 }

@@ -7,12 +7,22 @@ const impConfig = require('../config/iamport');
 
 const iamport = new Iamport(impConfig);
 
-const index_payment = function() {
-    iamport.payment.findByImpUid({
-        imp_uid: 'imp94333879'
-    }).then(function(result){
+/**결제 내역을 조회 */
+const payment_searchAll = function() {
+    iamport.payment.findByImpUid(
+        impConfig.uid
+    ).then(function(result){
         // to do
+        return result;
     }).catch(function(error){
         //handle error 
+        return { error }
     })
 }
+
+/**하나의 결제에 대한 결제내역을 조회 */
+const payment_search = function(mechantid) {
+    
+}
+
+module.exports = payment_searchAll

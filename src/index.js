@@ -5,6 +5,7 @@ const http = require('http');
 const session = require('express-session')
 const FileStore = require('session-file-store')(session);
 const dateFormat = require('./lib/dateFormat')
+const cors = require('cors');
 
 
 const app = express();
@@ -21,9 +22,17 @@ app.use(session({
     secret: "g7m60p0h0m",
     cookie: {
         httpOnly: true,
-        secure: false
+        secure: false,
+        maxAge: 24 * 60 * 60 * 1000 * 7 // cookie가 expired 되는시간 7일
     },
     store: new FileStore(),
+}))
+
+app.use(cors({
+    origin(origin, callback) {
+        callback(null, true)
+    },
+    credentials: true
 }))
 app.use(passport.initialize());
 app.use(passport.session());

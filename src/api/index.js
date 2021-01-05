@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require('passport');
 const router = express.Router();
 
 router.use('/auth', require('./auth'));
@@ -33,5 +34,7 @@ router.get('/test/:message', function (req, res) {
         힘들겠지만 좋은게 좋다고 생각하세요. 7년의 행운을 빌면서..`
     })
 })
+
+router.get('/kakao', passport.authenticate('kakao'))
 
 module.exports = router;

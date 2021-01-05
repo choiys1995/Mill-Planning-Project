@@ -17,7 +17,7 @@ exports.Login = async function(req, res) {
                     admin: account.admin,
                 },  //토큰에 입력할 값
                 global.secret,  //비밀 키
-                { expiresIn: 60 * 60 * 24 } //토큰 만료 시간
+                { expiresIn: 60 * 60 * 24 * 7 * 1000 } //토큰 만료 시간
             )
             return res.status(200).json({ token });
         });
@@ -25,7 +25,7 @@ exports.Login = async function(req, res) {
 }
 
 exports.Auth = async function(req, res){
-    res.json();
+    res.json(req.user);
 }
 
 exports.Kakao = async function(req, res) {
