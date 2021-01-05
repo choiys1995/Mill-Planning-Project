@@ -54,7 +54,7 @@ app.get('/', (req, res) => {
     res.render('index.html');
 })
 
-app.get('/', (req, res) => {
+app.get('/kakao', (req, res) => {
     res.render('kakao.html');
 })
 
