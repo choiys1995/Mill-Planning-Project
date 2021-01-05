@@ -12,10 +12,6 @@
 </head>
 
 <body>
-    <a href="/kakao"><img src="/images/usedata/kakaologin.png" alt=""/></a>
-    <a href="/api/auth/logout">로그아웃</a>
-    <a onclick="kakao_login">여긴 어디오</a>
-
     <script type='text/javascript'>
         function kakao_login() {
             //<![CDATA[
@@ -28,6 +24,8 @@
                 scope: 'profile, gender'
             })
         }
+
+        kakao_login();
     </script>
 </body>
 
