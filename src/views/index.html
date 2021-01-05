@@ -12,26 +12,23 @@
 </head>
 
 <body>
-    <a id="kakao-login-btn"></a>
+    <img src="/images/usedata/kakaologin.png" alt="" onclick="javascript:kakao_login()"/>
     <a href="/api/auth/logout">로그아웃</a>
-    <a href="lg_form.html">여긴 어디오</a>
+    <a onclick="kakao_login">여긴 어디오</a>
 
     <script type='text/javascript'>
-        //<![CDATA[
-        // 사용할 앱의 JavaScript 키를 설정해 주세요.
-        Kakao.init('7cfed509eceae20085ff178b10d53019');
+        function kakao_login() {
+            //<![CDATA[
+            // 사용할 앱의 JavaScript 키를 설정해 주세요.
+            Kakao.init('7cfed509eceae20085ff178b10d53019');
 
-        // 카카오 로그인 버튼을 생성합니다.
-        Kakao.Auth.createLoginButton({
-            container: '#kakao-login-btn',
-            success: function (authObj) {
-                alert(JSON.stringify(authObj));
-                window.location.href = '/api/auth/oauth/kakao'
-            },
-            fail: function (err) {
-                alert(JSON.stringify(err));
-            }
-        });
+            // 카카오 로그인 버튼을 생성합니다.
+            Kakao.Auth.authorize({
+                redirectUri: 'http://localhost:6534/api/auth/oauth/kakao',
+                scope: 'profile, gender'
+            })
+        }
+
     //
     </script>
 </body>
