@@ -58,6 +58,10 @@ app.get('/kakao', (req, res) => {
     res.render('kakao.html');
 })
 
+app.get('/payment', (req, res) => {
+    res.render('payment')
+})
+
 const httpServer = http.createServer(app);
 httpServer.listen(http_port, function() {
     console.log(`http server listening on ${http_port}`);
