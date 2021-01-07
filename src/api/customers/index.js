@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { register } = require('./customers.ctrl')
+const { register, doReserve } = require('./customers.ctrl')
 
 /**
  * 소비자 회원가입
@@ -23,7 +23,7 @@ router.get('/reserve/old');
  * 예약하기
  * 로그인 데이터 필요
  */
-router.post('/reserve/:storeid');
+router.post('/reserve/:storeid', doReserve);
 
 /**
  * 예약취소

@@ -35,5 +35,6 @@ module.exports = {
         const { storeid } = req.params;
         const reserve_data = req.body;
         
+        res.json(reserve_data)
     }
 }
