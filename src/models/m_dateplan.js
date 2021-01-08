@@ -1,4 +1,4 @@
-const dbconn = require('../dbconnpool');
+const dbconn = require('./dbconnpool');
 
 const connect = async function () {
     try {

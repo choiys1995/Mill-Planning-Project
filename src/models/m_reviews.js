@@ -1,4 +1,4 @@
-const dbconn = require('../dbconnpool');
+const dbconn = require('./dbconnpool');
 
 const connect = async function () {
     try {
@@ -40,7 +40,7 @@ module.exports = {
 
         try {
             const query = 
-            'insert into reviews(storeid,writer,title,content,review_img,score,writeday) values (?,?,?,?,?,?,?)';
+            'insert into reviews(storeid,writer,title,content,review_img,score,writedate) values (?,?,?,?,?,?,?)';
 
             const data = await connection.query(
                 query,

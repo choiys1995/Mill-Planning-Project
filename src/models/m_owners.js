@@ -1,4 +1,4 @@
-const dbconn = require('../dbconnpool');
+const dbconn = require('./dbconnpool');
 
 const connect = async function () {
     try {
@@ -52,11 +52,11 @@ module.exports = {
 
         const connection = await connect();
         if (connection.error) return;
-
         try {
-            const query = "update owners set nickname = ? where ownerid=" + user.custid;
-            const data = await connection.query(query, [user.nickname])
-            return data;
+            const query = "update owners set password = ?, tel =?, nickname=? where ownerid=" + user.ownerid;
+            const data = await connection.query(query, [user.password,user.tel,user.nickname])
+            return data;        
+        
         } catch (error) {
             return error;
         } finally {

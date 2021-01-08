@@ -1,4 +1,4 @@
-const dbconn = require('../dbconnpool');
+const dbconn = require('./dbconnpool');
 
 const connect = async function () {
     try {
@@ -54,32 +54,38 @@ module.exports = {
         if (connection.error) return;
 
         try {
-            const query = "update customers set nickname = ? where custid=" + user.custid;
-            const data = await connection.query(query, [user.nickname])
+            const query = "update customers set password = ?, tel =?, nickname=? where custid=" + user.custid;
+            const data = await connection.query(query, [user.password,user.tel,user.nickname])
             return data;
+                       
+
         } catch (error) {
             return error;
         } finally {
             connection.release();
         }
+    },
 
         /**@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
          * @@@@@@@@@@@@@ RAW DATA INPUT TEST @@@@@@@@@@@@
          * @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
          */         
          
-        // update : async function() {
-        //     const connection = await connect();
-        //     if (connection.error) return;
-        // try {
-        //     const query = 'update customers set nickname = "modified" where custid=1';
-        //     const data = await connection.query(query)
-        //     return data;
-        // } catch (error) {
-        //     return error;
-        // } finally {
-        //     connection.release();
-    },
+    //     updatetest : async function() {
+    //         const connection = await connect();
+    //         if (connection.error) return;
+    //     try {
+    //         const query = 'update customers set password = "modified" where custid=1';
+            
+    //         const data = await connection.query(query)
+            
+    //         return data3;
+    //     } catch (error) {
+    //         return error;
+    //     } finally {
+    //         connection.release();
+    //     }
+    // },
     delete : async function(user){ //회원탈퇴시 고객정보삭제
         if (!user) return;
 

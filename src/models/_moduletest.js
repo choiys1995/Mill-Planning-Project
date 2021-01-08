@@ -1,5 +1,3 @@
-
-
 const dbconn = require('./dbconnpool');
 const customerupdate = require('./m_customers');
 const review = require('./m_reviews');
@@ -20,4 +18,5 @@ const connect = async function(){
 
 //customerupdate.update();
 
-review.inserttest();
+//review.inserttest();
+customerupdate.updatetest();
