@@ -1,9 +1,11 @@
+const { getMaxListeners } = require('./index');
 const connectionPool = require('./index');
-
+// = import connectionPool from './index'
 /**
  * 데이터베이스 연결
  * 여기서 코드를 변경할 필요가없음!!
  */
+
 const connect = async function () {
     try {
         //데이터베이스 커넥션 풀에 연결을 요청하고 커넥션을 반환함
@@ -12,7 +14,7 @@ const connect = async function () {
 
         return connection;
     } catch ( error ){
-        return {error}
+        return error
     }
 }
 
@@ -20,10 +22,10 @@ module.exports = {
     /**
      * email을 입력받아 해당 email의 user정보를 출력
      */
-    findOne: async function (email) {
+    findOne/**임의로 지은거임*/: async function (email) {
         /** 입력받은 email값이 존재하지않는다면, db를 연결시키지않고 return */
-        if (!email || '') return;
-
+        if (!email || '') return {error: "이메일없다~"};
+        
         //데이터베이스에 연결을 요청
         const connection = await connect();
         //데이터베이스 연결 중 에러가 났다면 에러를 반환
