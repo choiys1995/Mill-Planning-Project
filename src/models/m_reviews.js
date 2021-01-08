@@ -40,7 +40,7 @@ module.exports = {
 
         try {
             const query =
-                'insert into reviews(storeid,writer,title,content,review_img,score,writedate) values (?,?,?,?,?,?,?)';
+                'insert into reviews(storeid,writer,title,content,review_img,score,writedate) values (?,?,?,?,?,?,sysdate())';
 
             const data = await connection.query(
                 query,
@@ -49,8 +49,8 @@ module.exports = {
                 user.title,
                 user.content,
                 user.review_img,
-                user.score,
-                user.writedate]
+                user.score
+                ]
             );
             return data;
         } catch (error) {
@@ -89,6 +89,7 @@ module.exports = {
                 'from reviews group by score with rollup;';
 
             const data = await connection.query(query);
+            //console.log(data);
             return data;
 
         } catch (error) {
