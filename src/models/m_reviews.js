@@ -39,8 +39,8 @@ module.exports = {
         if (connection.error) return;
 
         try {
-            const query = 
-            'insert into reviews(storeid,writer,title,content,review_img,score,writedate) values (?,?,?,?,?,?,?)';
+            const query =
+                'insert into reviews(storeid,writer,title,content,review_img,score,writedate) values (?,?,?,?,?,?,?)';
 
             const data = await connection.query(
                 query,
@@ -50,8 +50,8 @@ module.exports = {
                 user.content,
                 user.review_img,
                 user.score,
-                user.writeday]
-                );
+                user.writedate]
+            );
             return data;
         } catch (error) {
             return error;
@@ -60,14 +60,14 @@ module.exports = {
         }
     },
 
-    inserttest : async function () {
-        
+    inserttest: async function () {
+
         const connection = await connect();
         if (connection.error) return;
 
         try {
-            const query = 
-            'insert into reviews values(25,3,3,"리뷰테스트","sysdate테스트","www.naver.com",3,sysdate())';
+            const query =
+                'insert into reviews values(25,3,3,"리뷰테스트","sysdate테스트","www.naver.com",3,sysdate())';
 
             const data = await connection.query(query);
             return data;
@@ -77,9 +77,30 @@ module.exports = {
         } finally {
             connection.release();
         }
+    },
+
+    averagescore: async function () {
+        const connection = await connect();
+        if (connection.error) return;
+
+        try {
+            const query =
+                'select score, count(score), avg(score)' +
+                'from reviews group by score with rollup;';
+
+            const data = await connection.query(query);
+            return data;
+
+        } catch (error) {
+            console.log(error);
+            return error;
+        } finally {
+            connection.release();
+        }
     }
-    
 }
+    
+
 
     // delete: async function (user) {
     //     if (!user) return;
