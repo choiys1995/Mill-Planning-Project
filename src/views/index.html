@@ -9,10 +9,36 @@
 
     <title>Login Demo - Kakao JavaScript SDK</title>
     <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+
+    <style>
+        .footer-column {
+            float: left;
+            width: 25%;
+        }
+
+        /* Clear floats after the columns */
+        .footer-row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        /* 배너를 고정시킴 */
+        .footer-row {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: red;
+            color: white;
+            text-align: center;
+        }
+    </style>
+
 </head>
 
 <body>
-    <img src="/images/usedata/kakaologin.png" alt="" onclick="kakao_login()"/><br>
+    <img src="/images/usedata/kakaologin.png" alt="" onclick="kakao_login()" /><br>
     <a href="/api/auth/logout">로그아웃</a><br>
     <a href="/payment">결제창</a><br>
 
@@ -29,6 +55,13 @@
             })
         }
     </script>
+
+    <div class="footer-row">
+        <div class="footer-column">컬럼1</div>
+        <div class="footer-column">컬럼2</div>
+        <div class="footer-column">컬럼3</div>
+        <div class="footer-column">컬럼4</div>
+    </div>
 </body>
 
 </html>

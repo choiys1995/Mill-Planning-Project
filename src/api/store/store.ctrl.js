@@ -1,4 +1,5 @@
-const { date } = require("joi");
+const Review = require('../../../test/dbtest/sqlmodules/m_reviews')
+require('../../lib/dateFormat')
 
 module.exports = {
     //가게 생성
@@ -53,30 +54,40 @@ module.exports = {
     },
 
     //리뷰 작성 메서드
-    createReview: function(req, res) {
-        const {storeid} = req.params;
+    createReview: async function(req, res) {
+        const { storeid } = req.params;
         const { title, content, score } = req.body;
+        const { custid } = req.user.account
         let file = null;
+        const create_at = new Date().format('yyyyMMdd')
 
         if(req.file) file = req.file.filename;
 
         const review = {
-            title, storeid, content, score, 
+            title, storeid, custid, content, score, 
             review_img: file,
-            writedate: Date.now().format('yyyymmdd')
+            writedate: create_at
         }
+
 
         /**
          * db에 작성요청
          */
-        
-         return res.status(200).json(review);
+        const result = await Review.insert(review)
+        const affectedRows = result[0].affectedRows
 
+         return res.status(200).json(review);
     },
 
     //리뷰 조회 메서드
-    ReviewViewer: function(req, res) {
+    ReviewViewer: async function(req, res) {
         const { storeid } = req.params;
+
+        const result = await Review.select('aa')
+
+        console.log(result)
+
+        res.json(result)
     },
 
     test: async function(req, res) {

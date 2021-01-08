@@ -13,6 +13,7 @@ exports.Login = async function(req, res) {
             if(error) return res.status(500).json(error);
             const token = jwt.sign(
                 {
+                    custid: account.custid,
                     email: account.email,
                     admin: account.admin,
                 },  //토큰에 입력할 값
@@ -35,6 +36,7 @@ exports.Kakao = async function(req, res) {
         req.login(account, (error) => {
             if(error) return res.status(500).json(error);
             const token = jwt.sign( {
+                custid: account.custid,
                 oauth_token: account.oauth_token,
                 admin: account.admin,
             },

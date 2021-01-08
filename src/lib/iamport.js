@@ -22,7 +22,10 @@ const payment_searchAll = function() {
 
 /**하나의 결제에 대한 결제내역을 조회 */
 const payment_search = function(mechantid) {
-    
+    iamport.payment.getByMerchant({
+        merchant_uid: merchantid
+    })
 }
+
 
 module.exports = payment_searchAll

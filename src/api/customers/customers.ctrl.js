@@ -36,5 +36,10 @@ module.exports = {
         const reserve_data = req.body;
         
         res.json(reserve_data)
+    },
+
+    //예약취소
+    cencelReserve: function (req, res) {
+        
     }
 }

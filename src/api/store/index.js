@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('../../lib/multer');
-const { createStore, storeView, storeSearch, storeUpdate, storeDestory, test } = require('./store.ctrl');
+const { createStore, storeView, storeSearch, storeUpdate, storeDestory, test, createReview, ReviewViewer } = require('./store.ctrl');
 const {checkToAdmin, checkToLogin} = require('../../middleware/loginCheck')
 
 /**
@@ -36,15 +36,15 @@ router.delete('/:storeid', checkToAdmin, storeDestory);
 
 /**
  * 리뷰 조회
- * 로그인 필요
+ * 로그인이 필요하나
  */
-router.get('/:storeid/review', checkToLogin);
+router.get('/:storeid/review', ReviewViewer);
 
 /**
  * 리뷰 작성
  * 로그인 필요
  */
-router.post('/:storeid/review', checkToLogin, multer.upload.single("review_img"));
+router.post('/:storeid/review', checkToLogin, multer.upload.single("review_img"), createReview);
 
 router.post ('/test', multer.upload.single('test'), test);
 

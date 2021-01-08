@@ -10,7 +10,8 @@ module.exports = {
         user: 'root',
         password: 'vmfhwprxm',
         database: 'youngjaetest',
-        connectionLimit: 100
+        connectionLimit: 100,
+        dateStrings: 'date',
     },
     /**테스트용 */
     test: {
@@ -18,7 +19,8 @@ module.exports = {
         user: 'root',
         password: 'vmfhwprxm',
         database: 'youngjaetest',
-        connectionLimit: 100
+        connectionLimit: 100,
+        dateStrings: 'date',
     },
     /**운영서버 */
     production: {
@@ -27,5 +29,6 @@ module.exports = {
         password: 'vmfhwprxm',
         database: 'schema',
         connectionLimit: 100,
+        dateStrings: 'date',
     }
 }
