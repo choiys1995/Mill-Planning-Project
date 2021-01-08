@@ -1,4 +1,4 @@
-const Review = require('../../../test/dbtest/sqlmodules/m_reviews')
+//const Review = require('../../../test/dbtest/sqlmodules/m_reviews')
 require('../../lib/dateFormat')
 
 module.exports = {
@@ -73,8 +73,8 @@ module.exports = {
         /**
          * db에 작성요청
          */
-        const result = await Review.insert(review)
-        const affectedRows = result[0].affectedRows
+        //const result = await Review.insert(review)
+        //const affectedRows = result[0].affectedRows
 
          return res.status(200).json(review);
     },
