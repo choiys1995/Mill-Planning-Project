@@ -2,7 +2,8 @@ const dbconn = require('./dbconnpool');
 const customerupdate = require('./m_customers');
 const review = require('./m_reviews');
 const dateplan = require('./m_dateplan');
-
+const update = require('./m_menus');
+const store = require('./m_store');
 const connect = async function(){
     try{
         const connection = await dbconn.getConnection(conn=>conn);
@@ -21,6 +22,10 @@ const connect = async function(){
 //review.inserttest();
 //customerupdate.updatetest();
 //console.log(review.averagescore());
-dateplan.insertdateplantest();
+//dateplan.insertdateplantest();
+//update.selectmenu();
+store.insertstoretest();
+
+
 
 
