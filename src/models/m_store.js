@@ -51,7 +51,7 @@ module.exports = {
 
         const connection = await connect();
         if(connection.error) return;
-
+        
         try{
             const query =
             'SELECT  b.storeid,'+
