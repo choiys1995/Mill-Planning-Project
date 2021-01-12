@@ -1,5 +1,5 @@
 const encrypt = require('../../lib/encrypt');
-const customers = require('../../models/customer');
+const customers = require('../../models/m_customers');
 const iamport = require('../../lib/iamport');
 
 module.exports = {

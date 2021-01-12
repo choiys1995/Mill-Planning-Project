@@ -10,7 +10,7 @@ const { development, test, production } = require('../config/dbconfig')
  * })
  */
 
-const dbConnectionPool = mysql2.createPool(development);
+const dbConnectionPool = mysql2.createPool(test);
 
 /**db ConnectionPool을 생성 */
 module.exports = dbConnectionPool;

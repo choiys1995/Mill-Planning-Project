@@ -1,5 +1,6 @@
 //const Review = require('../../../test/dbtest/sqlmodules/m_reviews')
 require('../../lib/dateFormat')
+const Review = require('../../models/m_reviews')
 
 module.exports = {
     //가게 생성
@@ -73,8 +74,14 @@ module.exports = {
         /**
          * db에 작성요청
          */
-        //const result = await Review.insert(review)
-        //const affectedRows = result[0].affectedRows
+        const result = await Review.insert(review)
+        const affectedRows = result[0].affectedRows
+
+        if(affectedRows <= 0) {
+            return res.status(418).json({
+                error: "에러가 발생하였습니다."
+            })
+        }
 
          return res.status(200).json(review);
     },
@@ -83,7 +90,7 @@ module.exports = {
     ReviewViewer: async function(req, res) {
         const { storeid } = req.params;
 
-        const result = await Review.select('aa')
+        const result = await Review.select(storeid)
 
         console.log(result)
 

@@ -32,6 +32,9 @@ store:
     ownername:
       type: "string"
       description: "해당 가게 소유주의 이름"
+    categories:
+      type: "string"
+      description: "카테고리 목록"
     name:
       type: "string"
       description: "가게 명"
@@ -41,7 +44,7 @@ store:
     tel:
       type: "string"
       description: "가게 전화번호"
-    desc:
+    description:
       type: "string"
       description: "가게 설명"
     prepay:
@@ -53,7 +56,7 @@ store:
     holyday:
       type: "string"
       description: "휴일"
-    buisno:
+    busino:
       type: "string"
       description: "사업자 등록번호"
     store_img:
@@ -67,6 +70,7 @@ store:
     address: "경기도 성남시 분당구 삼평동 판교역로 231"
     tel: "07072090564"
     desc: "버거, 감자튀김, 셰이크로 유명한 오랜 전통의 클래식 패스트푸드 체인점입니다."
+    categories: "한식"
     prepay: 1000
     breaktime: 14시
     holyday: 월화수목금

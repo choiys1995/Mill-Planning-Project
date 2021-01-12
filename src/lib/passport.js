@@ -5,7 +5,9 @@
 
 const passport = require('passport');
 const encrypt = require('./encrypt');
-const customer = require('../models/customer');
+const customer = require('../models/m_customers');
+const temp_customer = require('../models/customer')
+const owner = require('../models/m_owners')
 const kakaoConfig = require('../config/kakao');
 
 //임시 다른파일에 보관할것
@@ -14,6 +16,7 @@ global.secret = secret;
 
 const LocalStrategy = require('passport-local').Strategy;
 const KakaoStrategy = require('passport-kakao').Strategy;
+const { selecttoken } = require('../models/m_customers');
 
 const LocalStrategyOption = {
     usernameField: "email",
@@ -47,9 +50,9 @@ async function localVerify(req, email, password, done) {
          */
 
         if(req.body.admin){
-            account = await customer.findOne(email);
+            account = await owner.select(email);
         }else {
-            account = await customer.findOne(email);
+            account = await customer.select(email);
         }
         if(!account) return done(null, false);
 
@@ -73,17 +76,30 @@ async function localVerify(req, email, password, done) {
     return done(null, userinfo);
 }
 
-async function kakaoVerify(accessToken, refreshToken, profile, done) {
+async function kakaoVerify(req, accessToken, refreshToken, profile, done) {
     //사용자 정보는 profile에 있음
     console.log('verify', profile);
     let account = null;
     let userinfo = null;
 
+    let kakao_data = {
+        token: profile.id,
+        nickname: profile.username,
+    }
+
     try{
-        account = await customer.findKakao(profile);
+        //관리자 로그인
+        if(req.body.admin) {
+            account = await owner.selecttoken(profile.id);
+            if(!account) {
+                await owner.insert(kakao_data)
+                account = await selecttoken(profile.id);
+            }
+        }
+        account = await customer.selecttoken(profile.id);
         if(!account) {
-            await customer.insertKakao(profile)
-            account = await customer.findKakao(profile);
+            await temp_customer.insert(kakao_data)
+            account = await temp_customer.selecttoken(profile.id);
         }
 
         userinfo = {

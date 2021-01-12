@@ -14,7 +14,10 @@
           tel:
             type: "string"
             description: "가게 전화번호"
-          desc:
+          categories:
+            type: "string"
+            description: "카테고리"
+          description:
             type: "string"
             description: "가게 설명"
           prepay:
@@ -26,19 +29,24 @@
           holyday:
             type: "string"
             description: "휴일"
-          buisno:
+          busino:
             type: "string"
             description: "사업자 등록번호"
           store_img:
             type: "string"
             description: "가게 이미지"
+          menu:
+            type: "array"
+            description: "메뉴"
         example:
           name: "맥도날드"
           address: "경기도 성남시 분당구 삼평동 판교역로 231"
           tel: "07072090564"
           desc: "버거, 감자튀김, 셰이크로 유명한 오랜 전통의 클래식 패스트푸드 체인점입니다."
+          categories: "한식"
           prepay: 1000
           breaktime: 14
           holyday: 월화수목금
           buisno: 101-81-26409
           store_img: "untitled-01.jpg"
+          menu: [{'name': '상하이 스파이스 치킨버거', 'price': '55000', 'menu_img': 'sscb.jpg'}]
