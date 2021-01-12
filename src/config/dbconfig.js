@@ -10,7 +10,7 @@ module.exports = {
         user: 'root',
         password: 'vmfhwprxm',
         database: 'test_schema',
-        connectionLimit: 10
+        connectionLimit: 100
     },
     /**테스트용 */
     test: {

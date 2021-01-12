@@ -25,7 +25,8 @@ const connect = async function(){
 //dateplan.insertdateplantest();
 //update.selectmenu();
 //store.insertstoretest();
-review.selecttest();
+//review.selecttest();
+store.selectstore_custtest();
 
 
 

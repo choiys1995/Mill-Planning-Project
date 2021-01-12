@@ -12,6 +12,40 @@ const connect = async function () {
 
 //관리자가 자기가게정보 볼 수 있는거, 소비자가 들어갔을때 볼 수 있는거
 module.exports = {
+    selectstore_cust: async function(storeid){
+        if (storeid <= 0) return { error : '일치하는 상점 정보가 없습니다'};
+
+        const connection = await connect();
+        if(connection.error) return;
+
+        try{
+            const query =
+            'SELECT b.storeid,'+
+                   'b.ownerid,'+
+                   'a.nickname as ownername,'+
+                   'b.name,'+
+                   'b.address,'+
+                   'b.tel,'+
+                   'b.desciption,'+
+                   'b.prepay,'+
+                   'b.breaktime,'+
+                   'b.holyday,'+
+                   'b.busino,'+
+                   'b.store_img,'+
+                   'b.categories '+
+            'FROM owners a, store b '+
+            'WHERE a.ownerid = b.ownerid '+
+            'AND storeid=?;';
+
+            const [row] = await connection.query(query,[storeid]);
+            return row[0];
+
+        } catch (error) {
+            return error;
+        } finally {
+            connection.release();
+        }
+    },
     insertstore: async function (user) {
 
         if (!user) return;
@@ -70,6 +104,40 @@ module.exports = {
 
         } catch (error) {
             console.log(error);
+            return error;
+        } finally {
+            connection.release();
+        }
+    },
+    selectstore_custtest: async function(){
+        
+        const connection = await connect();
+        if(connection.error) return;
+
+        try{
+            const query =
+            'SELECT b.storeid,'+
+                   'b.ownerid,'+
+                   'a.nickname as ownername,'+
+                   'b.name,'+
+                   'b.address,'+
+                   'b.tel,'+
+                   'b.desciption,'+
+                   'b.prepay,'+
+                   'b.breaktime,'+
+                   'b.holyday,'+
+                   'b.busino,'+
+                   'b.store_img,'+
+                   'b.categories '+
+            'FROM owners a, store b '+
+            'WHERE a.ownerid = b.ownerid '+
+            'AND storeid=1;';
+
+            const [row] = await connection.query(query);
+            console.log(row[0]);
+            return row[0];
+
+        } catch (error) {
             return error;
         } finally {
             connection.release();
