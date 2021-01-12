@@ -21,7 +21,7 @@ module.exports = {
             const query = 'select * from owners';
             const rows = await connection.query(query);
             //console.log(rows0);
-            return rows;
+            return [rows];
         } catch (error) {
             return error;
         } finally {
@@ -36,9 +36,9 @@ module.exports = {
         if (connection.error) return;
 
         try {
-            const query = 'insert into owners(email, password, tel, nickname) values (?, ?, ?, ?)';
+            const query = 'insert into owners(email, password, tel, nickname, token) values (?, ?, ?, ?, ?)';
 
-            const data = await connection.query(query, [user.email, user.password, user.tel, user.nickname]);
+            const data = await connection.query(query, [user.email, user.password, user.tel, user.nickname, user.token]);
             return data;
         } catch (error) {
             return error;

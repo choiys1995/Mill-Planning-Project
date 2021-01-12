@@ -6,9 +6,9 @@
 module.exports = {
     /**개발서버 */
     development: {
-        host: 'localhost',
+        host: '52.79.40.60',
         user: 'root',
-        password: 'root',
+        password: 'vmfhwprxm',
         database: 'test_schema',
         connectionLimit: 10
     },

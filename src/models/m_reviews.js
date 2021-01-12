@@ -21,7 +21,20 @@ module.exports = {
         if (connection.error) return connection.error;
 
         try {
-            const query = 'select * from reviews where storeid=? ';
+            const query = 
+            'SELECT a.nickname as writer,'+
+            'b.reviewid,'+
+            'b.storeid,'+
+            'b.custid,'+
+            'b.title,'+
+            'b.content,'+
+            'b.review_img,'+
+            'b.score,'+
+            'b.writedate '+
+            'FROM customers a, reviews b '+
+            'WHERE a.custid = b.custid '+
+            'AND storeid=?;';
+
             const [rows] = await connection.query(query, [storeid]);
             //console.log(rows0);
             return rows;
@@ -60,24 +73,24 @@ module.exports = {
         }
     },
 
-    inserttest: async function () {
+    // inserttest: async function () {
 
-        const connection = await connect();
-        if (connection.error) return;
+    //     const connection = await connect();
+    //     if (connection.error) return;
 
-        try {
-            const query =
-                'insert into reviews values(25,3,3,"리뷰테스트","sysdate테스트","www.naver.com",3,sysdate())';
+    //     try {
+    //         const query =
+    //             'insert into reviews values(25,3,3,"리뷰테스트","sysdate테스트","www.naver.com",3,sysdate())';
 
-            const data = await connection.query(query);
-            return data;
-        } catch (error) {
-            console.log(error);
-            return error;
-        } finally {
-            connection.release();
-        }
-    },
+    //         const data = await connection.query(query);
+    //         return data;
+    //     } catch (error) {
+    //         console.log(error);
+    //         return error;
+    //     } finally {
+    //         connection.release();
+    //     }
+    // },
 
     averagescore: async function () {
         const connection = await connect();
@@ -97,6 +110,36 @@ module.exports = {
             return error;
         } finally {
             connection.release();
+        }
+    },
+
+    selecttest: async function () {
+        
+        const connection = await connect();
+        if (connection.error) return connection.error;
+
+        try {
+            const query = 
+            'SELECT a.nickname as writer,'+
+            'b.reviewid,'+
+            'b.storeid,'+
+            'b.custid,'+
+            'b.title,'+
+            'b.content,'+
+            'b.review_img,'+
+            'b.score,'+
+            'b.writedate '+
+            'FROM customers a, reviews b '+
+            'WHERE a.custid = b.custid '+
+            'AND storeid=1;';
+
+            const [rows] = await connection.query(query);
+            console.log(rows[0]);
+            return rows;
+        } catch (error) {
+            return error;
+        } finally {
+            await connection.release();
         }
     }
 }
