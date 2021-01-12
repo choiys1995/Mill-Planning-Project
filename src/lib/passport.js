@@ -76,7 +76,7 @@ async function localVerify(req, email, password, done) {
     return done(null, userinfo);
 }
 
-async function kakaoVerify(req, accessToken, refreshToken, profile, done) {
+async function kakaoVerify(accessToken, refreshToken, profile, done) {
     //사용자 정보는 profile에 있음
     console.log('verify', profile);
     let account = null;
