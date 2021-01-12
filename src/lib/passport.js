@@ -21,7 +21,7 @@ const { selecttoken } = require('../models/m_customers');
 const LocalStrategyOption = {
     usernameField: "email",
     passwordField: "password",
-    passReqToCallback : true,
+    passReqToCallback: true,
 }
 
 const KakaoStrategyOption = kakaoConfig;
@@ -29,13 +29,13 @@ const KakaoStrategyOption = kakaoConfig;
 /**
  * 세션관리
  */
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
     delete user.account.password
     //console.log('serial', user);    
     done(null, user);
 });
 
-passport.deserializeUser(async function(user, done) {
+passport.deserializeUser(async function (user, done) {
     //delete user.account.password
     //console.log('deserial', user)
     done(null, user);
@@ -44,17 +44,17 @@ passport.deserializeUser(async function(user, done) {
 async function localVerify(req, email, password, done) {
     let account;
     let userinfo = null;
-    try{
+    try {
         /**
          * DB에서 아이디 체크
          */
 
-        if(req.body.admin){
+        if (req.body.admin) {
             account = await owner.select(email);
-        }else {
+        } else {
             account = await customer.select(email);
         }
-        if(!account) return done(null, false);
+        if (!account) return done(null, false);
 
         userinfo = {
             account,
@@ -65,8 +65,8 @@ async function localVerify(req, email, password, done) {
          * 아이디가 일치한다면 DB에서 패스워드 체크
          */
         const isEqualPassword = await encrypt.verifiEncrypt(password, account.password)
-        if(!isEqualPassword) return done(null, false);
-    }catch(e) {
+        if (!isEqualPassword) return done(null, false);
+    } catch (e) {
         return done(e);
     }
 
@@ -87,28 +87,29 @@ async function kakaoVerify(req, accessToken, refreshToken, profile, done) {
         nickname: profile.username,
     }
 
-    try{
+    try {
         //관리자 로그인
-        if(req.body.admin) {
+        if (req.body.admin) {
             account = await owner.selecttoken(profile.id);
-            if(!account) {
+            if (!account) {
                 await owner.insert(kakao_data)
                 account = await selecttoken(profile.id);
             }
-        }
-        account = await customer.selecttoken(profile.id);
-        if(!account) {
-            await temp_customer.insert(kakao_data)
-            account = await temp_customer.selecttoken(profile.id);
+        } else {
+            account = await customer.selecttoken(profile.id);
+            if (!account) {
+                await temp_customer.insert(kakao_data);
+                account = await temp_customer.selecttoken(profile.id);
+            }
         }
 
         userinfo = {
             account,
         }
-    }catch(e){
+    } catch (e) {
         done(e);
     }
-    
+
     return done(null, userinfo);
 }
 
