@@ -10,6 +10,7 @@ const connect = async function () {
     }
 }
 
+//관리자가 자기가게정보 볼 수 있는거, 소비자가 들어갔을때 볼 수 있는거
 module.exports = {
     insertstore: async function (user) {
 
