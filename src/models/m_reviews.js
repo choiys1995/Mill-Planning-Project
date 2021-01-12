@@ -15,14 +15,14 @@ const connect = async function () {
  */
 module.exports = {
 
-    select: async function (email) {
-        if (!email || '') return { error: "Unregistered email ID" };
+    select: async function (storeid) {
+        if(storeid <= 0) return;
         const connection = await connect();
         if (connection.error) return connection.error;
 
         try {
-            const query = 'select * from reviews';
-            const rows = await connection.query(query);
+            const query = 'select * from reviews where storeid=? ';
+            const [rows] = await connection.query(query, [storeid]);
             //console.log(rows0);
             return rows;
         } catch (error) {
@@ -42,7 +42,7 @@ module.exports = {
             const query =
                 'insert into reviews(storeid,writer,title,content,review_img,score,writedate) values (?,?,?,?,?,?,sysdate())';
 
-            const data = await connection.query(
+            const [data] = await connection.query(
                 query,
                 [user.storeid,
                 user.custid,

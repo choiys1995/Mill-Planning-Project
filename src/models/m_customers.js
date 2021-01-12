@@ -12,16 +12,33 @@ const connect = async function () {
 
 module.exports = {
 
-    select: async function (email) {
+    selecttoken: async function (token) {
+        if (!token || '') return { error: "error" };
+        const connection = await connect();
+        if (connection.error) return connection.error;
+
+        try {
+            const query = 'select * from customers where token=?';
+            const [rows] = await connection.query(query,[token]);
+            //console.log(rows0);
+            return rows[0];
+        } catch (error) {
+            return error;
+        } finally {
+            await connection.release();
+        }
+    },
+
+    selectemail: async function (email) {
         if (!email || '') return { error: "Unregistered email ID" };
         const connection = await connect();
         if (connection.error) return connection.error;
 
         try {
-            const query = 'select * from customers';
-            const [rows] = await connection.query(query);
+            const query = 'select * from customers where email=?';
+            const [rows] = await connection.query(query,[email]);
             //console.log(rows0);
-            return rows;
+            return rows[0];
         } catch (error) {
             return error;
         } finally {

@@ -18,10 +18,15 @@ module.exports = {
         if (connection.error) return;
 
         try {
-            const query = 
-            'SELECT name ,price ,menu_img ,storeid FROM menus WHERE (name,price,menu_img) IN (SELECT name,price,menu_img FROM menus WHERE storeid=? GROUP BY storeid)';
+            //const query = 
+            //'SELECT name ,price ,menu_img ,storeid FROM menus WHERE (name,price,menu_img) IN (SELECT name,price,menu_img FROM menus WHERE storeid=? GROUP BY storeid)';
             
-            const [data] = await connection.query(query, [store.storeid]);
+            const query = 
+            'SELECT name ,price ,menu_img ,storeid FROM menus '+
+            'WHERE (name,price,menu_img) ' +
+            'IN (SELECT name,price,menu_img FROM menus WHERE storeid=? GROUP BY storeid);';
+
+            const [data] = await connection.query(query)//(query, [store.storeid]);
             console.log(data);
             return data;
         } catch (error) {

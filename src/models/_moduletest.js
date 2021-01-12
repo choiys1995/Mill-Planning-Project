@@ -23,8 +23,8 @@ const connect = async function(){
 //customerupdate.updatetest();
 //console.log(review.averagescore());
 //dateplan.insertdateplantest();
-//update.selectmenu();
-store.insertstoretest();
+update.selectmenu();
+//store.insertstoretest();
 
 
 
