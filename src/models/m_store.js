@@ -34,7 +34,7 @@ module.exports = {
         try {
             const query = 'insert into store (ownerid,name,address,tel,description,prepay,breaktime,holyday,busino,store_img,categories) values (?,?,?,?,?,?,?,?,?,?,?)';
             
-            const data = await connection.query(
+            const [data] = await connection.query(
                 query, [
                 user.ownerid,
                 user.name,

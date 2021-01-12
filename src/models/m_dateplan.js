@@ -19,7 +19,7 @@ module.exports = {
 
         try{
             const query = 'select * from dateplan';
-            const rows = await connection.query(query);
+            const [rows] = await connection.query(query);
             console.log(rows)
             return rows;
         }catch(error){

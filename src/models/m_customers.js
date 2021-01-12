@@ -19,7 +19,7 @@ module.exports = {
 
         try {
             const query = 'select * from customers';
-            const rows = await connection.query(query);
+            const [rows] = await connection.query(query);
             //console.log(rows0);
             return rows;
         } catch (error) {
