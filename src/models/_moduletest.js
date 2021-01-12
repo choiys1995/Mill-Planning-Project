@@ -26,7 +26,7 @@ const connect = async function(){
 //update.selectmenu();
 //store.insertstoretest();
 //review.selecttest();
-store.selectstore_custtest();
-
+//store.selectstore_custtest();
+store.selectstore_ownertest();
 
 

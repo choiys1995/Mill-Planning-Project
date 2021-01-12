@@ -26,7 +26,7 @@ module.exports = {
                    'b.name,'+
                    'b.address,'+
                    'b.tel,'+
-                   'b.desciption,'+
+                   'b.description,'+
                    'b.prepay,'+
                    'b.breaktime,'+
                    'b.holyday,'+
@@ -39,6 +39,41 @@ module.exports = {
 
             const [row] = await connection.query(query,[storeid]);
             return row[0];
+
+        } catch (error) {
+            return error;
+        } finally {
+            connection.release();
+        }
+    },
+    selectstore_owner: async function(ownerid){
+        if (ownerid <= 0) return { error : '일치하는 상점 정보가 없습니다'};
+
+        const connection = await connect();
+        if(connection.error) return;
+
+        try{
+            const query =
+            'SELECT  b.storeid,'+
+                    'b.ownerid,'+
+                    'a.nickname as ownername,'+
+                    'b.name,'+
+                    'b.address,'+
+                    'b.tel,'+
+                    'b.description,'+
+                    'b.prepay,'+
+                    'b.breaktime,'+
+                    'b.holyday,'+
+                    'b.busino,'+
+                    'b.store_img,'+
+                    'b.categories '+
+            'FROM owners a, store b '+
+            'WHERE a.ownerid = b.ownerid '+
+            'AND b.ownerid=?;';
+            
+
+            const [rows] = await connection.query(query,[ownerid]);
+            return rows;
 
         } catch (error) {
             return error;
@@ -67,7 +102,20 @@ module.exports = {
         if (connection.error) return;
 
         try {
-            const query = 'insert into store (ownerid,name,address,tel,description,prepay,breaktime,holyday,busino,store_img,categories) values (?,?,?,?,?,?,?,?,?,?,?)';
+            const query =
+             'INSERT INTO store ('+
+                 'ownerid,'+
+                 'name,'+
+                 'address,'+
+                 'tel,'+
+                 'description,'+
+                 'prepay,'+
+                 'breaktime,'+
+                 'holyday,'+
+                 'busino,'+
+                 'store_img,'+
+                 'categories) '+
+              'VALUES (?,?,?,?,?,?,?,?,?,?,?)';
             
             const [data] = await connection.query(
                 query, [
@@ -91,24 +139,24 @@ module.exports = {
             connection.release();
         }
     },
-    insertstoretest: async function () {      
+    // insertstoretest: async function () {      
         
-        const connection = await connect();
-        if (connection.error) return;
+    //     const connection = await connect();
+    //     if (connection.error) return;
 
-        try {
-            const query = "insert into store (ownerid,name,address,tel,description,prepay,breaktime,holyday,busino,store_img,categories) values(2,'페리카나치킨','강남구 대치동','028936322','치킨파는집',3000,'오후1시부터 3시','법정공휴일','4444','www.naver.com','치킨집')";
+    //     try {
+    //         const query = "insert into store (ownerid,name,address,tel,description,prepay,breaktime,holyday,busino,store_img,categories) values(2,'페리카나치킨','강남구 대치동','028936322','치킨파는집',3000,'오후1시부터 3시','법정공휴일','4444','www.naver.com','치킨집')";
             
-            const data = await connection.query(query);
-            return data;
+    //         const data = await connection.query(query);
+    //         return data;
 
-        } catch (error) {
-            console.log(error);
-            return error;
-        } finally {
-            connection.release();
-        }
-    },
+    //     } catch (error) {
+    //         console.log(error);
+    //         return error;
+    //     } finally {
+    //         connection.release();
+    //     }
+    // },
     selectstore_custtest: async function(){
         
         const connection = await connect();
@@ -122,7 +170,7 @@ module.exports = {
                    'b.name,'+
                    'b.address,'+
                    'b.tel,'+
-                   'b.desciption,'+
+                   'b.description,'+
                    'b.prepay,'+
                    'b.breaktime,'+
                    'b.holyday,'+
@@ -138,6 +186,43 @@ module.exports = {
             return row[0];
 
         } catch (error) {
+            console.log(error);
+            return error;
+        } finally {
+            connection.release();
+        }
+    },
+    selectstore_ownertest: async function(){
+        
+        const connection = await connect();
+        if(connection.error) return;
+
+        try{
+            const query =
+            'SELECT b.storeid,'+
+                   'b.ownerid,'+
+                   'a.nickname as ownername,'+
+                   'b.name,'+
+                   'b.address,'+
+                   'b.tel,'+
+                   'b.description,'+
+                   'b.prepay,'+
+                   'b.breaktime,'+
+                   'b.holyday,'+
+                   'b.busino,'+
+                   'b.store_img,'+
+                   'b.categories '+
+            'FROM owners a, store b '+
+            'WHERE a.ownerid = b.ownerid '+
+            'AND b.ownerid=1;';
+            
+
+            const [rows] = await connection.query(query);
+            console.log(rows);
+            return rows;
+
+        } catch (error) {
+            console.log(error);
             return error;
         } finally {
             connection.release();
