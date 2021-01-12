@@ -26,7 +26,7 @@ module.exports = {
             'WHERE (name,price,menu_img) ' +
             'IN (SELECT name,price,menu_img FROM menus WHERE storeid=? GROUP BY storeid);';
 
-            const [data] = await connection.(query, [store.storeid]);
+            const [data] = await connection.query(query, [store.storeid]);
             console.log(data);
             return data;
         } catch (error) {
@@ -87,7 +87,7 @@ module.exports = {
         } finally {
             connection.release();
         }
-    },
+    }
 /** 
     updatemenutest: async function () {
         
