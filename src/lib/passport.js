@@ -6,7 +6,6 @@
 const passport = require('passport');
 const encrypt = require('./encrypt');
 const customer = require('../models/m_customers');
-const temp_customer = require('../models/customer')
 const owner = require('../models/m_owners')
 const kakaoConfig = require('../config/kakao');
 
@@ -16,7 +15,6 @@ global.secret = secret;
 
 const LocalStrategy = require('passport-local').Strategy;
 const KakaoStrategy = require('passport-kakao').Strategy;
-const { selecttoken } = require('../models/m_customers');
 
 const LocalStrategyOption = {
     usernameField: "email",
@@ -76,35 +74,42 @@ async function localVerify(req, email, password, done) {
     return done(null, userinfo);
 }
 
-async function kakaoVerify(accessToken, refreshToken, profile, done) {
+async function kakaoVerify(req, accessToken, refreshToken, profile, done) {
     //사용자 정보는 profile에 있음
-    console.log('verify', profile);
+    //console.log('verify', profile);
     let account = null;
     let userinfo = null;
 
+    console.log(req.session.admin)
+
     let kakao_data = {
+        email: null,
+        password: null,
+        tel: null,
         token: profile.id,
         nickname: profile.username,
     }
 
     try {
-        //관리자 로그인
-        if (req.body.admin) {
+        if (req.session.admin) {
             account = await owner.selecttoken(profile.id);
             if (!account) {
-                await owner.insert(kakao_data)
-                account = await selecttoken(profile.id);
+                await owner.insertKakao(kakao_data);
+                account = await owner.selecttoken(profile.id);
             }
-        } else {
+        }
+        else {
             account = await customer.selecttoken(profile.id);
             if (!account) {
-                await temp_customer.insert(kakao_data);
-                account = await temp_customer.selecttoken(profile.id);
+                await customer.insertKakao(kakao_data);
+                account = await customer.selecttoken(profile.id);
             }
         }
 
+
         userinfo = {
             account,
+            admin: !!req.session.admin
         }
     } catch (e) {
         done(e);

@@ -1,6 +1,7 @@
 //const Review = require('../../../test/dbtest/sqlmodules/m_reviews')
 require('../../lib/dateFormat')
 const Review = require('../../models/m_reviews')
+const Store = require('../../models/m_store')
 
 module.exports = {
     //가게 생성
@@ -25,13 +26,13 @@ module.exports = {
     },
 
     //가게 조회 메서드
-    storeView: function(req, res) {
+    storeView: async function(req, res) {
         const {storeid} = req.params;
 
         /**
          * DB에 조회요청
          */
-        const store_data = '가게 조회 임시데이터';
+        const store_data = await Store.selectstore_cust(storeid) ;
 
         res.status(200).json(store_data)
     },
@@ -92,11 +93,10 @@ module.exports = {
 
         const result = await Review.select(storeid)
 
-        console.log(result)
-
         res.json(result)
     },
 
+    //삭제해야할 코드
     test: async function(req, res) {
         if(!req.file) return res.status(200).json(req.fileVaildationError)
 

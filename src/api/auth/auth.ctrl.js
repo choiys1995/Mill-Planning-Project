@@ -5,7 +5,7 @@ const passport = require('passport');
  * 로그인메서드
  * 평문으로 받아서 암호화된 데이터베이스의 비밀번호와 비교
  */
-exports.Login = async function(req, res) {
+exports.Login = function(req, res) {
     passport.authenticate('local', (err, account) => {
         if(err) return res.status(400).end(err);
         if(!account) return res.status(406).json('Invalid email or password')
@@ -30,6 +30,8 @@ exports.Auth = async function(req, res){
 }
 
 exports.Kakao = async function(req, res) {
+    if(req.params.admin) req.session.admin = true;
+    else req.session.admin = false;
     passport.authenticate('kakao', (err, account) => {
         if(err) return res.status(500).json(err);
 
@@ -52,5 +54,9 @@ exports.Logout = async function(req, res) {
     console.log(req.user);
     req.logout();
 
+    if(req.session.admin) delete req.session.admin
+
     res.json();
+
+    res.redirect('/');
 }

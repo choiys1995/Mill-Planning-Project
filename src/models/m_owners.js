@@ -12,13 +12,13 @@ const connect = async function () {
 
 module.exports = {
 
-    select: async function (email) {
-        if (!email || '') return { error: "Unregistered email ID" };
+    select: async function (token) {
+        if (!token || '') return { error: "error" };
         const connection = await connect();
         if (connection.error) return connection.error;
 
         try {
-            const query = 'select * from owners';
+            const query = 'select * from owners where token=?';
             const rows = await connection.query(query);
             //console.log(rows0);
             return [rows];

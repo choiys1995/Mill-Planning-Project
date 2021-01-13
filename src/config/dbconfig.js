@@ -18,7 +18,7 @@ module.exports = {
         host: '52.79.40.60',
         user: 'root',
         password: 'vmfhwprxm',
-        database: 'heesoo',
+        database: 'test_schema',
         connectionLimit: 100,
         dateStrings: 'date',
     },

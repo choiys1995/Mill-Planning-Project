@@ -16,7 +16,8 @@ router.post('/login', checkToNotLogin, Login);
 /**
  * oAuth 기반 로그인
  */
-router.get('/oauth/kakao', checkToNotLogin, Kakao);
+router.get('/oauth/kakao/', checkToNotLogin, Kakao);
+router.get('/oauth/kakao/:admin', checkToNotLogin, Kakao);
 
 /**
  * 로그인 (관리자)

@@ -113,35 +113,35 @@ module.exports = {
         }
     },
 
-    selecttest: async function () {
+    // selecttest: async function () {
         
-        const connection = await connect();
-        if (connection.error) return connection.error;
+    //     const connection = await connect();
+    //     if (connection.error) return connection.error;
 
-        try {
-            const query = 
-            'SELECT a.nickname as writer,'+
-            'b.reviewid,'+
-            'b.storeid,'+
-            'b.custid,'+
-            'b.title,'+
-            'b.content,'+
-            'b.review_img,'+
-            'b.score,'+
-            'b.writedate '+
-            'FROM customers a, reviews b '+
-            'WHERE a.custid = b.custid '+
-            'AND storeid=1;';
+    //     try {
+    //         const query = 
+    //         'SELECT a.nickname as writer,'+
+    //         'b.reviewid,'+
+    //         'b.storeid,'+
+    //         'b.custid,'+
+    //         'b.title,'+
+    //         'b.content,'+
+    //         'b.review_img,'+
+    //         'b.score,'+
+    //         'b.writedate '+
+    //         'FROM customers a, reviews b '+
+    //         'WHERE a.custid = b.custid '+
+    //         'AND storeid=1;';
 
-            const [rows] = await connection.query(query);
-            console.log(rows[0]);
-            return rows;
-        } catch (error) {
-            return error;
-        } finally {
-            await connection.release();
-        }
-    }
+    //         const [rows] = await connection.query(query);
+    //         console.log(rows[0]);
+    //         return rows;
+    //     } catch (error) {
+    //         return error;
+    //     } finally {
+    //         await connection.release();
+    //     }
+    // }
 }
     
 
