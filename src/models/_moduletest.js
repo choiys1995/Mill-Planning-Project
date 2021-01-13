@@ -4,6 +4,7 @@ const review = require('./m_reviews');
 const dateplan = require('./m_dateplan');
 const update = require('./m_menus');
 const store = require('./m_store');
+const reserve = require('./m_reservation');
 const connect = async function(){
     try{
         const connection = await dbconn.getConnection(conn=>conn);
@@ -13,20 +14,7 @@ const connect = async function(){
         return error
     }
 }
+reserve.delete_rsv_test();
 
-//console.log(selectmodule.selectreviews())
-//console.log(customerupdate.update());
-
-//customerupdate.update();
-
-//review.inserttest();
-//customerupdate.updatetest();
-//console.log(review.averagescore());
-//dateplan.insertdateplantest();
-//update.selectmenu();
-//store.insertstoretest();
-//review.selecttest();
-//store.selectstore_custtest();
-store.selectstore_ownertest();
 
 
