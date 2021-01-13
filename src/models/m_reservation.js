@@ -124,26 +124,19 @@ module.exports = {
         }
     },
 
-    //고객이 예약 취소시 사용
-    delete_rsv_cust: async function (user) { 
-        if (!user) return;
+    //고객이 예약 취소시 사용 (실제로는 업데이트이용)
+    delete_rsv_cust: async function (custid) { 
+        if (!custid) return;
         const connection = await connect();
         if (connection.error) return;
 
         try {
             const query=
-            "DELETE FROM reservation "+
-            "WHERE storeid = ? "+
-            "AND reservedate = ? "+            
-            "AND orderer = ?"
-            
-            const [rows] = await connection.query(query,
-                [
-                 user.storeid,
-                 user.reservedate,
-                 user.reservetime,
-                 user.orderer
-                ]);
+            "UPDATE reservation "+
+            "SET cancel = 'N' "+
+            "WHERE orderer = ?;";
+                        
+            const [rows] = await connection.query(query,[custid]); //(=orderer)            
             //console.log();
             return rows[0];
         } catch (error) {
