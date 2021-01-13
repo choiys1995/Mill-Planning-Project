@@ -48,9 +48,6 @@ module.exports = {
             "SELECT reserveid,storeid,reservedate,prepay,orderer,peoples,reservetime,cancel "+
             "FROM reservation "+
             "WHERE storeid = ?;";
-            //oederer = customers.custid
-            //예약테이블에서 특정 고객이 예약한 행만 출력
-            //과거이력까지 고려하여 복수행 설정
             const [rows] = await connection.query(query,[user.storeid]);
             //console.log();
             return rows;
