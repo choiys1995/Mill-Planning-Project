@@ -1,9 +1,6 @@
 import React from 'react';
 import './Navigator.css';
 import {Route, Link} from 'react-router-dom';
-import myPage from '../myPage';
-import Search from '../Search';
-import App from '../App';
 
 const Navigator = () => {
   return (
