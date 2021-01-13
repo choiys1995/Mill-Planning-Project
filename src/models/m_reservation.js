@@ -125,18 +125,19 @@ module.exports = {
     },
 
     //고객이 예약 취소시 사용 (실제로는 업데이트이용)
-    delete_rsv_cust: async function (custid) { 
-        if (!custid) return;
+    delete_rsv_cust: async function (user) { 
+        if (!user) return;
         const connection = await connect();
         if (connection.error) return;
 
         try {
             const query=
             "UPDATE reservation "+
-            "SET cancel = 'N' "+
-            "WHERE orderer = ?;";
+            "SET cancel = 'Y' "+
+            "WHERE orderer = ? "+
+            "AND reservedate = ?;";
                         
-            const [rows] = await connection.query(query,[custid]); //(=orderer)            
+            const [rows] = await connection.query(query,[user.custid,user.reservedate]); //(=orderer)            
             //console.log();
             return rows[0];
         } catch (error) {
@@ -214,4 +215,25 @@ module.exports = {
     //         connection.release();
     //     }
     // },
+    delete_rsv_cust_test : async function () { 
+        
+        const connection = await connect();
+        if (connection.error) return;
+
+        try {
+            const query=
+            "UPDATE reservation "+
+            "SET cancel = 'Y' "+
+            "WHERE orderer = 3 "+
+            "AND reservedate = 20210113;";
+                        
+            const [rows] = await connection.query(query); //(=orderer)            
+            //console.log();
+            return rows[0];
+        } catch (error) {
+            return error;
+        } finally {
+            connection.release();
+        }
+    },
 }

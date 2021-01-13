@@ -14,7 +14,7 @@ const connect = async function(){
         return error
     }
 }
-reserve.delete_rsv_test();
+reserve.delete_rsv_cust_test();
 
 
 
