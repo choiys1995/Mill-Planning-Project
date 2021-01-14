@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import Navigator from './component/Navigator';
+import Navigator from './components/common/Navigator';
 import {Route, Switch} from 'react-router-dom';
 import myPage from './myPage';
 import Search from './Search';
