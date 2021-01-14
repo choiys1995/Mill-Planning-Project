@@ -24,19 +24,28 @@
     <button onclick="requestPay()">결제하기</button>
 
     <script>
-        function requestPay() {
-            console.log(IMP)
+
+        /**
+         * 여기서는 params를 통해 storeid를 가지고있으니까 가지고 잇는 
+         */
+        async function requestPay() {
+            const store_data = await axios({
+                url:"http://localhost:6534/api/customers/reserve/payment/1",
+                method: "get",
+            });
+
+            const {storeid, name, prepay} = store_data.data
             IMP.request_pay({ //param
             pg: "html5_inicis",
             pay_method: "card",
-            merchant_uid: "ORD20180131-0000016",
-            name: "노르웨이 회전 의자",
-            amount: 100,
-            buyer_email: "gildong@gmail.com",
+            merchant_uid: `MILLP${storeid}-${new Date().getTime()}`,
+            name: `${name}`,
+            amount: prepay,
+            //buyer_email: "gildong@gmail.com",
             buyer_name: "최영재",
-            buyer_tel: "010-3881-5074",
-            buyer_addr: "서울특별시 강남구 신사동",
-            buyer_postcode: "01181"
+            //buyer_tel: "010-3881-5074",
+            //buyer_addr: "서울특별시 강남구 신사동",
+            //buyer_postcode: "01181"
         }, rsp => { //callback
             if(rsp.success) {
                 console.log(rsp)
@@ -54,19 +63,21 @@
                         buyer_tel: rsp.buyer_tel
                     }
                 }).then((res) => {
-                    //결제 성공시 로직
-                    const {data} = res
+                    const { data } = res
                     console.log(res)
                     document.getElementsByTagName('body')[0].innerHTML = '결제가 완료되었습니다 <br>' +
                                                                         `주문번호: ${data.merchant_uid}<br>` +
                                                                         `제품명: ${data.name}<br>` +
                                                                         `결제금액: ${data.amount}원<br>` +
                                                                         `구매자명: ${data.buyer_name}<br>` +
-                                                                        `전화번호: ${data.buyer_tel}<br>`
+                                                                        `전화번호: ${data.buyer_tel}<br>` +
+                                                                        `<a href="/">메인으로</a>`
                 })
             }
             else {
                 //결제 실패 시 로직,
+                document.getElementsByTagName('body')[0].innerHTML = rsp.error_msg + 
+                                            '<br><a href="/">메인으로</a>'
             }
 
         })

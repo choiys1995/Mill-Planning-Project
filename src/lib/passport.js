@@ -48,11 +48,15 @@ async function localVerify(req, email, password, done) {
          */
 
         if (req.body.admin) {
-            account = await owner.select(email);
+            account = await owner.selectemail(email);
         } else {
-            account = await customer.select(email);
+            account = await customer.selectemail(email);
         }
         if (!account) return done(null, false);
+
+        if(!encrypt.verifiEncrypt(password, account.password)){
+            return done(null, false);
+        }
 
         userinfo = {
             account,
@@ -94,14 +98,14 @@ async function kakaoVerify(req, accessToken, refreshToken, profile, done) {
         if (req.session.admin) {
             account = await owner.selecttoken(profile.id);
             if (!account) {
-                await owner.insertKakao(kakao_data);
+                await owner.insert(kakao_data);
                 account = await owner.selecttoken(profile.id);
             }
         }
         else {
             account = await customer.selecttoken(profile.id);
             if (!account) {
-                await customer.insertKakao(kakao_data);
+                await customer.insert(kakao_data);
                 account = await customer.selecttoken(profile.id);
             }
         }
