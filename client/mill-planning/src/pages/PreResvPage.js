@@ -2,12 +2,12 @@ import React from 'react';
 import AuthTemplate from '../components/auth/AuthTemplate';
 import AuthForm from '../components/auth/AuthForm';
 
-const LoginPage = () => {
+const PreResvPage = () => {
   return (
     <AuthTemplate>
-      <AuthForm type="login" />
+      이전 예약 목록
     </AuthTemplate>
   );
 };
 
-export default LoginPage;
+export default PreResvPage;

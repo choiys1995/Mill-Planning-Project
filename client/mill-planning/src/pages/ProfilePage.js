@@ -2,12 +2,12 @@ import React from 'react';
 import AuthTemplate from '../components/auth/AuthTemplate';
 import AuthForm from '../components/auth/AuthForm';
 
-const LoginPage = () => {
+const ProfilePage = () => {
   return (
     <AuthTemplate>
-      <AuthForm type="login" />
+      프로필 수정
     </AuthTemplate>
   );
 };
 
-export default LoginPage;
+export default ProfilePage;

@@ -9,10 +9,10 @@ const Navigator = () => {
           <Link to="/">홈</Link>
       </div>
       <div className="footer-column">
-          <Link to="/Search">검색</Link>
+          <Link to="/SearchPage">검색</Link>
       </div>
       <div className="footer-column">
-          <Link to="/myPage">마이페이지</Link>
+          <Link to="/MyPage">마이페이지</Link>
       </div>
     </div>
   );

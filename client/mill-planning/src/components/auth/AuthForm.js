@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import palette from '../../lib/styles/palette';
-import Button from '../common/Button';
-import { useDispatch } from 'react-redux';
-import axios from 'axios';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import palette from "../../lib/styles/palette";
+import Button from "../common/Button";
+import { useDispatch } from "react-redux";
+import axios from "axios";
 
 /**
  * 회원가입 또는 로그인 폼을 보여줍니다.
@@ -52,13 +52,10 @@ const Footer = styled.div`
   }
 `;
 
-const ButtonWithMarginTop = styled(Button)`
-  margin-top: 1rem;
-`;
 
 const textMap = {
-  login: '로그인',
-  register: '회원가입'
+  login: "로그인",
+  register: "회원가입",
 };
 
 /**
@@ -71,11 +68,13 @@ const ErrorMessage = styled.div`
   margin-top: 1rem;
 `;
 
-const AuthForm = (props) => {
+const AuthForm = ({ props, type }) => {
+  const text = textMap[type];
+
   const dispatch = useDispatch();
 
   const [Email, setEmail] = useState("");
-  const [Password, setPassword] = useState("")
+  const [Password, setPassword] = useState("");
 
   function onEmailChange(e) {
     setEmail(e.currentTarget.value);
@@ -86,7 +85,7 @@ const AuthForm = (props) => {
   }
 
   async function loginUser(body) {
-    const result = await axios.post('/api/auth/login', body);
+    const result = await axios.post("/api/auth/login", body);
 
     console.log(result);
 
@@ -98,20 +97,50 @@ const AuthForm = (props) => {
     const body = {
       email: Email,
       password: Password,
-      admin: false
-    }
+      admin: false,
+    };
 
     loginUser(body);
   }
 
   return (
-    <form onSubmit={onSubmitHandler}>
-      email: <input type="email" value={Email} onChange={onEmailChange}/><br/>
-      password: <input type="password" value={Password} onChange={onPasswordChange}/><br/>
-      <button type="submit">Login</button>
-    </form>
-  )
-}
+    <AuthFormBlock>
+      <h3>{text}</h3>
+      <form onSubmit={onSubmitHandler}>
+        <StyledInput
+          placeholder="아이디"
+          type="email"
+          value={Email}
+          onChange={onEmailChange}
+        />
+        <br />
+        <StyledInput
+          placeholder="비밀번호"
+          type="password"
+          value={Password}
+          onChange={onPasswordChange}
+        />
+        <br />
+        {type === "register" && <StyledInput placeholder="전화번호" />}
+        <Button
+          cyan
+          fullWidth
+          style={{ marginTop: "1rem" }}
+          type="submit"
+        >
+          {text}
+        </Button>
+      </form>
+      <Footer>
+        {type === "login" ? (
+          <Link to="/register">회원가입</Link>
+        ) : (
+          <Link to="/login">로그인</Link>
+        )}
+      </Footer>
+    </AuthFormBlock>
+  );
+};
 
 // const AuthForm = ({ type, form, onChange, onSubmit, error }) => {
 //   const text = textMap[type];
@@ -145,9 +174,9 @@ const AuthForm = (props) => {
 //           />
 //         )}
 //         {error && <ErrorMessage>{error}</ErrorMessage>}
-//         <ButtonWithMarginTop cyan fullWidth style={{ marginTop: '1rem' }}>
+//         <Button cyan fullWidth style={{ marginTop: '1rem' }}>
 //           {text}
-//         </ButtonWithMarginTop>
+//         </Button>
 //       </form>
 //       <Footer>
 //         {type === 'login' ? (
