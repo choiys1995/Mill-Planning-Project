@@ -12,8 +12,8 @@ const connect = async function () {
 
 module.exports = {
 
-    insertpayment : async function (store) {
-        if (!store) return;
+    insertpayment : async function (user) {
+        if (!user) return;
 
         const connection = await connect();
         if (connection.error) return;
@@ -21,20 +21,41 @@ module.exports = {
         try {
             const query =
                 'INSERT INTO payment('+
-                    'paycode,'+
-                    'ordercode,'+
-                    'reserveid) '+                                        
-                'VALUES (?,?,?)';
+                    'ordercode,'+                    
+                    'reserveid) '+                                      
+                'VALUES (?,?)';
 
             const [rows] = await connection.query(
                 query,
                 [store.storeid,
-                 store.reservedate,
-                 store.prepay                                                 
+                 store.reserveid                                                                 
                 ]
             );
             return rows;
         } catch (error) {
+            return error;
+        } finally {
+            connection.release();
+        }
+    },
+
+    insertpaymenttest : async function (r) {
+        
+        const connection = await connect();
+        if (connection.error) return;
+
+        try {
+            const query =
+                'INSERT INTO payment('+
+                    'ordercode,'+                    
+                    'reserveid) '+                                      
+                'VALUES ("2013AA",5)';
+
+            const [rows] = await connection.query(query);
+            console.log(rows[0]);
+            return rows[0];
+        } catch (error) {
+            console.log(error);
             return error;
         } finally {
             connection.release();

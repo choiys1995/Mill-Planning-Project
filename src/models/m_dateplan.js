@@ -37,10 +37,18 @@ module.exports = {
         try{
             const query = 
             'insert into dateplan (busi_index,res_date,res_time,res_YN)'
-            +'values (?,sysdate(),sysdate(),?);';
-            const rows = await connection.query(query,[user.storeid,user.res_YN]);
+            +'values (?,?,?,?);';
+            //데이터 형식 날짜 : 20201225(2020년 12월 25일), 시간 : 153030 (오후 3시30분30초)
+            const [rows] = await connection.query(query,
+                [
+                    user.storeid,
+                    user.res_date,
+                    user.res_time,
+                    user.res_YN
+                ]
+                );
             //console.log(rows)
-            return rows;
+            return rows[0];
         }catch(error){
             return error;
         }finally{
@@ -55,8 +63,8 @@ module.exports = {
         try{
             const query = 
             'insert into dateplan (busi_index,res_date,res_time,res_YN)'
-            +'values (?,sysdate(),sysdate(),?);';
-            const rows = await connection.query(query,[32,'Y']);
+            +"values (2,20200325,153022,'N');";
+            const rows = await connection.query(query);
             //console.log(rows)
             return rows;
         }catch(error){

@@ -5,6 +5,7 @@ const dateplan = require('./m_dateplan');
 const update = require('./m_menus');
 const store = require('./m_store');
 const reserve = require('./m_reservation');
+const payment = require('./m_payment');
 const connect = async function(){
     try{
         const connection = await dbconn.getConnection(conn=>conn);
@@ -14,6 +15,12 @@ const connect = async function(){
         return error
     }
 }
+//reserve.delete_rsv_cust_test();
+//dateplan.insertdateplantest();
+//payment.insertpaymenttest();
+//reserve.check_cust_test();
+//reserve.inserttest();
+//reserve.delete_rsv_test();
 reserve.delete_rsv_cust_test();
 
 

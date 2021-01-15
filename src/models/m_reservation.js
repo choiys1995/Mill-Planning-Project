@@ -20,9 +20,9 @@ module.exports = {
 
         try {
             const query=
-            "SELECT reserveid,storeid,reservedate,prepay,orderer,peoples,reservetime,cancel "+
+            "SELECT reserveid,storeid,reservedate,prepay,orderer_cust,peoples,reservetime,cancel "+
             "FROM reservation "+
-            "WHERE orderer = ?;";
+            "WHERE orderer_cust = ?;";
             //oederer = customers.custid
             //예약테이블에서 특정 고객이 예약한 행만 출력
             //과거이력까지 고려하여 복수행 설정
@@ -45,7 +45,7 @@ module.exports = {
 
         try {
             const query=
-            "SELECT reserveid,storeid,reservedate,prepay,orderer,peoples,reservetime,cancel "+
+            "SELECT reserveid,storeid,reservedate,prepay,orderer_cust,orderer_owner,peoples,reservetime,cancel "+
             "FROM reservation "+
             "WHERE storeid = ?;";
             const [rows] = await connection.query(query,[user.storeid]);
@@ -57,6 +57,27 @@ module.exports = {
             connection.release();
         }
     },
+
+    // rsv_check_owner_test : async function () { 
+        
+    //     const connection = await connect();
+    //     if (connection.error) return;
+
+    //     try {
+    //         const query=
+    //         "SELECT * "+
+    //         "FROM reservation "+
+    //         "WHERE storeid = 1;";
+    //         const [rows] = await connection.query(query);
+    //         console.log(rows);
+    //         return rows;
+
+    //     } catch (error) {
+    //         return error;
+    //     } finally {
+    //         connection.release();
+    //     }
+    // },
 
     //예약테이블에 입력되는 기본값
     insert_rsv: async function (store) { 
@@ -71,25 +92,45 @@ module.exports = {
                 'storeid,' +
                 'reservedate,' +
                 'prepay,' +
-                'orderer,' +
+                'orderer_cust,' +
+                'orderer_owner,' +
                 'peoples,' +
-                'reservetime ' +
-                'VALUES (?,?,?,?,?,?)';
+                'reservetime) '+
+                'VALUES (?,?,?,?,?,?,?)';
 
             const [rows] = await connection.query(
                 query,
                 [store.storeid,
                 store.reservedate,
                 store.prepay,
-                store.orderer,
+                store.orderer_cust,//custid
+                store.orderer_owner,//ownerid
                 store.peoples,
                 store.reservetime
                 ]
             );
-            return rows[0];
+
+            const query_rsvid = 
+            'SELECT reserveid '+
+            'FROM reservation '+
+            'WHERE storeid=? '+
+            'AND orderer_cust=? '+
+            'AND orderer_owner=? '+
+            'AND reservetime=?;'
+
+            const [data] = await connection.query(query_rsvid,[
+                store.storeid,
+                store.orderer_cust,
+                store.orderer_owner,
+                store.reservetime
+            ])
+            console.log(data[0]);
+
+            return data[0];
+            
         } catch (error) {
             return error;
-        } finally {
+        } finally {            
             connection.release();
         }
     },
@@ -106,14 +147,16 @@ module.exports = {
             "WHERE storeid = ?"+
             "AND reservedate = ? "+
             "AND reservetime = ? "+
-            "AND orderer = ?"
+            "AND orderer_cust = ? "+
+            "AND orderer_owner = ?;";
             
             const [rows] = await connection.query(query,
                 [
                  user.storeid,
                  user.reservedate,
                  user.reservetime,
-                 user.orderer
+                 user.orderer_cust,
+                 uer.orderer_owner
                 ]);
             //console.log();
             return rows[0];
@@ -134,10 +177,33 @@ module.exports = {
             const query=
             "UPDATE reservation "+
             "SET cancel = 'Y' "+
-            "WHERE orderer = ? "+
+            "WHERE orderer_cust = ? "+
+            "AND orderer_owner = ? "+
             "AND reservedate = ?;";
                         
-            const [rows] = await connection.query(query,[user.custid,user.reservedate]); //(=orderer)            
+            const [rows] = await connection.query(query,[user.custid,user.ownerid,user.reservedate]); //(=orderer)            
+            //console.log();
+            return rows[0];
+        } catch (error) {
+            return error;
+        } finally {
+            connection.release();
+        }
+    },
+    delete_rsv_cust_test: async function () { 
+        
+        const connection = await connect();
+        if (connection.error) return;
+
+        try {
+            const query=
+            "UPDATE reservation "+
+            "SET cancel = 'Y' "+
+            "WHERE orderer_cust = 3 "+
+            "AND orderer_owner = 0 "+
+            "AND reservedate = 20770101;";
+                        
+            const [rows] = await connection.query(query); //(=orderer)            
             //console.log();
             return rows[0];
         } catch (error) {
@@ -157,18 +223,31 @@ module.exports = {
     //                 'storeid,'+
     //                 'reservedate,'+
     //                 'prepay,'+
-    //                 'orderer,'+
+    //                 'orderer_cust,'+
+    //                 'orderer_owner,'+
     //                 'peoples,'+
     //                 'reservetime) '+                    
-    //             'VALUES (1,20201225,5000,3,3,20)';
+    //             'VALUES (1,20770101,150000,3,0,100,20)';
 
     //         const [rows] = await connection.query(query);
-    //         console.log(rows[0]);
-    //         return rows[0];
+
+    //         const query_rsvid = 
+    //         'SELECT reserveid '+
+    //         'FROM reservation '+
+    //         'WHERE storeid=1 '+
+    //         'AND orderer_cust=3 '+
+    //         'AND orderer_owner=0 '+
+    //         'AND reservetime=20;'
+
+    //         const [data] = await connection.query(query_rsvid)
+    //         console.log(data[0]);
+    //         return data[0];
+            
     //     } catch (error) {
     //         console.log(error);
     //         return error;
     //     } finally {
+            
     //         connection.release();
     //     }
     // },
@@ -179,9 +258,9 @@ module.exports = {
 
     //     try {
     //         const query=
-    //         "SELECT reserveid,storeid,reservedate,prepay,orderer,peoples,reservetime,cancel "+
+    //         "SELECT reserveid,storeid,reservedate,prepay,orderer_cust,peoples,reservetime,cancel "+
     //         "FROM reservation "+
-    //         "WHERE orderer = 1;";
+    //         "WHERE orderer_cust = 1;";
     //         const [rows] = await connection.query(query);
     //         console.log(rows);
     //         return rows;
@@ -201,9 +280,10 @@ module.exports = {
     //         const query=
     //         "DELETE FROM reservation "+
     //         "WHERE storeid = 1 "+
-    //         "AND reservedate = 20201225 "+
+    //         "AND reservedate = 20770101 "+
     //         "AND reservetime = 20 "+
-    //         "AND orderer = 3"
+    //         "AND orderer_cust = 3 "+
+    //         "AND orderer_owner = 0"
             
     //         const [rows] = await connection.query(query);
     //         console.log(rows[0]);
@@ -215,25 +295,25 @@ module.exports = {
     //         connection.release();
     //     }
     // },
-    delete_rsv_cust_test : async function () { 
+    // delete_rsv_cust_test : async function () { 
         
-        const connection = await connect();
-        if (connection.error) return;
+    //     const connection = await connect();
+    //     if (connection.error) return;
 
-        try {
-            const query=
-            "UPDATE reservation "+
-            "SET cancel = 'Y' "+
-            "WHERE orderer = 3 "+
-            "AND reservedate = 20210113;";
+    //     try {
+    //         const query=
+    //         "UPDATE reservation "+
+    //         "SET cancel = 'Y' "+
+    //         "WHERE orderer = 3 "+
+    //         "AND reservedate = 20210113;";
                         
-            const [rows] = await connection.query(query); //(=orderer)            
-            //console.log();
-            return rows[0];
-        } catch (error) {
-            return error;
-        } finally {
-            connection.release();
-        }
-    },
+    //         const [rows] = await connection.query(query); //(=orderer)            
+    //         //console.log();
+    //         return rows[0];
+    //     } catch (error) {
+    //         return error;
+    //     } finally {
+    //         connection.release();
+    //     }
+    // },
 }
