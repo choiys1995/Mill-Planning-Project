@@ -425,6 +425,7 @@ dateplan:
     res_date: "20201225"
     res_time: "18:00:00"
     res_YN: "Y"
+    
 # 영수증
 receipt:
   type: "object"

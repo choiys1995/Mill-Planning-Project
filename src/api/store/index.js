@@ -46,6 +46,4 @@ router.get('/:storeid/review', ReviewViewer);
  */
 router.post('/:storeid/review', checkToLogin, multer.upload.single("review_img"), createReview);
 
-router.post ('/test', multer.upload.single('test'), test);
-
 module.exports = router;

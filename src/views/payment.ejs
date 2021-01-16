@@ -29,19 +29,20 @@
          * 여기서는 params를 통해 storeid를 가지고있으니까 가지고 잇는 
          */
         async function requestPay() {
+            //테스트 데이터입니다
             const store_data = await axios({
-                url:"http://localhost:6534/api/customers/reserve/payment/1",
+                url:"http://localhost:6534/api/customers/reserve/payment/50",
                 method: "get",
             });
 
-            const {storeid, name, prepay} = store_data.data
+            const {storeid, name, prepay} = store_data.data;
             IMP.request_pay({ //param
             pg: "html5_inicis",
             pay_method: "card",
             merchant_uid: `MILLP${storeid}-${new Date().getTime()}`,
             name: `${name}`,
             amount: prepay,
-            //buyer_email: "gildong@gmail.com",
+            buyer_email: "",
             buyer_name: "최영재",
             //buyer_tel: "010-3881-5074",
             //buyer_addr: "서울특별시 강남구 신사동",
@@ -51,7 +52,7 @@
                 console.log(rsp)
                 //결제 성공 시 로직,
                 axios({
-                    url: "http://localhost:6534/api/customers/reserve/0",
+                    url: "http://localhost:6534/api/customers/reserve/50",
                     method: "post",
                     headers: {"Content-Type": "application/json"},
                     data: {
@@ -60,18 +61,25 @@
                         name: rsp.name,
                         amount: rsp.paid_amount,
                         buyer_name: rsp.buyer_name,
-                        buyer_tel: rsp.buyer_tel
+                        buyer_tel: rsp.buyer_tel,
+                        storeid,
+                        reservedate: 20210120,
+                        prepay: rsp.paid_amount,
+                        peoples: 20,
+                        reservetime: 22
                     }
                 }).then((res) => {
                     const { data } = res
-                    console.log(res)
-                    document.getElementsByTagName('body')[0].innerHTML = '결제가 완료되었습니다 <br>' +
-                                                                        `주문번호: ${data.merchant_uid}<br>` +
-                                                                        `제품명: ${data.name}<br>` +
-                                                                        `결제금액: ${data.amount}원<br>` +
-                                                                        `구매자명: ${data.buyer_name}<br>` +
-                                                                        `전화번호: ${data.buyer_tel}<br>` +
-                                                                        `<a href="/">메인으로</a>`
+
+                    document.getElementsByTagName('body')[0].innerHTML = 
+                    '결제가 완료되었습니다.<br>' +
+                    `주문번호 ${data.merchant_uid}<br>` +
+                    `예약 매장 ${data.name}<br>` +
+                    `예약 일시 ${data.reservedate}<br>` +
+                    `예약 시간 ${data.reservetime}시<br>` +
+                    `예약 장소 ${data.address}<br>` +
+                    `예약자명 ${data.buyer_name}<br>` +
+                    `<a href="/">메인으로</a>`
                 })
             }
             else {

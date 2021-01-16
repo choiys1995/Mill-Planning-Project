@@ -12,16 +12,34 @@ const connect = async function () {
 
 module.exports = {
 
-    select: async function (token) {
-        if (!token || '') return { error: "error" };
+    selectemail: async function (email) {
+        if (!email) return {errno: "email is null"};
+
         const connection = await connect();
-        if (connection.error) return connection.error;
+        if (connection.error) return {errno: "connection error"};
 
         try {
-            const query = 'select * from owners where token=?';
-            const rows = await connection.query(query);
+            const query = 'select * from owners where email = ?';
+            const [rows] = await connection.query(query, [email]);
             //console.log(rows0);
-            return [rows];
+            return rows[0];
+        } catch (error) {
+            return error;
+        } finally {
+            await connection.release();
+        }
+    },
+
+    selecttoken: async function(token) {
+        if (!token) return {errno: "token is null"};
+
+        const connection = await connect();
+        if (connection.error) return {errno: "connection error"};
+
+        try {
+            const query = 'select * from owners where token = ?';
+            const [rows] = await connection.query(query, [token]);
+            return rows[0];
         } catch (error) {
             return error;
         } finally {
@@ -30,10 +48,10 @@ module.exports = {
     },
 
     insert: async function (user) {
-        if (!user) return;
+        if (!user) return {errno: "user is null"};
 
         const connection = await connect();
-        if (connection.error) return;
+        if (connection.error) return {errno: "connection error"};
 
         try {
             const query = 'insert into owners(email, password, tel, nickname, token) values (?, ?, ?, ?, ?)';
@@ -48,10 +66,11 @@ module.exports = {
     },
 
     update: async function (user) {
-        if (!user) return;
+        if (!user) return {errno: "user is null"};
 
         const connection = await connect();
-        if (connection.error) return;
+        if (connection.error) return {errno: "connection error"};
+
         try {
             const query = "update owners set password = ?, tel =?, nickname=? where ownerid=" + user.ownerid;
             const data = await connection.query(query, [user.password,user.tel,user.nickname])
@@ -68,10 +87,10 @@ module.exports = {
         //✨query 작성시 하나의 상점주에 딸린 여러 가게가 있을 경우
         //✨탈퇴시 연관된 자식노드들도 삭제하기 위해
         //✨on delete cascade 옵션을 테이블에 꼭 걸어줄 것
-        if (!user) return;
-        
+        if (!user) return {errno: "user is null"};
+
         const connection = await connect();
-        if (connection.error) return;
+        if (connection.error) return {errno: "connection error"};
 
         try {
             const query = 'delete from owners where ownerid = ?';

@@ -206,6 +206,17 @@ paths:
   
   ###########################예약관련##################################
 
+  #예약 가게 정보확인
+  /api/customers/reserve/payment/{storeid}:
+    post:
+      summary: "예약 정보 확인"
+      parameters:
+      - $ref: "parameters.yaml#/index_store"
+        required: true
+      responses:
+        schema:
+          $ref: "schemas.yaml#/store"
+
   #새로운 예약
   /api/customers/reserve/{storeid}:
     post:
@@ -224,11 +235,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "schemas.yaml#/receipt"
+              - $ref: "schemas.yaml#/receipt"
+              - $ref: "schamas.yaml#/payment"
         default:
           $ref: 'responses/error.yaml'
     # 예약취소(사용자)
-    delete:
+    patch:
       summary: "예약 취소"
       parameters:
       - in : path

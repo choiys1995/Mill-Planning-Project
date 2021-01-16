@@ -21,11 +21,16 @@ const payment_searchAll = function() {
 }
 
 /**하나의 결제에 대한 결제내역을 조회 */
-const payment_search = function(mechantid) {
-    iamport.payment.getByMerchant({
+const payment_search = async function(merchantid) {
+    const result = await iamport.payment.getByMerchant({
         merchant_uid: merchantid
     })
+
+    return result;
 }
 
 
-module.exports = payment_searchAll
+module.exports = {
+    payment_search,
+    payment_searchAll
+}

@@ -2,6 +2,10 @@ const Store = require('../../models/m_store')
 const Menu = require('../../models/m_menus')
 
 module.exports = {
+
+    /**
+     * 관리자가 자신의 가게를 조회
+     */
     myStore: async function (req, res) {
         const user = req.user;
         const storeList = await Store.selectstore_owner(user.ownerid);

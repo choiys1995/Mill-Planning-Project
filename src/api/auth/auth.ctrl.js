@@ -7,7 +7,7 @@ const passport = require('passport');
  */
 exports.Login = function(req, res) {
     passport.authenticate('local', (err, account) => {
-        if(err) return res.status(400).end(err);
+        if(err) return res.status(400).json(err);
         if(!account) return res.status(406).json('Invalid email or password')
         req.login(account, (error) => {
             if(error) return res.status(500).json(error);
@@ -53,12 +53,10 @@ exports.Kakao = async function(req, res) {
 }
 
 exports.Logout = async function(req, res) {
-    console.log(req.user);
+    if(!req.user) res.status(401).json({message:'로그인 되어있지 않은 사용자입니다.'});
     req.logout();
 
     if(req.session.admin) delete req.session.admin
 
-    res.json();
-
-    res.redirect('/');
+    res.json({message: '로그아웃이 성공적으로 이루어졌습니다'});
 }

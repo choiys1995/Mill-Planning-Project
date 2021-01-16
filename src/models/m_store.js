@@ -13,32 +13,32 @@ const connect = async function () {
 //관리자가 자기가게정보 볼 수 있는거, 소비자가 들어갔을때 볼 수 있는거
 module.exports = {
     selectstore_cust: async function(storeid){
-        if (storeid <= 0) return { error : '일치하는 상점 정보가 없습니다'};
+        if (storeid <= 0) return { errno : '일치하는 상점 정보가 없습니다'};
 
         const connection = await connect();
-        if(connection.error) return;
+        if(connection.error) return { errno: 'connection failed'};
 
         try{
             const query =
-            'SELECT b.storeid,'+
-                   'b.ownerid,'+
+            'SELECT b.storeid as storeid,'+
+                   'b.ownerid as ownerid,'+
                    'a.nickname as ownername,'+
-                   'b.name,'+
-                   'b.address,'+
-                   'b.tel,'+
-                   'b.description,'+
-                   'b.prepay,'+
-                   'b.breaktime,'+
-                   'b.holyday,'+
-                   'b.busino,'+
-                   'b.store_img,'+
-                   'b.categories '+
+                   'b.name as name,'+
+                   'b.address as address,'+
+                   'b.tel as tel,'+
+                   'b.description as description,'+
+                   'b.prepay as prepay,'+
+                   'b.breaktime as breaktime,'+
+                   'b.holyday as holyday,'+
+                   'b.busino as busino,'+
+                   'b.store_img as store_img,'+
+                   'b.categories as categories '+
             'FROM owners a, store b '+
             'WHERE a.ownerid = b.ownerid '+
             'AND storeid=?;';
 
-            const [row] = await connection.query(query,[storeid]);
-            return row[0];
+            const [rows] = await connection.query(query,[storeid]);
+            return rows[0];
 
         } catch (error) {
             return error;
@@ -47,32 +47,32 @@ module.exports = {
         }
     },
     selectstore_owner: async function(ownerid){
-        if (ownerid <= 0) return { error : '일치하는 상점 정보가 없습니다'};
+        if (ownerid <= 0) return { errno : '일치하는 상점 정보가 없습니다'};
 
         const connection = await connect();
-        if(connection.error) return;
+        if(connection.error) return {errno: 'connection failed' };
         
         try{
             const query =
-            'SELECT  b.storeid,'+
-                    'b.ownerid,'+
+            'SELECT  b.storeid as storeid,'+
+                    'b.ownerid as ownerid,'+
                     'a.nickname as ownername,'+
-                    'b.name,'+
-                    'b.address,'+
-                    'b.tel,'+
-                    'b.description,'+
-                    'b.prepay,'+
-                    'b.breaktime,'+
-                    'b.holyday,'+
-                    'b.busino,'+
-                    'b.store_img,'+
-                    'b.categories '+
+                    'b.name as name,'+
+                    'b.address as address,'+
+                    'b.tel as tel,'+
+                    'b.description as description,'+
+                    'b.prepay as prepay,'+
+                    'b.breaktime as breaktime,'+
+                    'b.holyday as holyday,'+
+                    'b.busino as busino,'+
+                    'b.store_img as store_img,'+
+                    'b.categories as categories'+
             'FROM owners a, store b '+
             'WHERE a.ownerid = b.ownerid '+
             'AND b.ownerid=?;';
             
 
-            const [rows] = await connection.query(query,[ownerid]);
+            const [rows] = await connection.query(query, [ownerid]);
             return rows;
 
         } catch (error) {
@@ -83,7 +83,7 @@ module.exports = {
     },
     insertstore: async function (user) {
 
-        if (!user) return;
+        if(!user) return {errno: "user is null"};
         /**
          *  storeid int(11) AI PK 
             ownerid int(11) 
@@ -99,7 +99,7 @@ module.exports = {
             categories varchar(15)
         */
         const connection = await connect();
-        if (connection.error) return;
+        if (connection.error) return {errno: 'connection failed'};
 
         try {
             const query =
@@ -115,9 +115,9 @@ module.exports = {
                  'busino,'+
                  'store_img,'+
                  'categories) '+
-              'VALUES (?,?,?,?,?,?,?,?,?,?,?)';
+              'VALUES (?,?,?,?,?,?,?,?,?,?,?) ';
             
-            const [data] = await connection.query(
+            await connection.query(
                 query, [
                 user.ownerid,
                 user.name,
@@ -126,12 +126,15 @@ module.exports = {
                 user.description,
                 user.prepay,
                 user.breaktime,
-                user.holiday,
+                user.holyday,
                 user.busino,
                 user.store_img,
                 user.categories]
             );
-            return data;
+
+            const result = await connection.query('SELECT LAST_INSERT_ID() as insertid')
+            
+            return result[0][0].insertid;
 
         } catch (error) {
             return error;
@@ -181,9 +184,8 @@ module.exports = {
             'WHERE a.ownerid = b.ownerid '+
             'AND storeid=1;';
 
-            const [row] = await connection.query(query);
-            console.log(row[0]);
-            return row[0];
+            const [rows] = await connection.query(query);
+            return rows[0];
 
         } catch (error) {
             console.log(error);

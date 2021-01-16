@@ -1,5 +1,6 @@
 const encrypt = require('../../lib/encrypt');
 const owners = require('../../models/m_owners');
+const Reservation = require('../../models/m_reservation')
 
 module.exports = {
     register: async function (req, res) {
@@ -28,4 +29,28 @@ module.exports = {
 
         return res.status(201).json(customer)
     },
+
+    //해당 가게에 대한 예약 현황
+    currentReserve: async function(req, res) {
+        const { storeid } = req.params;
+
+        const reserveData = await Reservation.rsv_check_owner(storeid);
+        if(!reserveData.errno) return res.json(reserveData)
+
+        res.status(500).json()
+    },
+
+    cancelReserve: async function(req, res) {
+        const { storeid, reserveid, reservedate } = req.params;
+
+        const reserve_data = {
+            storeid, reserveid, reservedate
+        }
+
+        const result = await Reservation.delete_rsv_owner(reserve_data);
+
+        if(!result.errno) return res.status(204).json();
+
+        return res.json(500).json();
+    }
 }

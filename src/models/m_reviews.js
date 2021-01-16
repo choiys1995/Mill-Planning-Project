@@ -16,9 +16,10 @@ const connect = async function () {
 module.exports = {
 
     select: async function (storeid) {
-        if(storeid <= 0) return;
+        if(storeid <= 0) return {errno: "잘못된 요청입니다."};
+
         const connection = await connect();
-        if (connection.error) return connection.error;
+        if (connection.error) return {errno: "connection failed"};
 
         try {
             const query = 
@@ -46,10 +47,10 @@ module.exports = {
     },
 
     insert: async function (user) {
-        if (!user) return;
+        if(!user) return {errno: "user is null"};
 
         const connection = await connect();
-        if (connection.error) return;
+        if (connection.error) return {errno: "connection failed"};
 
         try {
             const query =
@@ -94,7 +95,7 @@ module.exports = {
 
     averagescore: async function () {
         const connection = await connect();
-        if (connection.error) return;
+        if (connection.error) return {errno: "connection failed"};
 
         try {
             const query =
