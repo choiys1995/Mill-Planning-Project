@@ -88,14 +88,19 @@ module.exports = {
     createReview: async function (req, res) {
         const { storeid } = req.params;
         const { title, content, score } = req.body;
-        const { custid } = req.user.account
+        const {custid, ownerid} = req.user.account
+
+        let account = {
+            custid: !req.user.account.custid ? 0 : custid,
+            ownerid: !req.user.account.ownerid ? 0 : ownerid,
+        }
         let file = null;
         const create_at = new Date().format('yyyyMMdd')
 
         if (req.file) file = req.file.filename;
 
         const review = {
-            title, storeid, custid, content, score,
+            title, storeid, custid, ownerid, content, score,
             review_img: file,
             writedate: create_at
         }
@@ -105,13 +110,7 @@ module.exports = {
          * db에 작성요청
          */
         const result = await Review.insert(review)
-        const affectedRows = result[0].affectedRows
-
-        if (affectedRows <= 0) {
-            return res.status(418).json({
-                error: "에러가 발생하였습니다."
-            })
-        }
+        if(result.errno) return res.status(500).json();
 
         return res.status(200).json(review);
     },

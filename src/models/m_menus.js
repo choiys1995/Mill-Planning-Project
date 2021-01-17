@@ -18,12 +18,10 @@ module.exports = {
         if (connection.error) return {errno: "connection error"};
 
         try {
-            // const query = 
-            // 'SELECT name ,price ,menu_img ,storeid FROM menus '+
-            // 'WHERE (name,price,menu_img) ' +
-            // 'IN (SELECT name,price,menu_img FROM menus WHERE storeid=? GROUP BY storeid);';
-
-            const query = 'select * from menus where storeid = ?'
+            const query = 
+            'SELECT name ,price ,menu_img ,storeid FROM menus '+
+            'WHERE (name,price,menu_img) ' +
+            'IN (SELECT name,price,menu_img FROM menus WHERE storeid=? GROUP BY storeid);';
 
             const [rows] = await connection.query(query, [storeid]);
             return rows;

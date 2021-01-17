@@ -135,7 +135,7 @@ module.exports = {
         res.status(500).json();
     },
 
-    //예약취소
+    //예약취소(소비자)
     cencelReserve: function (req, res) {
 
     }
