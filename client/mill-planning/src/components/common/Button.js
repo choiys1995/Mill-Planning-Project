@@ -35,6 +35,12 @@ const buttonStyle = css`
         background: ${palette.cyan[4]};
       }
     `}
+
+    ${props =>
+      props.right &&
+      css`
+      float: right;
+      `}
 `;
 
 

@@ -14,6 +14,7 @@ const myPage = () =>{
     }
     return(
         <AuthTemplate>
+            My Page<br/><br/>
             <Button cyan style={{marginTop: '1rem'}}>
                 <Link to="/MyResvPage">나의 예약 현황</Link>
             </Button><br/>
