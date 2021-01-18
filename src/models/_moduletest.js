@@ -21,7 +21,12 @@ const connect = async function(){
 //reserve.check_cust_test();
 //reserve.inserttest();
 //reserve.delete_rsv_test();
-reserve.delete_rsv_cust_test();
+//reserve.delete_rsv_cust_test();
+//review.inserttest();
+//review.selecttest();
+//reserve.rsv_3month_before();
+//reserve.rsv3mb_test();
+review.averagescore_test();
 
 
 

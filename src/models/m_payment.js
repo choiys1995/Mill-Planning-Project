@@ -12,11 +12,48 @@ const connect = async function () {
 
 module.exports = {
 
-    insertpayment : async function (user) {
-        if (!user) return;
+    //결제코드로 검색
+    select_Ordercode: async function(ordercode) {
+        if(ordercode <= 0) return {errno: "잘못된 요청입니다."}
 
         const connection = await connect();
-        if (connection.error) return;
+        if (connection.error) return {errno: "connection error"};
+
+        try{
+            const query =
+                'SELECT * FROM payment WHERE ordercode = ?'
+
+            const [rows] = await connection.query(query, [ordercode]);
+
+            return rows;
+        }catch(error){
+            return error
+        }
+    },
+
+    select_reserveid: async function(reserveid) {
+        if (reserveid <= 0) return {errno: "잘못된 요청입니다"};
+
+        const connection = await connect();
+        if (connection.error) return {errno: "connection error"};
+
+        try{
+            const query =
+                'SELECT * FROM payment WHERE reserveid = ?'
+
+            const [rows] = await connection.query(query, [reserveid]);
+
+            return rows;
+        }catch(error){
+            return error
+        }
+    },
+
+    insertpayment : async function (store) {
+        if (!store) return {errno: "store is null"};
+
+        const connection = await connect();
+        if (connection.error) return {errno: "connection error"};
 
         try {
             const query =
@@ -25,13 +62,13 @@ module.exports = {
                     'reserveid) '+                                      
                 'VALUES (?,?)';
 
-            const [rows] = await connection.query(
+            const result = await connection.query(
                 query,
-                [store.storeid,
+                [store.ordercode,
                  store.reserveid                                                                 
                 ]
             );
-            return rows;
+            return result;
         } catch (error) {
             return error;
         } finally {

@@ -13,14 +13,14 @@ const connect = async function () {
 module.exports = {
 
     selecttoken: async function (token) {
-        if (!token || '') return { error: "error" };
+        if (!token || '') return { errno: "token is null" };
         const connection = await connect();
-        if (connection.error) return connection.error;
+        if (connection.error) return { errno: "connection error" };
 
         try {
             const query = 'select * from customers where token=?';
-            const [rows] = await connection.query(query,[token]);
-            //console.log(rows0);
+            const [rows] = await connection.query(query, [token]);
+
             return rows[0];
         } catch (error) {
             return error;
@@ -30,9 +30,9 @@ module.exports = {
     },
 
     selectemail: async function (email) {
-        if (!email || '') return { error: "Unregistered email ID" };
+        if (!email || '') return { errno: "email is null" };
         const connection = await connect();
-        if (connection.error) return connection.error;
+        if (connection.error) return { errno: connection.error };
 
         try {
             const query = 'select * from customers where email=?';
@@ -47,10 +47,10 @@ module.exports = {
     },
 
     insert: async function (user) {
-        if (!user) return;
+        if (!user) return {errno: "user is null"};
 
         const connection = await connect();
-        if (connection.error) return;
+        if (connection.error) return {errno: "connection error"};
 
         try {
             const query = 'insert into customers(email, password, tel, nickname, token) values (?, ?, ?, ?, ?)';
@@ -65,10 +65,10 @@ module.exports = {
     },
 
     update: async function (user) {
-        if (!user) return;
+        if (!user) return {errno: "user is null"};
 
         const connection = await connect();
-        if (connection.error) return;
+        if (connection.error) return {errno: "connection error"};
 
         try {
             const query = "update customers set password = ?, tel =?, nickname=? where custid=" + user.custid;
@@ -104,10 +104,10 @@ module.exports = {
     //     }
     // },
     delete : async function(user){ //회원탈퇴시 고객정보삭제
-        if (!user) return;
+        if (!user) return {errno: "user is null"};
 
         const connection = await connect();
-        if (connection.error) return;
+        if (connection.error) return {errno: "connection error"};
 
         try {
             const query = 'delete from customers where custid = ?';
