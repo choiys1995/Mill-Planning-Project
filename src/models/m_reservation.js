@@ -423,25 +423,25 @@ module.exports = {
     //         connection.release();
     //     }
     // },
-    rsv3mb_test : async function() {
+    // rsv3mb_test : async function() {
         
         
-        let query = 'SELECT * FROM reservation ' +
-                    'WHERE orderer_cust = 1 AND ' +
-                    'reservedate < NOW() - INTERVAL 1 DAY';
+    //     let query = 'SELECT * FROM reservation ' +
+    //                 'WHERE orderer_cust = 1 AND ' +
+    //                 'reservedate < NOW() - INTERVAL 1 DAY';
 
         
-        const connection = await connect();
-        if (connection.error) return {errno: "connection failed"};
+    //     const connection = await connect();
+    //     if (connection.error) return {errno: "connection failed"};
 
-        try{
-            const [rows] = await connection.query(query);
-            console.log(rows);
-            return rows;
-        }catch(error){
-            return error
-        }finally{
-            connection.release();
-        }
-    },
+    //     try{
+    //         const [rows] = await connection.query(query);
+    //         console.log(rows);
+    //         return rows;
+    //     }catch(error){
+    //         return error
+    //     }finally{
+    //         connection.release();
+    //     }
+    // },
 }

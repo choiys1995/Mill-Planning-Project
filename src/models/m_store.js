@@ -90,12 +90,12 @@ module.exports = {
         
         try{
             const query =
-            'SELECT name, address '+                    
-            'FROM store '+
-            'WHERE name like %?% '+
-            'OR categories like %?%';
+            'SELECT * FROM store WHERE name LIKE ' +
+            connection.escape('%' + store.main + '%') + 
+            ' OR address LIKE ' +
+            connection.escape('%' + store.datail + '%')
             
-            const [rows] = await connection.query(query, [store.main,store.detail]);
+            const [rows] = await connection.query(query);
             return rows;
 
         } catch (error) {
@@ -248,6 +248,29 @@ module.exports = {
 
         } catch (error) {
             console.log(error);
+            return error;
+        } finally {
+            connection.release();
+        }
+    },
+    categories_test : async function(){
+
+    
+        const connection = await connect();
+        if(connection.error) return {errno: 'connection failed' };
+        
+        try{
+            const query =
+            'SELECT * FROM store WHERE name LIKE ' +
+            connection.escape('%' + '맥도날드' + '%') + 
+            ' OR address LIKE ' +
+            connection.escape('%' + '양식' + '%')
+            
+            const [rows] = await connection.query(query);
+            console.log(rows);
+            return rows;
+
+        } catch (error) {
             return error;
         } finally {
             connection.release();

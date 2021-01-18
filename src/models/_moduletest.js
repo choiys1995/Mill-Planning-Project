@@ -26,7 +26,8 @@ const connect = async function(){
 //review.selecttest();
 //reserve.rsv_3month_before();
 //reserve.rsv3mb_test();
-review.averagescore_test();
+//review.averagescore_test();
+store.categories_test();
 
 
 
