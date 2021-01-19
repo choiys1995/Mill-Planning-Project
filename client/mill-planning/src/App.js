@@ -10,7 +10,11 @@ import MyResvPage from './pages/MyResvPage';
 import PreResvPage from './pages/PreResvPage';
 import ProfilePage from './pages/ProfilePage';
 import OwnerPage from './pages/OwnerPage';
-import OwnerStorePage from "./pages/OwnerStorePage"
+import AddStorePage from "./pages/AddStorePage"
+import ReviewPage from "./pages/ReviewPage"
+import CancelPage from "./pages/CancelPage"
+import HomePage from "./pages/HomePage"
+import ModStorePage from "./pages/ModStorePage"
 import Button from './components/common/Button';
 
 const App = () => {
@@ -22,16 +26,16 @@ const App = () => {
       <Route component={PreResvPage} path="/PreResvPage"/>
       <Route component={ProfilePage} path="/ProfilePage"/>
       <Route component={OwnerPage} path="/OwnerPage"/>
-      <Route component={OwnerStorePage} path="/OwnerStorePage"/>
+      <Route component={AddStorePage} path="/AddStorePage"/>
+      <Route component={ReviewPage} path="/ReviewPage"/>
+      <Route component={CancelPage} path="/CancelPage"/>
+      <Route component={ModStorePage} path="/ModStorePage"/>
       <Switch>
-        <Route path={'/'} exact/>
-        <Route component={MyPage} path="/mypage"/>
+        <Route component={HomePage} path="/HomePage"/>
+        <Route component={MyPage} path="/MyPage"/>
         <Route component={SearchPage} path="/SearchPage"/>
       </Switch>
-      <Button>
-          <Link to="/OwnerPage">관리자페이지</Link> 
-          {/* 관리자 아이디 로그인시만 보여야함 */}
-      </Button>
+      
       <Navigator></Navigator>
     </>
   );

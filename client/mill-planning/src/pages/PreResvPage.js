@@ -6,14 +6,14 @@ import palette from "../lib/styles/palette";
 import Button from "../components/common/Button";
 import { Link } from 'react-router-dom';
 
-
 const TagsBlock = styled.div`
-padding: 0.5rem 0.75rem;
-border-radius: 0.25rem;
-font-size: 1rem;
-line-height: 1.5;
-border: 1px solid lightgray;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border: 1px solid ${palette.gray[8]};
 `;
+
 
 const PreResvPage = () => {
   return (

@@ -4,7 +4,7 @@ import Button from '../components/common/Button';
 import AuthTemplate from '../components/auth/AuthTemplate';
 import {Route, Link} from 'react-router-dom';
 
-const myPage = () =>{
+const MyPage = () =>{
     async function authCheck() {
         const user = await axios.get('/api/auth')
 
@@ -29,4 +29,4 @@ const myPage = () =>{
     )
 }
 
-export default myPage;
+export default MyPage;

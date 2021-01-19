@@ -6,7 +6,7 @@ const Navigator = () => {
   return (
     <div className="footer-row">
       <div className="footer-column">
-          <Link to="/">홈</Link>
+          <Link to="/HomePage">홈</Link>
       </div>
       <div className="footer-column">
           <Link to="/SearchPage">검색</Link>
