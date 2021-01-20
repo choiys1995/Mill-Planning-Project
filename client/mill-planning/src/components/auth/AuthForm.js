@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import palette from "../../lib/styles/palette";
 import Button from "../common/Button";
-import { useDispatch } from "react-redux";
 import axios from "axios";
 
 /**
@@ -68,10 +67,10 @@ const ErrorMessage = styled.div`
   margin-top: 1rem;
 `;
 
-const AuthForm = ({ props, type }) => {
-  const text = textMap[type];
+const { Kakao } = window;
 
-  const dispatch = useDispatch();
+const AuthForm = ({ type }) => {
+  const text = textMap[type];
 
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
@@ -103,12 +102,23 @@ const AuthForm = ({ props, type }) => {
     loginUser(body);
   }
 
+  function KakaoLogin() {
+    axios.defaults.xsrfCookieName = "csrftoken"
+    axios.defaults.xsrfHeaderName = "X-CSRFToken"
+
+    console.log(Kakao.Auth.authorize({
+      redirectUri: 'http://localhost:6534/api/auth/oauth/kakao',
+      //어드민일시 'api/auth/oauth/kakao/1로 바꿔야함
+      scope: 'profile, gender'
+    }))
+  }
+
   return (
     <AuthFormBlock>
       <h3>{text}</h3>
       <form onSubmit={onSubmitHandler}>
         <StyledInput
-          placeholder="아이디"
+          placeholder="이메일"
           type="email"
           value={Email}
           onChange={onEmailChange}
@@ -130,13 +140,29 @@ const AuthForm = ({ props, type }) => {
         >
           {text}
         </Button>
+        {
+          type === "login" && 
+          <Button
+          yellow
+          fullWidth
+          style={{ marginTop: "1rem" }}
+          type="button"
+          onClick={KakaoLogin}
+        >
+          카카오 로그인
+        </Button>
+        }
+        
+        <div className={('login')}>
+
+        </div>
       </form>
       <Footer>
         {type === "login" ? (
           <Link to="/register">회원가입</Link>
         ) : (
-          <Link to="/login">로그인</Link>
-        )}
+            <Link to="/login">로그인</Link>
+          )}
       </Footer>
     </AuthFormBlock>
   );
