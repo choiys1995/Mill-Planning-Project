@@ -15,6 +15,7 @@ import ReviewPage from "./pages/ReviewPage"
 import CancelPage from "./pages/CancelPage"
 import HomePage from "./pages/HomePage"
 import ModStorePage from "./pages/ModStorePage"
+import StorePage from "./pages/StorePage"
 import Button from './components/common/Button';
 
 const App = () => {
@@ -30,6 +31,7 @@ const App = () => {
       <Route component={ReviewPage} path="/ReviewPage"/>
       <Route component={CancelPage} path="/CancelPage"/>
       <Route component={ModStorePage} path="/ModStorePage"/>
+      <Route component={StorePage} path="/StorePage"/>
       <Switch>
         <Route component={HomePage} path="/HomePage"/>
         <Route component={MyPage} path="/MyPage"/>
