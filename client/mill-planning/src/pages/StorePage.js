@@ -1,11 +1,13 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import AuthTemplate from "../components/auth/AuthTemplate";
 import styled, { css } from "styled-components";
 import palette from "../lib/styles/palette";
 import AuthForm from "../components/auth/AuthForm";
 import Button from "../components/common/Button";
 import { Link } from "react-router-dom";
-import Modal from '../components/modal/Modal'
+import Modal from "../components/modal/Modal";
+import Carousel from "react-elastic-carousel";
+import "../components/common/Carousel.css";
 
 const ImgDiv = styled.div`
   float: left;
@@ -40,16 +42,14 @@ const MenuBlock = styled.div`
     `}
 `;
 
-
 const StorePage = () => {
-
-    const [modalVisible, setModalVisible] = useState(false)
-    const openModal = () => {
-      setModalVisible(true)
-    }
-    const closeModal = () => {
-      setModalVisible(false)
-    }
+  const [modalVisible, setModalVisible] = useState(false);
+  const openModal = () => {
+    setModalVisible(true);
+  };
+  const closeModal = () => {
+    setModalVisible(false);
+  };
   return (
     <AuthTemplate>
       <h3>가게 조회</h3>
@@ -71,13 +71,39 @@ const StorePage = () => {
       <Button cyan fullWidth style={{ marginTop: "1rem" }} onClick={openModal}>
         예약하기
       </Button>
-      {
-        modalVisible && <Modal
+      {modalVisible && (
+        <Modal
           visible={modalVisible}
           closable={true}
           maskClosable={true}
-          onClose={closeModal}>예약시간</Modal>
-      }
+          onClose={closeModal}
+        >
+          <div>
+            <Carousel itemToShow={1}>
+              <item>1월 22일</item>
+              <item>1월 23일</item>
+              <item>1월 24일</item>
+              <item>1월 25일</item>
+              <item>1월 26일</item>
+              <item>1월 27일</item>
+            </Carousel>
+          </div>
+          <MenuBlock>
+            <Button white fullWidth>
+              14:00 ~ 16:00
+            </Button>
+            <Button white fullWidth>
+              16:00 ~ 18:00
+            </Button>
+            <Button white fullWidth>
+              <Link to="/ReservePage">18:00 ~ 20:00 (test용)</Link>
+            </Button>
+            <Button white fullWidth>
+              20:00 ~ 22:00
+            </Button>
+          </MenuBlock>
+        </Modal>
+      )}
     </AuthTemplate>
   );
 };

@@ -2,6 +2,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 import palette from "../../lib/styles/palette";
+import {darken, lighten} from 'polished';
 
 const buttonStyle = css`
   border: none;
@@ -12,6 +13,7 @@ const buttonStyle = css`
   color: white;
   outline: none;
   cursor: pointer;
+  margin-top: 0.5rem;
 
   background: ${palette.gray[8]};
   &:hover {
@@ -56,6 +58,19 @@ const buttonStyle = css`
       top: 0;
       right: 0;
     `}
+
+    ${(props) =>
+      props.white &&
+      css`
+      background: #dee2e6;
+      color: black;
+      &:hover {
+        background: ${lighten(0.1, '#dee2e6')};
+      }
+      &:active {
+        background: ${darken(0.1, '#dee2e6')};
+      }
+      `}
 `;
 
 const StyledButton = styled.button`

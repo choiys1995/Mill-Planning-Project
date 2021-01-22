@@ -32,7 +32,9 @@ function Modal({
         visible={visible}
       >
         <ModalInner tabIndex="0" className="modal-inner">
-          {closable && <Button vertex className="modal-close" onClick={close} >닫기</Button>}
+          {closable 
+          // && <Button vertex className="modal-close" onClick={close} >닫기</Button>
+        }
           {children}
         </ModalInner>
       </ModalWrapper>
