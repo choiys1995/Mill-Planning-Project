@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import palette from '../../lib/styles/palette';
 import { Link } from 'react-router-dom';
 
@@ -20,7 +20,18 @@ const AuthTemplateBlock = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  
+  ${({relative}) =>
+    relative ? 
+    css`
+      position: relative;
+      padding-top: 1rem;
+      padding-bottom: 5rem;` :
+      css` position: absolute;
+    `}
 `;
+
+
 
 /* 흰색 박스 */
 const WhiteBox = styled.div`
@@ -38,9 +49,9 @@ const WhiteBox = styled.div`
   border-radius: 2px;
 `;
 
-const AuthTemplate = ({ children }) => {
+const AuthTemplate = ({ children, relative }) => {
   return (
-    <AuthTemplateBlock>
+    <AuthTemplateBlock relative={relative}>
       <WhiteBox>
         <div className="logo-area">
           <Link to="/">Mill-Planning</Link>

@@ -5,6 +5,7 @@ import AuthTemplate from "../components/auth/AuthTemplate";
 import styled from "styled-components";
 import palette from "../lib/styles/palette";
 import { Link } from "react-router-dom";
+import { CustomRadioButton } from "../components/common/CustomRadioButton"
 
 const SearchBox = styled.input`
   padding: 0.5rem 0.75rem;
@@ -17,6 +18,8 @@ const SearchBox = styled.input`
   width: 12rem;
   margin-right: 1rem;
 `;
+
+
 
 
 // const [Search, setSearch] = useState("");
@@ -47,6 +50,10 @@ const SearchPage = () => {
         검색
       </Button>
       <br />
+
+      <div>
+        <CustomRadioButton></CustomRadioButton>
+      </div>
 
       <Button fullWidth style={{ marginTop: '1rem' }}>
         <Link to="/StorePage">가게조회 버튼(임시)</Link> 
