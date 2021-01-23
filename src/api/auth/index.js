@@ -6,7 +6,7 @@ const {checkToLogin, checkToNotLogin} = require('../../middleware/loginCheck');
 /**
  * 로그인 인증
  */
-router.get("/", checkToLogin, Auth);
+router.get("/", Auth);
 
 /**
  * 로그인

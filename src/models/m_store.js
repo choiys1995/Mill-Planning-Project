@@ -12,6 +12,24 @@ const connect = async function () {
 
 //관리자가 자기가게정보 볼 수 있는거, 소비자가 들어갔을때 볼 수 있는거
 module.exports = {
+    select_Limit5_Stores: async function(){
+        const connection = await connect();
+        if(connection.error) return { errno: 'connection failed'};
+
+        try{
+            const query = 
+                    `SELECT * ` +
+                    `FROM store ` +
+                    `limit 5`
+
+            const [rows] = await connection.query(query,[]);
+            return rows;
+        }catch(e){
+            return e;
+        }finally{
+            connection.release();
+        }
+    },
     selectstore_cust: async function(storeid){
         if (storeid <= 0) return { errno : '일치하는 상점 정보가 없습니다'};
 

@@ -28,12 +28,12 @@ app.use(session({
     store: new FileStore(),
 }))
 
-app.use(cors({
-    origin(origin, callback) {
-        callback(null, true)
-    },
-    credentials: true
-}))
+// app.use(cors({
+//     origin(origin, callback) {
+//         callback(null, true)
+//     },
+//     credentials: true
+// }))
 app.use(passport.initialize());
 app.use(passport.session());
 passportConfig();

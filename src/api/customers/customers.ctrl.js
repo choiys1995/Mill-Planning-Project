@@ -89,9 +89,6 @@ module.exports = {
         };
 
         const insert_reserve = await Reservation.insert_rsv(reserve_data);
-
-        console.log(insert_reserve);
-
         if(insert_reserve.errno) return res.status(500).json(insert_reserve)
 
         const dateplan_data = {

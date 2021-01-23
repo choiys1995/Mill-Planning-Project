@@ -1,4 +1,3 @@
-//const Review = require('../../../test/dbtest/sqlmodules/m_reviews')
 require('../../lib/dateFormat')
 const Review = require('../../models/m_reviews');
 const Store = require('../../models/m_store');
@@ -37,6 +36,17 @@ module.exports = {
         }
 
         res.status(500).json();
+    },
+
+    //홈에걸어둘 가게정보 5개
+    homePageSearch: async function(req, res) {
+        const store_data = await Store.select_Limit5_Stores();
+
+        if(store_data.errno) return res.status(500).json(store_data)
+
+        res.json({
+            store: store_data
+        })
     },
 
     //가게 검색 메서드
@@ -100,7 +110,10 @@ module.exports = {
         if (req.file) file = req.file.filename;
 
         const review = {
-            title, storeid, custid, ownerid, content, score,
+            title, storeid,
+            custid: account.custid,
+            ownerid: account.ownerid,
+            content, score,
             review_img: file,
             writedate: create_at
         }
@@ -115,14 +128,26 @@ module.exports = {
         return res.status(200).json(review);
     },
 
+    ReviewStarPoint: async function(req, res) {
+        const { storeid } = req.params;
+
+        const starPoint = await Review.averagescore(storeid)
+
+        res.json(starPoint);
+    },
+
     //리뷰 조회 메서드
     ReviewViewer: async function (req, res) {
         const { storeid } = req.params;
 
-        const result = await Review.select(storeid);
+        const arr_Review = await Review.select(storeid);
+        const starPoint = await Review.averagescore(storeid);
 
-        if(!result.errno) return res.json(result);
+        if(arr_Review.errno) return res.status(500).json();
 
-        res.status(500).json();
+        res.json({
+            review: arr_Review,
+            star: starPoint
+        });
     },
 }

@@ -74,6 +74,8 @@ module.exports = {
         }
     },
 
+    
+
     // inserttest: async function () {
 
     //     const connection = await connect();
@@ -93,21 +95,28 @@ module.exports = {
     //     }
     // },
 
-    averagescore: async function () {
+    //가게별 평점 조회
+    averagescore: async function (storeid) {
+        if (storeid <= 0) return {errno: "there is not store"};
+
         const connection = await connect();
         if (connection.error) return {errno: "connection failed"};
 
         try {
             const query =
-                'select score, count(score), avg(score)' +
-                'from reviews group by score with rollup;';
+                'SELECT storeid, score,'+
+                        'count(score) as count,'+
+                        'ROUND(avg(score),1) as average '+
+                        'FROM reviews '+
+                        'WHERE storeid = ? ' +
+                        'GROUP BY score, storeid ' +
+                        'WITH ROLLUP;';
 
-            const data = await connection.query(query);
+            const [rows] = await connection.query(query,[storeid]);
             //console.log(data);
-            return data;
+            return rows;
 
         } catch (error) {
-            console.log(error);
             return error;
         } finally {
             connection.release();

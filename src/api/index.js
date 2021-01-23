@@ -9,6 +9,12 @@ router.use('/owners', require('./owners'));
 router.use('/reserve', require('./reserve'));
 router.use('/store', require('./store'));
 
+router.get('/test', async function(req, res) {
+    const cus = require('../models/customer');
+    const result = await cus.test();
+    res.json(result);
+})
+
 router.get('/test/:message', function (req, res) {
     const { message } = req.params
 

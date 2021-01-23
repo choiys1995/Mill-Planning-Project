@@ -20,6 +20,36 @@ module.exports = {
     /**
      * email을 입력받아 해당 email의 user정보를 출력
      */
+    test: async function () {
+        const main = '분당 맥도날드';
+        const detail = '';
+
+        const connection = await connect();
+
+        try {
+            let query = 'SELECT * FROM store ' +
+                        'WHERE (name LIKE ' + 
+                        connection.escape(`%${main}%`) +
+                        ' OR address LIKE ' +
+                        connection.escape(`%${main}%`) +
+                        `) AND categories = "${detail}"`;
+
+            if(!detail || ''){
+                query = query.replace(`AND categories = "${detail}"`, '');
+            }
+
+            console.log(query);
+
+            const [rows] = await connection.query(query);
+
+            return rows;
+        }catch(e)
+        {
+            return e;
+        }finally{
+            connection.release();
+        }
+    },
     findOne: async function (email) {
         /** 입력받은 email값이 존재하지않는다면, db를 연결시키지않고 return */
         if (!email || '') return;

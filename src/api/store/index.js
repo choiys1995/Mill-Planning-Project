@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('../../lib/multer');
-const { createStore, storeView, storeSearch, storeUpdate, storeDestory, test, createReview, ReviewViewer } = require('./store.ctrl');
+const { createStore, storeView, storeSearch, storeUpdate, storeDestory, test, createReview, ReviewViewer, homePageSearch, ReviewStarPoint } = require('./store.ctrl');
 const {checkToAdmin, checkToLogin} = require('../../middleware/loginCheck')
 
 /**
@@ -15,6 +15,9 @@ router.post('/', checkToAdmin, multer.upload.single("store_img"), createStore)
  * query 데이터를 입력받음
  */
 router.get('/search', storeSearch);
+
+//메인용
+router.get('/home', homePageSearch);
 
 /**
  * 가게 조회
@@ -39,6 +42,11 @@ router.delete('/:storeid', checkToAdmin, storeDestory);
  * 로그인이 필요하나
  */
 router.get('/:storeid/review', ReviewViewer);
+
+/**
+ * 리뷰 별점 계산
+ */
+router.get('/:storeid/review/star', ReviewStarPoint);
 
 /**
  * 리뷰 작성
