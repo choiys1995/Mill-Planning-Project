@@ -49,7 +49,7 @@ exports.Kakao = async function(req, res) {
             { expiresIn: 60 * 60 * 24 }
             )
 
-            res.redirect(req.headers.referer)
+            res.redirect('http://localhost:3000/')
         })
     })(req,res);
 }
