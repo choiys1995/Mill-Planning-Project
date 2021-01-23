@@ -47,7 +47,7 @@ exports.Kakao = async function(req, res) {
             global.secret,
             { expiresIn: 60 * 60 * 24 }
             )
-            res.redirect(req.headers.referer);
+            res.json(token)
         })
     })(req,res);
 }

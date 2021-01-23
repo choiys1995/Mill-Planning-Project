@@ -39,7 +39,7 @@ app.use(passport.session());
 passportConfig();
 app.use(cookieParser())
 
-app.use(express.static(path.join(__dirname, '../public/build')))
+//app.use(express.static(path.join(__dirname, '../public/build')))
 app.use('/swagger-ui', express.static(__dirname + '/../public/docs'))
 app.use('/images', express.static(__dirname + '/../public/images'))
 app.use('/api', require('./api'));
