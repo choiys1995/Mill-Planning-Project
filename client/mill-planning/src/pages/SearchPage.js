@@ -2,22 +2,9 @@ import React, { useState } from "react";
 import axios from 'axios';
 import Button from "../components/common/Button";
 import AuthTemplate from "../components/auth/AuthTemplate";
-import styled from "styled-components";
-import palette from "../lib/styles/palette";
 import { Link } from "react-router-dom";
 import { CustomRadioButton } from "../components/common/CustomRadioButton"
-
-const SearchBox = styled.input`
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.25rem;
-  font-weight: bold;
-  font-size: 1rem;
-  line-height: 1.5;
-  border: 1px solid ${palette.gray[5]};
-  height: 2.25rem;
-  width: 12rem;
-  margin-right: 1rem;
-`;
+import Input from '../components/common/Input'
 
 
 
@@ -41,7 +28,7 @@ const SearchPage = () => {
 
   return (
     <AuthTemplate>
-      <SearchBox placeholder="검색" 
+      <Input placeholder="검색" 
       //type="store"
       //value={Store}
       //onChange={onStoreChange}

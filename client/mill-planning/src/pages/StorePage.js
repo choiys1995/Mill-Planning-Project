@@ -1,17 +1,12 @@
 import React, { useState } from "react";
 import AuthTemplate from "../components/auth/AuthTemplate";
-import styled, { css } from "styled-components";
-import palette from "../lib/styles/palette";
-import AuthForm from "../components/auth/AuthForm";
 import Button from "../components/common/Button";
 import { Link } from "react-router-dom";
 import Modal from "../components/modal/Modal";
 import Carousel from "react-elastic-carousel";
 import "../components/common/Carousel.css";
-import ReviewTemplete from "../components/common/ImgDiv";
 import MenuBlock from "../components/common/MenuBlock"
 import ImgDiv from "../components/common/ImgDiv"
-import Clock from "../components/common/Clock"
 import Moment from 'react-moment'
 
 
@@ -72,16 +67,16 @@ const StorePage = () => {
             </Carousel>
           </div>
           <MenuBlock>
-            <Button white fullWidth>
+            <Button gray fullWidth>
               14:00 ~ 16:00
             </Button>
-            <Button white fullWidth>
+            <Button gray fullWidth>
               16:00 ~ 18:00
             </Button>
-            <Button white fullWidth>
+            <Button gray fullWidth>
               <Link to="/ReservePage">18:00 ~ 20:00 (test용)</Link>
             </Button>
-            <Button white fullWidth>
+            <Button gray fullWidth>
               20:00 ~ 22:00
             </Button>
           </MenuBlock>
