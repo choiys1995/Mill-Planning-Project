@@ -70,7 +70,7 @@ module.exports = {
 
     //예약하기
     doReserve: async function (req, res) {
-        console.log(req.params, req.body)
+        //console.log(req.params, req.body)
         const { storeid } = req.params;
         if(!req.body.merchant_uid) return res.status(400).json("잘못된 요청입니다.");
 
