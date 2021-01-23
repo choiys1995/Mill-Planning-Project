@@ -51,8 +51,8 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 
-app.get('/', (req, res) => {
-    res.render('index.html');
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(___dirname, '../public/build', 'index.html'))
 })
 
 app.get('/kakao', (req, res) => {
