@@ -27,7 +27,6 @@ exports.Login = function(req, res) {
 }
 
 exports.Auth = async function(req, res){
-    console.log(req.user);
     res.json(req.user);
 }
 
@@ -48,8 +47,7 @@ exports.Kakao = async function(req, res) {
             global.secret,
             { expiresIn: 60 * 60 * 24 }
             )
-
-            res.json(req);
+            res.redirect(req.headers.referer);
         })
     })(req,res);
 }
