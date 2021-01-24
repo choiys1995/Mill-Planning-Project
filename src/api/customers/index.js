@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { register, doReserve, reserveInfo, reserveInfo_old, paymentInfo } = require('./customers.ctrl')
+const { register, doReserve, reserveInfo, reserveInfo_old, paymentInfo, findOneReserve } = require('./customers.ctrl')
 const { checkToLogin, checkToNotLogin } = require('../../middleware/loginCheck')
 
 /**
- * 소비자 회원가입
+ * 유저 회원가입
  */
 router.post('/register', checkToNotLogin, register);
 
@@ -14,11 +14,13 @@ router.post('/register', checkToNotLogin, register);
  */
 router.get('/reserve', checkToLogin, reserveInfo);
 
+router.get('/reserve/find/:reserveid', checkToLogin, findOneReserve);
+
 /**
  * 유저 이전 예약 현황
  * 로그인 데이터 필요
  */
-router.get('/reserve/old', checkToLogin, reserveInfo_old);
+router.get('/old/reserve', checkToLogin, reserveInfo_old);
 
 /**
  * 예약하기

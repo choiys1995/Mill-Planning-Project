@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { Login, Logout, Auth, Kakao } = require('./auth.ctrl');
+const { Login, Logout, Auth, Kakao, findById } = require('./auth.ctrl');
 const {checkToLogin, checkToNotLogin} = require('../../middleware/loginCheck');
 
 /**
  * 로그인 인증
  */
 router.get("/", Auth);
+
+router.get('/findbyid', findById)
 
 /**
  * 로그인

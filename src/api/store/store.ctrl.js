@@ -50,10 +50,15 @@ module.exports = {
     },
 
     //가게 검색 메서드
-    storeSearch: function (req, res) {
+    storeSearch: async function (req, res) {
         const { main, detail } = req.query;
 
-        res.json(req.query)
+        const keyword = {main, detail}
+
+        const storeList = await Store.selectstore_categories(keyword);
+        if(storeList.errno) return res.json(500).json(storeList);
+
+        res.json(storeList)
     },
 
     //해당 가게 조회 메서드

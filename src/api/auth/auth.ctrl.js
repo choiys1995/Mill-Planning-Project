@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
+const customers = require('../../models/m_customers');
+const owners = require('../../models/m_owners')
 
 /**
  * 로그인메서드
@@ -30,9 +32,26 @@ exports.Auth = async function(req, res){
     res.json(req.user);
 }
 
+exports.findById = async function (req, res) {
+    const { email, admin } = req.query;
+    if (!email || '') return res.json({ error: '입력된 이메일이 없습니다.', isExist: false })
+
+
+    const userdata = admin ? await owners.selectemail(email) : 
+                await customers.selectemail(email);
+
+    if(!userdata) return res.json({isExist: false})
+
+    res.json({isExist: true})
+}
+
 exports.Kakao = async function(req, res) {
-    if(req.params.admin) req.session.admin = true;
-    else req.session.admin = false;
+    //console.log(req.session, "for kakao");
+    if(req.params.admin) 
+    {   
+        req.session.admin = true;
+        return res.redirect('/api/auth/oauth/kakao')
+    }
     passport.authenticate('kakao', (err, account) => {
         if(err) return res.status(500).json(err);
 
@@ -47,7 +66,8 @@ exports.Kakao = async function(req, res) {
             global.secret,
             { expiresIn: 60 * 60 * 24 }
             )
-            res.json(token)
+            
+            if(token) return res.redirect(req.headers.referer);
         })
     })(req,res);
 }

@@ -30,6 +30,30 @@ module.exports = {
             connection.release();
         }
     },
+
+    selectstore_categories : async function(keyword){
+
+        if (!keyword) return { errno : '검색어가 없습니다'};
+
+        const connection = await connect();
+        if(connection.error) return {errno: 'connection failed' };
+        
+        try{
+            const query =
+            'SELECT * FROM store WHERE name LIKE ' +
+            connection.escape('%' + keyword.main + '%') + 
+            ' OR address LIKE ' +
+            connection.escape('%' + keyword.datail + '%');
+            
+            const [rows] = await connection.query(query);
+            return rows;
+
+        } catch (error) {
+            return error;
+        } finally {
+            connection.release();
+        }
+    },
     selectstore_cust: async function(storeid){
         if (storeid <= 0) return { errno : '일치하는 상점 정보가 없습니다'};
 

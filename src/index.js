@@ -30,7 +30,7 @@ app.use(session({
 }))
 
 app.use(cors({
-    //origin: "http://localhost:3000",
+    origin: "http://localhost:3000",
     credentials: true
 }))
 
@@ -52,7 +52,7 @@ app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 
 app.get('/*', (req, res) => {
-    res.sendFile(path.join(___dirname, '../public/build', 'index.html'))
+    res.sendFile(path.join(__dirname, '../public/build', 'index.html'))
 })
 
 app.get('/kakao', (req, res) => {

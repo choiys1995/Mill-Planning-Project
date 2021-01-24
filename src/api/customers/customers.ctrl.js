@@ -45,10 +45,7 @@ module.exports = {
             ownerid: !req.user.account.ownerid ? 0 : ownerid,
         }
         const newData = await Reservation.rsv_check_new(account);
-        const beforeData = await Reservation.rsv_3month_before(account);
-
-        const result = newData.concat(beforeData);
-        if (!result.errno) return res.json(result);
+        if (!newData.errno) return res.json(newData);
 
         res.status(500).json(result);
     },
@@ -62,10 +59,14 @@ module.exports = {
             custid: !req.user.account.custid ? 0 : custid,
             ownerid: !req.user.account.ownerid ? 0 : ownerid,
         }
+        const beforeData = await Reservation.rsv_3month_before(account);
+        if(beforeData.errno) return res.status(500).json(beforeData);
         const result = await Reservation.rsv_check_old(account);
         if(result.errno) return res.status(500).json(result);
 
-        res.json(result);
+        const exportData = beforeData.concat(result);
+
+        res.json(exportData);
     },
 
     //예약하기
@@ -89,6 +90,7 @@ module.exports = {
         };
 
         const insert_reserve = await Reservation.insert_rsv(reserve_data);
+        //console.log(insert_reserve);
         if(insert_reserve.errno) return res.status(500).json(insert_reserve)
 
         const dateplan_data = {
@@ -108,16 +110,18 @@ module.exports = {
         }
 
         const insert_dateplan = await Dateplan.insertdateplan(dateplan_data)
+        //console.log(insert_dateplan);
         if(insert_dateplan.errno) return res.status(500).json(insert_dateplan);
 
         const insert_payment = await Payment.insertpayment(payment_data)
+        //console.log(insert_payment);
         if(insert_payment.errno) return res.status(500).json(payment_data)
 
         const {address} = await Store.selectstore_cust(storeid)
         
 
         return res.json({
-            buyer_name, name, reservedate, prepay, peoples, reservetime, merchant_uid, address
+            buyer_name, name, reservedate, prepay, peoples, reservetime, merchant_uid, address, insert_reserve
         });
     },
 
@@ -130,6 +134,15 @@ module.exports = {
         if (!store_data.errno) return res.json(store_data);
 
         res.status(500).json();
+    },
+
+    findOneReserve: async function(req, res) {
+        const {reserveid} = req.params;
+
+        const reserve_data = await Reservation.find_one_reserve(reserveid);
+        if(reserve_data.errno) return res.status(500).json();
+
+        res.json(reserve_data);
     },
 
     //예약취소(소비자)

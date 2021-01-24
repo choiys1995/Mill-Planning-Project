@@ -84,7 +84,7 @@ async function kakaoVerify(req, accessToken, refreshToken, profile, done) {
     let account = null;
     let userinfo = null;
 
-    //console.log(req.session.admin)
+    //console.log(req.session, "for passport")
 
     let kakao_data = {
         email: null,
