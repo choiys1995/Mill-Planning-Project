@@ -6,7 +6,7 @@ const Menu = require('../../models/m_menus');
 module.exports = {
     //가게 생성
     createStore: async function (req, res) {
-        const upload_file = !req.file ? null : req.file.filename;
+        const upload_file = !req.files.store_img ? `images/ml-untitle.png` : `images/store/${req.files.store_img[0].filename}`;
         const { name, address, tel, description, prepay, breaktime, holyday, busino, categories } = req.body;
         const { ownerid } = req.user.account;
         const store_data = {
@@ -14,28 +14,55 @@ module.exports = {
             store_img: upload_file
         }
 
-        const menuList = req.body.menu;
+        const {menu_name, menu_price, menu_img_name} = req.body;
+        const {menu_img} = req.files
+    
         /** upload file이 두가지 이상이 될것같은데, 메뉴가 들어오면 파일도 넘겨줘야함 */
-        
 
         /**
          * DB에 입력요청
          */
 
         const insert_store = await Store.insertstore(store_data);
-        store_data.storeid = insert_store;
-        if (!insert_store.errno) {
-            menuList.map(async function (data) {
-                data.storeid = insert_store;
-                await Menu.insertmenu(data);
-            })
-            return res.status(200).json({
-                store: store_data,
-                menu: menuList,
-            });
+        //store_data.storeid = insert_store;
+
+        if(insert_store.errno) return res.status(500).json(insert_store);
+
+        if(menu_name.length > 0) {
+            let count = 0;
+            for(let i=0; i<menu_name.length; i++){
+                let t_menuImg = '';
+
+                if(!menu_img_name[i] || ''){
+                    count === 0 ? count = 0 : console.log(count);
+                }
+                else {
+                    t_menuImg = `images/store/${menu_img[count].filename}`
+                    count ++;
+                }
+                const menu = {
+                    storeid: insert_store,
+                    name: menu_name[i],
+                    price: !menu_price[i] || '' ? 0 : menu_price[i],
+                    menu_img:  !t_menuImg || '' ? `images/ml-untitle.png` : t_menuImg
+                }
+                const menuResult = await Menu.insertmenu(menu);
+                if(menuResult.errno) return res.status(500).json(menuResult);
+            }
+        }
+        else {
+            const menu = {
+                storeid: insert_store,
+                name: menu_name,
+                price: menu_price,
+                menu_img: !menu_img_name || '' ? 'images/ml-untitle.png' : menu_img[0].filename
+            }
+            const menuResult = await Menu.insertmenu(menu);
+            if(menuResult.errno) return res.status(500).json(menuResult);
         }
 
-        res.status(500).json();
+
+        res.json(insert_store)
     },
 
     //홈에걸어둘 가게정보 5개

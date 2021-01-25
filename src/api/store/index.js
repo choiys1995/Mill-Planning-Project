@@ -8,7 +8,7 @@ const {checkToAdmin, checkToLogin} = require('../../middleware/loginCheck')
  * 가게 생성
  * 관리자 로그인 필요
  */
-router.post('/', checkToAdmin, multer.upload.single("store_img"), createStore)
+router.post('/', checkToAdmin, multer.upload.fields([{ name: 'store_img' }, { name: 'menu_img' }]), createStore)
 
 /**
  * 가게 검색

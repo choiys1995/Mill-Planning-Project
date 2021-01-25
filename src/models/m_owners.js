@@ -47,6 +47,22 @@ module.exports = {
         }
     },
 
+    selectOwnerid: async function (ownerid) {
+        if(ownerid <= 0) return { errno: "user is null" }
+        const connection = await connect();
+        if (connection.error) return { errno: connection.error };
+
+        try {
+            const query = 'select * from owners where ownerid = ?';
+            const [rows] = await connection.query(query,[ownerid]);
+            return rows[0];
+        } catch (error) {
+            return error;
+        } finally {
+            await connection.release();
+        }
+    },
+
     insert: async function (user) {
         if (!user) return {errno: "user is null"};
 
@@ -72,8 +88,8 @@ module.exports = {
         if (connection.error) return {errno: "connection error"};
 
         try {
-            const query = "update owners set password = ?, tel =?, nickname=? where ownerid=" + user.ownerid;
-            const data = await connection.query(query, [user.password,user.tel,user.nickname])
+            const query = "update owners set password = ?, tel =?, nickname=? where ownerid= ?";
+            const data = await connection.query(query, [user.password,user.tel,user.nickname, user.ownerid])
             return data;        
         
         } catch (error) {

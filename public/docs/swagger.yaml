@@ -22,20 +22,20 @@ info:
 # type: 데이터 타입의 명시
 # schema $ref: 밑 부분의 model 작성을 통해 참조
 paths:
-  #테스트
-  /api/test/{message}:
-    get:
-      summary: 테스트
-      parameters:
-        - $ref: 'parameters.yaml#/test'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: "schemas.yaml#/test"
-        '418':
-          description: "나는 커피를 끓이는것을 원치않는다 아이스아메리카노를 가져와라"
+  # #테스트
+  # /api/test/{message}:
+  #   get:
+  #     summary: 테스트
+  #     parameters:
+  #       - $ref: 'parameters.yaml#/test'
+  #     responses:
+  #       '200':
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "schemas.yaml#/test"
+  #       '418':
+  #         description: "나는 커피를 끓이는것을 원치않는다 아이스아메리카노를 가져와라"
 
   ###############################가게######################################
   #가게 생성

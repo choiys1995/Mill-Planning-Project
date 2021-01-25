@@ -29,6 +29,20 @@ module.exports = {
 
         return res.status(201).json(customer)
     },
+    test: async function(req, res){
+        console.log("???")
+    },
+
+    currentReserveOwner: async function(req, res) {
+        const { ownerid } = req.user.account;
+
+        console.log("adafaff");
+
+        const reserveData = await Reservation.rsv_check_owner_ownerid(ownerid);
+        if(reserveData.errno) return res.status(500).json(reserveData);
+
+        res.json(reserveData);
+    },
 
     //해당 가게에 대한 예약 현황
     currentReserve: async function(req, res) {

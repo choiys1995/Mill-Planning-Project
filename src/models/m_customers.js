@@ -46,6 +46,22 @@ module.exports = {
         }
     },
 
+    selectCustid: async function (custid) {
+        if(custid <= 0) return { errno: "user is null" }
+        const connection = await connect();
+        if (connection.error) return { errno: connection.error };
+
+        try {
+            const query = 'select * from customers where custid=?';
+            const [rows] = await connection.query(query,[custid]);
+            return rows[0];
+        } catch (error) {
+            return error;
+        } finally {
+            await connection.release();
+        }
+    },
+
     insert: async function (user) {
         if (!user) return {errno: "user is null"};
 
@@ -71,8 +87,8 @@ module.exports = {
         if (connection.error) return {errno: "connection error"};
 
         try {
-            const query = "update customers set password = ?, tel =?, nickname=? where custid=" + user.custid;
-            const data = await connection.query(query, [user.password,user.tel,user.nickname])
+            const query = "update customers set password = ?, tel =?, nickname=? where custid = ?";
+            const data = await connection.query(query, [user.password,user.tel,user.nickname, user.custid])
             return data;
                        
 

@@ -180,6 +180,48 @@ module.exports = {
         }
     },
 
+    rsv_check_owner_ownerid: async function (ownerid) {
+        if (ownerid <= 0) return { errno: "검색할 수 없는 데이터입니다." };
+        const connection = await connect();
+        if (connection.error) return { errno: "연결에 실패했습니다." }
+        
+        try {
+            const query =
+                'select pay.ordercode as ordercode,' +
+                'res.reserveid as reserveid,' +
+                'res.reservedate as reservedate,' +
+                'res.reservetime as reservetime, ' +
+                'res.cancel as cancel,' +
+                'str.ownerid as store_ownerid,' +
+                'str.name as store_name,' +
+                'cus.custid as orderer_cust,' +
+                'own.ownerid as orderer_owner,' +
+                'cus.nickname as orderer_cust_nickname,' +
+                'own.nickname as orderer_owner_nickname ' +
+                'from reservation res,' +
+                'payment pay,' +
+                'store str,' +
+                'owners own,' +
+                'customers cus ' +
+                'where res.storeid in' +
+                '(select storeid ' +
+                'from store ' +
+                'where ownerid = ?)' +
+                'and pay.reserveid = res.reserveid ' +
+                'and str.storeid = res.storeid ' +
+                'and own.ownerid = res.orderer_owner ' +
+                'and cus.custid = res.orderer_cust ' +
+                'order by reservedate desc, reservetime desc'
+            const [rows] = await connection.query(query, [ownerid]);
+            //console.log();
+            return rows;
+        } catch (error) {
+            return error;
+        } finally {
+            connection.release();
+        }
+    },
+
 
     //상점주가 자신의 상점 예약현황 조회
     rsv_check_owner: async function (storeid) {
@@ -278,7 +320,7 @@ module.exports = {
                 'res.cancel as cancel,' +   //취소여부
                 'res.peoples as peoples,' + //인원수
                 'pay.ordercode as ordercode,' + //주문번호
-                'cus.nickname as c_nickname,' + 
+                'cus.nickname as c_nickname,' +
                 'own.nickname as o_nickname,' + //둘중에하나
                 'store.prepay as prepay, ' + //선수금
                 'store.name as name,' + //가게명
@@ -289,9 +331,9 @@ module.exports = {
                 'res.storeid = store.storeid) and ' +
                 '(res.orderer_cust = cus.custid and res.orderer_owner = own.ownerid)'
 
-                const [rows] = await connection.query(query, [reserveid]);
+            const [rows] = await connection.query(query, [reserveid]);
 
-                return rows[0];
+            return rows[0];
         } catch (e) {
             return e
         } finally {
