@@ -55,10 +55,10 @@ router.get('/:storeid/review/star', ReviewStarPoint);
 router.post('/:storeid/review', checkToLogin, multer.upload.single("review_img"), createReview);
 
 
-router.post('/test', multer.upload.fields([{ name: 'store_img' }, { name: 'menu_img' }]), function(req, res) {
-    console.log(req.body);
+router.post('/test/:storeid', multer.upload.array('reviews', 20), function(req, res) {
+    console.log(req.body, req.files, req.file);
 
-    res.json(req.files);
+    res.json(req.file);
 })
 
 module.exports = router;

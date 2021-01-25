@@ -136,16 +136,19 @@ module.exports = {
             custid: !req.user.account.custid ? 0 : custid,
             ownerid: !req.user.account.ownerid ? 0 : ownerid,
         }
-        let file = null;
+        let file = 'images/ml-untitle.png';
         const create_at = new Date().format('yyyyMMdd')
 
-        if (req.file) file = req.file.filename;
-
+        if (req.file) file = `images/store/${req.file.filename}`;
+        
+        const regText = content.replace(/(<([^>]+)>)/ig,"");
+        
         const review = {
             title, storeid,
             custid: account.custid,
             ownerid: account.ownerid,
-            content, score,
+            content: regText,
+            score,
             review_img: file,
             writedate: create_at
         }
@@ -155,7 +158,7 @@ module.exports = {
          * db에 작성요청
          */
         const result = await Review.insert(review)
-        if(result.errno) return res.status(500).json();
+        if(result.errno) return res.status(500).json(result);
 
         return res.status(200).json(review);
     },
