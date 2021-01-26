@@ -51,7 +51,7 @@ exports.Kakao = async function (req, res) {
 
     if(admin) {
         req.session.admin = true;
-        return res.send('<meta http-equiv="refresh" content="1;url=http://millplanning.ml/api/auth/oauth/kakao"></meta>')
+        res.redirect('/api/auth/oauth/kakao');
     }
     passport.authenticate('kakao', (err, account) => {
         if (err) return res.status(500).json(err);
