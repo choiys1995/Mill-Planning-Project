@@ -28,6 +28,8 @@ router.get('/old/reserve', checkToLogin, reserveInfo_old);
  */
 router.post('/reserve/:storeid', checkToLogin, doReserve);
 
+router.post('/mobile/reserve/:storeid', checkToLogin, doReserve_mobile);
+
 /**
  * 결제정보
  * payment 필요
