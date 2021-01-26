@@ -54,7 +54,7 @@ module.exports = {
 
         try {
             const query =
-                'insert into reviews(storeid,custid,ownerid,title,content,review_img,score,writedate) values (?,?,?,?,?,?,sysdate())';
+                'insert into reviews(storeid,custid,ownerid,title,content,review_img,score,writedate) values (?,?,?,?,?,?,?,sysdate())';
             
             if(user.ownerid > 0){
                 user.custid = 0;
