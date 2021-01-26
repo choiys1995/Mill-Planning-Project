@@ -108,7 +108,7 @@ module.exports = {
                     'b.holyday as holyday,'+
                     'b.busino as busino,'+
                     'b.store_img as store_img,'+
-                    'b.categories as categories'+
+                    'b.categories as categories '+
             'FROM owners a, store b '+
             'WHERE a.ownerid = b.ownerid '+
             'AND b.ownerid=?;';
