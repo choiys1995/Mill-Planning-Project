@@ -47,13 +47,15 @@ exports.findById = async function (req, res) {
 }
 
 exports.Kakao = async function (req, res) {
-    //console.log(req.session, "for kakao");
-    if (req.params.admin) {
-        req.session.admin = true;
-        return res.redirect('/api/auth/oauth/kakao')
+    const {admin} = req.params
+
+    if(admin) {
+        req.session.admin = true
+        return res.redirect('/api/auth/oauth/kakao');
     }
     passport.authenticate('kakao', (err, account) => {
         if (err) return res.status(500).json(err);
+        const redirectPage = '<meta http-equiv="refresh" content="1;url=http://millplanning.ml/MyPage"></meta>'
 
         req.login(account, (error) => {
             if (error) return res.status(500).json(error);
@@ -67,8 +69,11 @@ exports.Kakao = async function (req, res) {
                 { expiresIn: 60 * 60 * 24 }
             )
 
-            if (token) return res.redirect(req.headers.referer);
+            if(!token || '') return res.send(redirectPage + '<div>로그인에 실패하셨습니다</div>')
         })
+
+
+        res.send(redirectPage + '<div>잠시 후 페이지로 넘어갑니다</div>')
     })(req, res);
 }
 
