@@ -51,7 +51,7 @@ exports.Kakao = async function (req, res) {
 
     if(admin) {
         req.session.admin = true;
-        res.redirect('/api/auth/oauth/kakao');
+        return res.redirect('/api/auth/oauth/kakao');
     }
     passport.authenticate('kakao', (err, account) => {
         if (err) return res.status(500).json(err);
