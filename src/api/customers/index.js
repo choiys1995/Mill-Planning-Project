@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { register, doReserve, reserveInfo, reserveInfo_old, paymentInfo, findOneReserve } = require('./customers.ctrl')
+const { register, doReserve, reserveInfo, reserveInfo_old, paymentInfo, findOneReserve, doReserve_mobile } = require('./customers.ctrl')
 const { checkToLogin, checkToNotLogin } = require('../../middleware/loginCheck')
 
 /**
