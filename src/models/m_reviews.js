@@ -54,14 +54,21 @@ module.exports = {
 
         try {
             const query =
-                'insert into reviews(storeid,custid,title,content,review_img,score,writedate) values (?,?,?,?,?,?,sysdate())';
+                'insert into reviews(storeid,custid,ownerid,title,content,review_img,score,writedate) values (?,?,?,?,?,?,sysdate())';
             
-            if(user.custid === 0) query.replace('custid', 'ownerid')
+            if(user.ownerid > 0){
+                user.custid = 0;
+            }
+
+            if(user.custid > 0) {
+                user.ownerid = 0;
+            }
 
             const result = await connection.query(
                 query,
                 [user.storeid,
-                user.custid === 0 ? user.ownerid : user.custid,
+                user.custid,
+                user.ownerid,
                 user.title,
                 user.content,
                 user.review_img,
