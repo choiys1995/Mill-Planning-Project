@@ -125,6 +125,61 @@ module.exports = {
         });
     },
 
+    doReserve_mobile: async function (req, res) {
+        const { storeid } = req.params;
+        if(!req.body.merchant_uid) return res.status(400).json("잘못된 요청입니다.");
+
+        let { reservedate, prepay, peoples, reservetime, merchant_uid, name, buyer_name } = req.body
+        const {custid, ownerid} = req.user.account
+        let account = {
+            custid: !req.user.account.custid ? 0 : custid,
+            ownerid: !req.user.account.ownerid ? 0 : ownerid,
+        }
+        const reserve_data = {
+            storeid,
+            reservedate,
+            prepay, peoples, reservetime, merchant_uid,
+            orderer_cust: account.custid,
+            orderer_owner: account.ownerid,
+        };
+
+        const insert_reserve = await Reservation.insert_rsv(reserve_data);
+        //console.log(insert_reserve);
+        if(insert_reserve.errno) return res.status(500).json(insert_reserve)
+
+        const dateplan_data = {
+            storeid,
+            res_date: reservedate,
+            res_time: reservetime,
+            res_YN: 'Y',
+        }
+
+        const orderer_data = await iamport.payment_search(merchant_uid).then(data => data);
+
+        if(!orderer_data) return res.status(400).json('결제가 진행되지 않은 건 입니다.')
+
+        const payment_data = {
+            ordercode: merchant_uid,
+            reserveid: insert_reserve
+        }
+
+        const insert_dateplan = await Dateplan.insertdateplan(dateplan_data)
+        //console.log(insert_dateplan);
+        if(insert_dateplan.errno) return res.status(500).json(insert_dateplan);
+
+        const insert_payment = await Payment.insertpayment(payment_data)
+        //console.log(insert_payment);
+        if(insert_payment.errno) return res.status(500).json(payment_data)
+
+        const {address} = await Store.selectstore_cust(storeid)
+        
+        const redirectPage = 
+            '<meta http-equiv="refresh" content="1;url=http://millplanning.ml/CompletePage/eternalUrl></meta>'
+        
+
+        return res.send(redirectPage.replace('eternalUrl',insert_reserve) + '<div>잠시 후 이동됩니다</div>')
+    },
+
     //결제에 필요한 정보를 제공해줌
     paymentInfo: async function (req, res) {
         const { storeid } = req.params;
