@@ -62,7 +62,7 @@ const ReservePage = (props) => {
 
           </MenuBlock>
           <Iamport
-            identificationCode="imp94333879"
+            identificationCode="<IMPORTACCESS>"
             params={{
               pg: "html5_inicis",
               pay_method: "card",
