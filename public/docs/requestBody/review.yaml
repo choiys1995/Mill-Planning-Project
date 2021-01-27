@@ -1,0 +1,29 @@
+
+description: '리뷰 작성시 필요한 데이터'
+content:
+  application/json:
+    schema:
+      type: "object"
+      properties:
+        title:
+          type: "string"
+          description: "리뷰 제목"
+        content:
+          type: "string"
+          description: "리뷰 내용"
+        review_img:
+          type: "string"
+          description: "리뷰 이미지"
+        score:
+          type: "integer"
+        description: "별점"
+        writedate:
+          type: "date"
+          description: "작성일자"
+
+      example:
+        title: "최고의 가게입니다."
+        content: "제 이름같은 영재적 사고방식을 가진 사람이 만든 가게인것같습니다. 다좋았어요 그래서 제 점수는요?"
+        review_img: "untitled-01yo.jpg"
+        score: 4
+        writedate: "20201225"

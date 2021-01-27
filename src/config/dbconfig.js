@@ -6,19 +6,21 @@
 module.exports = {
     /**개발서버 */
     development: {
-        host: 'localhost',
+        host: '52.79.40.60',
         user: 'root',
-        password: 'root',
+        password: 'vmfhwprxm',
         database: 'test_schema',
-        connectionLimit: 10
+        connectionLimit: 100,
+        dateStrings: 'date',
     },
     /**테스트용 */
     test: {
         host: '52.79.40.60',
         user: 'root',
         password: 'vmfhwprxm',
-        database: 'youngjaetest',
-        connectionLimit: 100
+        database: 'test_schema',
+        connectionLimit: 100,
+        dateStrings: 'date',
     },
     /**운영서버 */
     production: {
@@ -27,5 +29,6 @@ module.exports = {
         password: 'vmfhwprxm',
         database: 'schema',
         connectionLimit: 100,
+        dateStrings: 'date',
     }
 }

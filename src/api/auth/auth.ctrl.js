@@ -1,85 +1,143 @@
-const Customer = require('../../models/customer');
-const encrypt = require('../../lib/encrypt');
 const jwt = require('jsonwebtoken');
-const jwtConfig = require('../../config/jwt')
-
-const removeSecretCustomerData = function(customer){
-    delete customer.password;
-    return customer;
-}
+const passport = require('passport');
+const customers = require('../../models/m_customers');
+const owners = require('../../models/m_owners')
+const encrypt = require('../../lib/encrypt')
 
 /**
  * 로그인메서드
  * 평문으로 받아서 암호화된 데이터베이스의 비밀번호와 비교
  */
-exports.Login = async function(req, res) {
-    const { email, password } = req.body;
+exports.Login = function (req, res) {
+    passport.authenticate('local', (err, account) => {
+        if (err) return res.status(400).json(err);
+        if (!account) return res.status(406).json('Invalid email or password')
+        req.login(account, (error) => {
+            if (error) return res.status(500).json(error);
+            const token = jwt.sign(
+                {
+                    custid: account.custid,
+                    ownerid: account.ownerid,
+                    email: account.email,
+                    admin: account.admin,
+                },  //토큰에 입력할 값
+                global.secret,  //비밀 키
+                { expiresIn: 60 * 60 * 24 * 7 * 1000 } //토큰 만료 시간
+            )
+            return res.status(200).json({ token });
+        });
+    })(req, res)
+}
 
-    //입력받은 email이 존재하지 않음
-    if(!email || '') return res.status(400).json({
-        error: "이메일 칸이 비어있습니다. 잘못된 요청입니다."
-    });
+exports.Auth = async function (req, res) {
+    res.json(req.user);
+}
 
-    const customer = await Customer.findOne(email);
+exports.findById = async function (req, res) {
+    const { email, admin } = req.query;
+    if (!email || '') return res.json({ error: '입력된 이메일이 없습니다.', isExist: false })
 
-    //해당 이메일이 DataBase에 존재하지않음
-    if(!customer) return res.status(406).json({
-        error: "해당 이메일이 존재하지않습니다."
-    });
 
-    //query 또는 connection문제 발생
-    if(customer.errno) return res.status(500).json(customer);
+    const userdata = admin ? await owners.selectemail(email) :
+        await customers.selectemail(email);
 
-    if(email === customer.email &&
-        encrypt.verifiEncrypt(password, customer.password)){
-            return res.status(200).json(removeSecretCustomerData(customer));
+    if (!userdata) return res.json({ isExist: false })
+
+    res.json({ isExist: true })
+}
+
+exports.Kakao = async function (req, res) {
+    const { admin } = req.params
+
+    if(admin) {
+        req.session.admin = true;
+        return res.redirect('/api/auth/oauth/kakao');
+    }
+    passport.authenticate('kakao', (err, account) => {
+        if (err) return res.status(500).json(err);
+        const redirectPage = 
+            '<meta http-equiv="refresh" content="1;url=http://millplanning.ml/MyPage"></meta>'
+
+        req.login(account, (error) => {
+            if (error) return res.status(500).json(error);
+            const token = jwt.sign({
+                custid: account.custid,
+                ownerid: account.ownerid,
+                oauth_token: account.oauth_token,
+                admin: account.admin,
+            },
+                global.secret,
+                { expiresIn: 60 * 60 * 24 }
+            )
+
+            if(!token || '') return res.send(redirectPage + '<div>로그인에 실패하셨습니다</div>')
+        })
+
+
+        res.send(redirectPage + '<div>잠시 후 페이지로 넘어갑니다</div>')
+    })(req, res);
+}
+
+exports.viewProfile = async function (req, res) {
+    const { account, admin } = req.user
+    if (!account) res.status(401).json({ message: '로그인 되어있지 않은 사용자입니다.' });
+
+    const { currentPassword } = req.body;
+
+    if (account.token) return res.json({ passwordConfirm: true })
+
+    const preProfile = req.user.admin ?
+        await owners.selectOwnerid(account.ownerid) :
+        await customers.selectCustid(account.custid)
+
+    console.log(encrypt.verifiEncrypt(currentPassword, preProfile.password))
+
+    encrypt.verifiEncrypt(currentPassword, preProfile.password) ?
+        res.json({ passwordConfirm: true }) :
+        res.json({ passwordConfirm: false })
+}
+
+exports.editProfile = async function (req, res) {
+    const { account } = req.user
+    if (!account) res.status(401).json({ message: '로그인 되어있지 않은 사용자입니다.' });
+
+    const { currentPassword, newPassword, newNickname, newTel } = req.body;
+    let newHashedPassword = null;
+
+    const preProfile = req.user.admin ?
+        await owners.selectOwnerid(account.ownerid) :
+        await customers.selectCustid(account.custid)
+
+    if (!account.token || '') {
+        if (!encrypt.verifiEncrypt(currentPassword, preProfile.password)) return res.status(406).json({ errno: "비밀번호가 일치하지않습니다." })
+
+        if (newPassword || '')
+            newHashedPassword = encrypt.genEncryption(newPassword).hash
     }
 
-    return res.status(406).json({
-        error: "올바르지않은 비밀번호입니다."
-    })
-}
 
-exports.Logout = async function(req, res) {
-    if(req.cookies.access_token){
-        res.clearCookie('access_token')
-        return res.status(204).json()
-    }
-}
-
-exports.Auth = async function(req, res) {
-    /**올바르게 로그인되어있는 사용자 */
-    res.status(204).json()
-}
-
-/** 테스트 로그인 코드
- * 운영서버로 옮길시 삭제
- */
-exports.Test = async function(req, res) {
-    const { email, password } = req.body;
-    const token = jwt.sign({
-        email
-    }, jwtConfig.secret, {expiresIn: '1h'});
-
-    const customer = await Customer.findOne(email);
-
-    /**
-     * customer가 존재하지않거나 query error가 발생하였을경우 에러처리
-     */
-    if(!customer) return res.status(400).json();
-    if(customer.errno) return res.status(500).json(customer);
-
-    /**
-     * 평문의 패스워드와 암호화된 패스워드가 일치하는지 체크
-     */
-    if(encrypt.verifiEncrypt(password, customer.password)){
-        res.cookie('access_token', token);
-        return res.status(200).json(removeSecretCustomerData(customer));
+    const profile = {
+        custid: account.custid,
+        ownerid: account.ownerid,
+        password: newPassword || '' ? newHashedPassword : preProfile.password,
+        nickname: newNickname || '' ? newNickname : preProfile.nickname,
+        tel: newTel || '' ? newTel : preProfile.tel
     }
 
-    return res.status(400).json();
+    const result = req.user.admin ?
+        await owners.update(profile) :
+        await customers.update(profile);
+    if (result.errno) return res.status(500).json();
+
+    res.json(result)
 }
 
-exports.TestCM = async function(req, res) {
-    return res.status(200).json('it')
+
+exports.Logout = async function (req, res) {
+    if (!req.user) res.status(401).json({ message: '로그인 되어있지 않은 사용자입니다.' });
+    req.logout();
+
+    if (req.session.admin) delete req.session.admin
+
+    res.json({ message: '로그아웃이 성공적으로 이루어졌습니다' });
 }

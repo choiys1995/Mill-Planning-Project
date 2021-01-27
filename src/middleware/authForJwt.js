@@ -5,7 +5,7 @@ module.exports = function(req, res, next) {
     const token = req.cookies.access_token;
 
     /**토큰이 존재하지 않을 때 에러처리 */
-    if(!token) res.status(401).json({
+    if(!token) res.status(403).json({
         error: '로그인이 되어있지 않은 사용자'
     });
 
