@@ -82,10 +82,19 @@ module.exports = {
 
         const keyword = {main, detail}
 
-        const storeList = await Store.selectstore_categories(keyword);
+        const storeList = await Store.selectStoreListAndReviewStar(keyword);
         if(storeList.errno) return res.json(500).json(storeList);
 
         res.json(storeList)
+    },
+
+    store_ReviewIndexer: async function(req, res) {
+        const data = await Store.selectStoreListAndReviewStar();
+
+        console.log(data);
+        if(data.errno) return res.json(500).json(data);
+        
+        res.json(data);
     },
 
     //해당 가게 조회 메서드

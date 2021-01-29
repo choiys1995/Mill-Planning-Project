@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('../../lib/multer');
-const { createStore, storeView, storeSearch, storeUpdate, storeDestory, test, createReview, ReviewViewer, homePageSearch, ReviewStarPoint } = require('./store.ctrl');
+const { createStore, storeView, storeSearch, storeUpdate, storeDestory, store_ReviewIndexer, test, createReview, ReviewViewer, homePageSearch, ReviewStarPoint } = require('./store.ctrl');
 const {checkToAdmin, checkToLogin} = require('../../middleware/loginCheck')
 
 /**
@@ -18,6 +18,8 @@ router.get('/search', storeSearch);
 
 //메인용
 router.get('/home', homePageSearch);
+
+router.get('/storeview', store_ReviewIndexer)
 
 /**
  * 가게 조회

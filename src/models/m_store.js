@@ -236,6 +236,48 @@ module.exports = {
             connection.release();
         }
     },
+
+    selectStoreListAndReviewStar: async function(keyword) {
+        const connection = await connect();
+        if(connection.error) return;
+
+        try{
+            const storeQuery =
+            'SELECT * FROM store WHERE name LIKE ' +
+            connection.escape('%' + keyword.main + '%') + 
+            ' OR address LIKE ' +
+            connection.escape('%' + keyword.detail + '%');
+
+            const reviewQuery =
+                'SELECT store.storeid as storeid, rev.storeid, store.name as name, AVG(rev.score) as score ' +
+                'FROM store store, reviews rev ' +
+                'WHERE name LIKE ' +
+                connection.escape('%' + keyword.main + '%') + 
+                ' OR address LIKE ' +
+                connection.escape('%' + keyword.detail + '%') +
+                ' GROUP BY store.storeid, rev.storeid ' +
+                'HAVING store.storeid = rev.storeid'
+            
+
+            const store = await connection.query(storeQuery);
+            const review = await connection.query(reviewQuery);
+
+            console.log(store[0], review[0]);
+
+            const data = {
+                store: store[0], 
+                review: review[0]
+            }
+
+            return data;
+
+        } catch (error) {
+            return error;
+        } finally {
+            connection.release();
+        }
+    },
+
     selectstore_ownertest: async function(){
         
         const connection = await connect();

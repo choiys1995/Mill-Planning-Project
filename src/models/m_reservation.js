@@ -181,7 +181,7 @@ module.exports = {
     },
 
     rsv_check_owner_ownerid: async function (ownerid) {
-        if (ownerid <= 0) return { errno: "검색할 수 없는 데이터입니다." };
+        if (ownerid <= 0) return { errno: "해당 점주를 검색할 수 없습니다." };
         const connection = await connect();
         if (connection.error) return { errno: "연결에 실패했습니다." }
         
@@ -213,7 +213,6 @@ module.exports = {
                 'and cus.custid = res.orderer_cust ' +
                 'order by reservedate desc, reservetime desc'
             const [rows] = await connection.query(query, [ownerid]);
-            //console.log();
             return rows;
         } catch (error) {
             return error;

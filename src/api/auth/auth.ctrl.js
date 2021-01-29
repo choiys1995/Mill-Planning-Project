@@ -2,7 +2,8 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const customers = require('../../models/m_customers');
 const owners = require('../../models/m_owners')
-const encrypt = require('../../lib/encrypt')
+const encrypt = require('../../lib/encrypt');
+const { KakaoURI } = require('../../config/kakao');
 
 /**
  * 로그인메서드
@@ -56,7 +57,7 @@ exports.Kakao = async function (req, res) {
     passport.authenticate('kakao', (err, account) => {
         if (err) return res.status(500).json(err);
         const redirectPage = 
-            '<meta http-equiv="refresh" content="1;url=http://millplanning.ml/MyPage"></meta>'
+            `<meta http-equiv="refresh" content="1;url=${KakaoURI.kakaoURI}MyPage"></meta>`
 
         req.login(account, (error) => {
             if (error) return res.status(500).json(error);
