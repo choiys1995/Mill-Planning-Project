@@ -27,7 +27,7 @@ module.exports = {
         host: '52.79.40.60',
         user: 'root',
         password: 'vmfhwprxm',
-        database: 'schema',
+        database: 'mill_planning',
         connectionLimit: 100,
         dateStrings: 'date',
     }
