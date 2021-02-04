@@ -1,6 +1,9 @@
 # Mill-Planning (식당 예약 관리 서비스)
 # 목차
-- [팀원 소개](https://github.com/ece5074/Mill-Planning-Project/new/master?readme=1#1-%ED%8C%80%EC%9B%90-%EC%86%8C%EA%B0%9C)
+- [팀원 소개](https://github.com/ece5074/Mill-Planning-Project#1-%ED%8C%80%EC%9B%90-%EC%86%8C%EA%B0%9C)
+- [사용 기술 및 언어]()
+- [개발 목적]()
+- [화면]()
 
 ## 1. 팀원 소개
 > ### 최영재(백엔드 개발 희망)
@@ -19,7 +22,7 @@
 - 데이터 베이스 설계 및 백엔드 개발
 - 사용 가능언어: JavaScript, Java, Python, SQL
 
-## 2. 사용한 기술
+## 2. 사용 기술 및 언어
 > ### 프론트엔드
 - HTML/CSS
 
@@ -45,6 +48,10 @@
 
 - Amazon LightSail
 
+> ### 공통
+- KaKao API
+- IAMPORT API
+
 
 ## 3. 개발 목적
 ---
@@ -67,9 +74,15 @@
 
  ==> **이를 해소하기위하여 예약 과정에서 자연스럽게 선수금을 받고, 방문여부를 파악 노쇼(NoShow)족에서의 피해를 최소화 시키기 위한 시스템의 필요성을 인식**
  
- ## 4. 구현 화면
+ ## 4. 화면
  ---
  - 메인화면
-  * ![image](https://user-images.githubusercontent.com/32730914/105947379-5a445080-60ac-11eb-8395-096ff2b8027f.png)
-  
- -
+  * ![image](https://user-images.githubusercontent.com/32730914/106845815-12967800-66ef-11eb-83d3-3fa00ee2c928.png)
+ - 로그인 화면
+  * ![image](https://user-images.githubusercontent.com/32730914/106845870-3063dd00-66ef-11eb-96c7-ec3971b089e9.png)
+ - 마이페이지
+  * ![image](https://user-images.githubusercontent.com/32730914/106845955-525d5f80-66ef-11eb-9753-d1bec67f3c2c.png)
+ - 가게 조회 페이지
+  * ![image](https://user-images.githubusercontent.com/32730914/106846024-728d1e80-66ef-11eb-9e5d-4c6aff28db96.png)
+ - 리뷰 작성 페이지
+  * ![image](https://user-images.githubusercontent.com/32730914/106846122-9badaf00-66ef-11eb-841b-4a721050820a.png)
