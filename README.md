@@ -1,9 +1,9 @@
 # Mill-Planning (식당 예약 관리 서비스)
 # 목차
 - [팀원 소개](https://github.com/ece5074/Mill-Planning-Project#1-%ED%8C%80%EC%9B%90-%EC%86%8C%EA%B0%9C)
-- [사용 기술 및 언어]()
-- [개발 목적]()
-- [화면]()
+- [사용 기술 및 언어](https://github.com/ece5074/Mill-Planning-Project#2-%EC%82%AC%EC%9A%A9-%EA%B8%B0%EC%88%A0-%EB%B0%8F-%EC%96%B8%EC%96%B4)
+- [개발 목적](https://github.com/ece5074/Mill-Planning-Project#3-%EA%B0%9C%EB%B0%9C-%EB%AA%A9%EC%A0%81)
+- [화면](https://github.com/ece5074/Mill-Planning-Project#4-%ED%99%94%EB%A9%B4)
 
 ## 1. 팀원 소개
 > ### 최영재(백엔드 개발 희망)
