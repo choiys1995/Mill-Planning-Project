@@ -77,12 +77,17 @@
  ## 4. 화면
  ---
  - 메인화면
+ 
    ![image](https://user-images.githubusercontent.com/32730914/106845815-12967800-66ef-11eb-83d3-3fa00ee2c928.png)
  - 로그인 화면
+ 
    ![image](https://user-images.githubusercontent.com/32730914/106845870-3063dd00-66ef-11eb-96c7-ec3971b089e9.png)
  - 마이페이지
+ 
    ![image](https://user-images.githubusercontent.com/32730914/106845955-525d5f80-66ef-11eb-9753-d1bec67f3c2c.png)
  - 가게 조회 페이지
+ 
    ![image](https://user-images.githubusercontent.com/32730914/106846024-728d1e80-66ef-11eb-9e5d-4c6aff28db96.png)
  - 리뷰 작성 페이지
+ 
    ![image](https://user-images.githubusercontent.com/32730914/106846122-9badaf00-66ef-11eb-841b-4a721050820a.png)
